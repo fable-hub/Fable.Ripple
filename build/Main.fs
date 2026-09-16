@@ -11,7 +11,8 @@ open SimpleExec
 [<EntryPoint>]
 let main args =
 
-    Command.Run("dotnet", "husky install")
+    if System.Environment.GetEnvironmentVariable("ACT") = null then
+        Command.Run("dotnet", "husky install")
 
     let app = CommandApp()
 
