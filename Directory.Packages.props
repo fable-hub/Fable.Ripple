@@ -32,11 +32,11 @@
     <PackageVersion Include="Nacara.Plugin.Deploy.GitHubPages" Version="1.0.0-beta.2" />
     <PackageVersion Include="Nacara.Plugin.FSharpApi" Version="1.0.0-beta.3" />
     <PackageVersion Include="Nacara.Plugin.LiveExample" Version="1.0.0-beta.9" />
-    <PackageVersion Include="Nacara.Theme.Default" Version="1.0.0-beta.10" />
-    <PackageVersion Include="Scriptorium.Hedgehog" Version="0.3.0" />
-    <PackageVersion Include="Scriptorium.Nib" Version="0.4.0" />
+    <PackageVersion Include="Nacara.Theme.Default" Version="1.0.0-beta.11" />
+    <PackageVersion Include="Scriptorium.Hedgehog" Version="0.4.0" />
+    <PackageVersion Include="Scriptorium.Nib" Version="0.4.1" />
     <PackageVersion Include="Scriptorium.Nib.Browser" Version="0.2.1" />
-    <PackageVersion Include="Scriptorium.Quill" Version="0.5.0" />
+    <PackageVersion Include="Scriptorium.Quill" Version="0.7.1" />
     <PackageVersion Include="WebSharper.UI" Version="10.1.5.676" />
     <PackageVersion Include="WebSharper.FSharp" Version="10.1.6.676" />
   </ItemGroup>

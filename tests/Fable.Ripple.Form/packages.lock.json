@@ -142,6 +142,27 @@
           "Scriptorium.Quill": "[0.7.1, )"
         }
       },
+      "fable.ripple.form": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.301, )",
+          "Fable.Browser.Dom": "[2.20.0, )",
+          "Fable.Core": "[5.2.0, )",
+          "Fable.Promise": "[3.2.0, )",
+          "Fable.Ripple.Dom": "[1.0.0, )"
+        }
+      },
+      "fable.ripple.form.plain": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.301, )",
+          "Fable.Browser.Dom": "[2.20.0, )",
+          "Fable.Core": "[5.2.0, )",
+          "Fable.Promise": "[3.2.0, )",
+          "Fable.Ripple.Dom": "[1.0.0, )",
+          "Fable.Ripple.Form": "[1.0.0, )"
+        }
+      },
       "Fable.Browser.Css": {
         "type": "CentralTransitive",
         "requested": "[2.5.0, )",

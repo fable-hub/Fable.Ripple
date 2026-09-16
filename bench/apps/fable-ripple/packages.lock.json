@@ -68,14 +68,14 @@
           "Fable.Core": "3.2.8"
         }
       },
-      "fable.signals": {
+      "fable.ripple": {
         "type": "Project",
         "dependencies": {
           "FSharp.Core": "[10.1.301, )",
           "Fable.Core": "[5.2.0, )"
         }
       },
-      "fable.signals.dom": {
+      "fable.ripple.dom": {
         "type": "Project",
         "dependencies": {
           "FSharp.Core": "[10.1.301, )",

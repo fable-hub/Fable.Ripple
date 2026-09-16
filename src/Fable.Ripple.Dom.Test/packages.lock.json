@@ -78,15 +78,15 @@
       },
       "Scriptorium.Quill": {
         "type": "Direct",
-        "requested": "[0.5.0, )",
-        "resolved": "0.5.0",
-        "contentHash": "F/j4n5jKoz2lv8Qoa8pWqx8EzWdQoia1nZQHz/gJ3YwIawZoaxaUpWeHAkX0wwhTaJ1PIeq27bsjSMTgXsA/MA==",
+        "requested": "[0.7.1, )",
+        "resolved": "0.7.1",
+        "contentHash": "Fgy7GumQgehmhOiBnIubm8tYLGHOHr33DF2r2bxE+iiGH4NbuwKljYF5V3MGTdMMBG8oLjgICKWSS0+Pp5cxvg==",
         "dependencies": {
           "FSharp.Core": "10.0.101",
           "Fable.Core": "5.2.0",
           "Scriptorium.Ink": "0.5.0",
-          "Scriptorium.Nib": "0.4.0",
-          "Scriptorium.Parchment": "0.6.0"
+          "Scriptorium.Nib": "0.4.1",
+          "Scriptorium.Parchment": "0.6.1"
         }
       },
       "Fable.Browser.Blob": {
@@ -138,8 +138,8 @@
       },
       "Scriptorium.Parchment": {
         "type": "Transitive",
-        "resolved": "0.6.0",
-        "contentHash": "uLfrbtLEIJxXc5lgtbAsGg0x4/DMtUb0w7veMHw6e3wgTUvp43KaA1PdkAVhrEJIu9QDoAj9KreeNdkWcmEzYA==",
+        "resolved": "0.6.1",
+        "contentHash": "jDtjiSHD66Vv6TjYn+WYY0UQRmBjoNL1OHHG/JRJWkurrrSIaBGaZfaIhRF8lIXoOCA4o3T7so7DbDPF8LpCdg==",
         "dependencies": {
           "FSharp.Core": "10.0.101",
           "Fable.Core": "5.2.0",
@@ -189,9 +189,9 @@
       },
       "Scriptorium.Nib": {
         "type": "CentralTransitive",
-        "requested": "[0.4.0, )",
-        "resolved": "0.4.0",
-        "contentHash": "32oCJNVPkhgEL+FsR+V2CxOwWL6esd7/UMucsTrAS0t+ENNVew7Jz337opzTQR5t4SAn+UcUBaFhXvf/iUFFCA==",
+        "requested": "[0.4.1, )",
+        "resolved": "0.4.1",
+        "contentHash": "UDZbD1o7hosNjPlMiLPYGtFZRb+2Rp2c+HXbxfGX3YaouS5j6ZXqTFqLURabIcMnrFIn9MwmDH9WGGZLxPp1Rw==",
         "dependencies": {
           "FSharp.Core": "10.0.101",
           "Scriptorium.Ink": "0.5.0"
