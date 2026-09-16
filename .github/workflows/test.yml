@@ -1,0 +1,38 @@
+# Build and test on every pull request, and on every push to the main branch.
+#
+# The "easybuild-shipit.yml" workflow waits for this one to succeed before preparing a release,
+# so if you rename this workflow, remember to update the "workflows" filter over there as well.
+name: test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The component tests drive a real browser.
+      - run: npx playwright install --with-deps chromium
+
+      - name: Test
+        run: ./build.sh test
