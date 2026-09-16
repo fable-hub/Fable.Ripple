@@ -15,5 +15,8 @@ src
     bin/
 demo
     dist/
+docs
+    snippets
+        app.css
 """
      >

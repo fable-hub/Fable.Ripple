@@ -57,9 +57,12 @@ let rec private copyTree (source: string) (destination: string) =
         copyTree directory (Path.Combine(destination, Path.GetFileName directory))
 
 // The live-example plugin inlines one stylesheet, so the form package's css is appended to the snippets' own.
+//
+// The destination comes from VirtualWorkspace: it is generated and git-ignored, so a fresh
+// checkout has no file for the real workspace to expose.
 let private writeSnippetCss () =
     File.WriteAllText(
-        Workspace.docs.snippets.``app.css``,
+        VirtualWorkspace.docs.snippets.``app.css``,
         File.ReadAllText Workspace.docs.snippets.``app.base.css``
         + "\n"
         + File.ReadAllText(
