@@ -1,0 +1,79 @@
+/*
+    The demo's own content column: description, the live demo, and its source.
+    The docs site's navbar and sidebar carry the rest of the shell.
+*/
+
+#root .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-6);
+}
+
+#root .content h2 {
+    margin: 0;
+}
+
+#root .lede {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--sg-ink-muted);
+}
+
+#root .home {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+#root .home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: var(--nacara-space-6);
+    margin-top: var(--nacara-space-4);
+}
+
+#root .home-section h2 {
+    padding-bottom: var(--nacara-space-2);
+    border-bottom: 1px solid var(--sg-border);
+}
+
+#root .home-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-3);
+}
+
+#root .home-list p {
+    margin: 0;
+}
+
+/* The demo takes exactly what it needs; the listing takes the rest. */
+#root .panel {
+    position: relative;
+    flex: 0 0 auto;
+    padding: var(--nacara-space-6);
+}
+
+/* The shell's wrapper around an example (see `Shell.render`). It owns the
+   vertical rhythm, so an example need not wrap itself in a stack to get one. */
+#root .example {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-4);
+}
+
+/* The motif: one border masked away except at its four corners, so the two
+   arms of a corner cannot disagree. */
+#root .panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--sg-ink);
+    pointer-events: none;
+    mask-image:
+        linear-gradient(#000 0 0), linear-gradient(#000 0 0), linear-gradient(#000 0 0),
+        linear-gradient(#000 0 0);
+    mask-size: 15px 15px;
+    mask-position: left top, right top, left bottom, right bottom;
+    mask-repeat: no-repeat;
+}

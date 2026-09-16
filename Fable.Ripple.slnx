@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/build/">
+    <Project Path="build/EasyBuild.fsproj" />
+  </Folder>
+  <Folder Name="/demo/">
+    <Project Path="demo/Demo.fsproj" />
+  </Folder>
+  <Folder Name="/docs/">
+    <Project Path="docs/Docs.fsproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Fable.Ripple/Fable.Ripple.fsproj" />
+    <Project Path="src/Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
+    <Project Path="src/Fable.Ripple.Dom.Test/Fable.Ripple.Dom.Test.fsproj" />
+    <Project Path="src/Fable.UrlParser/Fable.UrlParser.fsproj" />
+    <Project Path="src/Fable.Ripple.Form/Fable.Ripple.Form.fsproj" />
+    <Project Path="src/Fable.Ripple.Form.Plain/Fable.Ripple.Form.Plain.fsproj" />
+  </Folder>
+  <Folder Name="/tests/">
+      <Project Path="tests/Fable.Ripple/Fable.Ripple.Tests.fsproj" />
+      <Project Path="tests/Fable.Ripple.Dom/Fable.Ripple.Dom.Tests.fsproj" />
+      <Project Path="tests/Fable.UrlParser/Fable.UrlParser.Tests.fsproj" />
+      <Project Path="tests/Fable.Ripple.Form/Fable.Ripple.Form.Tests.fsproj" />
+  </Folder>
+</Solution>

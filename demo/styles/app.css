@@ -1,0 +1,23 @@
+/*
+    Entry point. index.html links only this file.
+
+    No `@layer`: the demo renders inside a Nacara page whose stylesheet is
+    unlayered, and unlayered rules beat layered ones whatever their specificity.
+    Everything below is scoped to `#root` instead, except schematic.css, which
+    the docs site also loads on its own pages.
+*/
+
+@import "./tokens.css";
+@import "./base.css";
+@import "./shell.css";
+@import "./demos.css";
+@import "./code.css";
+@import "./instrumentation.css";
+@import "./schematic.css";
+
+/* Filed by kind, not by section: one reorder list serves Control Flow, Recipes
+   and Routing. */
+@import "./examples/lists.css";
+@import "./examples/figures.css";
+@import "./examples/apps.css";
+@import "./examples/forms.css";

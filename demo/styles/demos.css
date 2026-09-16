@@ -1,0 +1,68 @@
+/*
+    Component classes for the demos. `.row` and the ink-fill emphasis live in
+    base.css, shared with their classless equivalents.
+*/
+
+/* Columns of differing height align at the top, not centre. */
+#root .row.is-top {
+    align-items: start;
+}
+
+#root .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-2);
+}
+
+#root .stack.is-narrow {
+    max-width: 20rem;
+}
+
+#root .affirm {
+    color: var(--nacara-tip);
+    font-size: var(--text-sm);
+}
+
+#root .error {
+    color: var(--nacara-danger);
+    font-size: var(--text-sm);
+}
+
+/* A separator between two wrapping labels. `.row` centres on the whole label
+   block, so the glyph needs the input's own height to land on its centre line. */
+#root .eq {
+    align-self: end;
+    display: flex;
+    align-items: center;
+    height: var(--control-h);
+    color: var(--sg-ink-muted);
+}
+
+/* Un-styles the button default, which no element selector can do. */
+#root .icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: var(--sg-ink-muted);
+    font-size: var(--text-lg);
+    line-height: 1;
+    padding: 0 var(--nacara-space-1);
+}
+
+#root .icon-button:hover:not(:disabled) {
+    background: none;
+    color: var(--nacara-danger);
+}
+
+/* The example's own gap supplies the rhythm. */
+#root .example > p {
+    margin: 0;
+}
+
+/* The closing note, in the muted voice of a footnote. */
+#root .outcome {
+    color: var(--sg-ink-muted);
+}

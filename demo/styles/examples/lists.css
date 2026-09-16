@@ -1,0 +1,141 @@
+/*
+    Rows of things: reorder lists, drag lists, todos, the CRUD listbox, the
+    benchmark table, and the scroll window that bounds the long ones.
+*/
+
+#root .listbox {
+    border: 1px solid var(--sg-border);
+    min-width: 12rem;
+    height: 8rem;
+    overflow: auto;
+    background: var(--sg-bg);
+}
+
+#root .listbox li {
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    cursor: pointer;
+}
+
+#root .listbox li:hover {
+    background: var(--sg-bg-subtle);
+}
+
+#root .listbox li.is-selected {
+    background: var(--sg-accent-wash);
+    color: var(--sg-accent-text);
+    font-weight: 600;
+}
+
+#root .todo-app {
+    max-width: 30rem;
+}
+
+#root .todo-item {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-3);
+    padding: var(--nacara-space-2) 0;
+    border-bottom: 1px solid var(--sg-border);
+}
+
+#root .todo-new input,
+#root .todo-text,
+#root .todo-edit {
+    flex: 1;
+}
+
+#root .todo-text {
+    cursor: text;
+}
+
+#root .todo-text.is-done {
+    text-decoration: line-through;
+    color: var(--sg-ink-muted);
+}
+
+/* The reorder list: short rows, so twelve fit without scrolling. */
+#root .moves-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nacara-space-1);
+    list-style: none;
+    padding: 0;
+}
+
+#root .moves-list li {
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg-subtle);
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+}
+
+/* Long lists are bounded so the page does not become a mile of rows. */
+#root .scroll-window {
+    max-height: 22rem;
+    overflow: auto;
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+    overscroll-behavior: contain;
+}
+
+#root .bench-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+#root .bench-table td {
+    padding: 2px var(--nacara-space-2);
+    border-bottom: 1px solid var(--sg-border);
+}
+
+#root .bench-table .row-id {
+    width: 5ch;
+    font-family: var(--nacara-font-mono);
+    color: var(--sg-ink-muted);
+}
+
+#root .bench-table a {
+    cursor: pointer;
+}
+
+#root .bench-table tr.is-selected {
+    background: var(--sg-accent-wash);
+    color: var(--sg-accent-text);
+    font-weight: 600;
+}
+
+#root .drag-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-1);
+    list-style: none;
+    padding: 0;
+}
+
+#root .drag-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+    cursor: grab;
+}
+
+#root .drag-handle {
+    font-family: var(--nacara-font-mono);
+    color: var(--sg-ink-muted);
+    letter-spacing: -1px;
+}
+
+#root .drag-row.is-dragging {
+    opacity: 0.4;
+}
+
+/* The drop target, marked on the edge the row will land against. */
+#root .drag-row.is-over {
+    border-top-color: var(--sg-accent-text);
+    border-top-width: 2px;
+}

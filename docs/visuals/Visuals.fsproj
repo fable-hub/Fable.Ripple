@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <!-- Compiled by Fable into docs/static/visuals, outside the repository's central versioning. -->
+        <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+        <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="../../demo/Examples/Widgets.fs" />
+        <Compile Include="../../demo/Examples/Schematic.fs" />
+        <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../src/Fable.Ripple/Fable.Ripple.fsproj" />
+        <ProjectReference Include="../../src/Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Update="FSharp.Core" Version="10.1.301" />
+        <PackageReference Include="Fable.Core" Version="5.2.0" />
+        <PackageReference Include="Fable.Browser.Dom" Version="2.20.0" />
+    </ItemGroup>
+</Project>

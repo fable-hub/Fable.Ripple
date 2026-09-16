@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Components/Rendering.fs" />
+    <Compile Include="Components/ControlFlow.fs" />
+    <Compile Include="Components/Lists.fs" />
+    <Compile Include="Components/Bindings.fs" />
+    <Compile Include="Components.fs" />
+    <Compile Include="Tests/Rendering.fs" />
+    <Compile Include="Tests/ControlFlow.fs" />
+    <Compile Include="Tests/Lists.fs" />
+    <Compile Include="Tests/Bindings.fs" />
+    <Compile Include="Main.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
+    <ProjectReference Include="../../src/Fable.Ripple.Dom.Test/Fable.Ripple.Dom.Test.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" />
+    <PackageReference Include="Fable.Browser.Dom" />
+    <PackageReference Include="Fable.Promise" />
+    <PackageReference Include="Scriptorium.Nib.Browser" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,33 @@
+/*
+    The tokens Nacara does not provide. Palette, spacing and the three font
+    families come from the docs site (docs/static/theme.css plus Nacara's own
+    tokens), which is what the demo renders inside.
+*/
+
+#root {
+    /* Sized so x 1.5 line-height lands on whole pixels (12 -> 18, 14 -> 21). */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+
+    --track: 0.08em;
+
+    /* One text control's outer height: line box + padding + borders. */
+    --control-h: calc(1.5rem + 2 * var(--nacara-space-1) + 2px);
+
+    --alert-tint: color-mix(in srgb, var(--nacara-danger) 8%, transparent);
+}
+
+#root button,
+#root input,
+#root select {
+    font: inherit;
+    color: inherit;
+}
+
+/* `attr.hidden` sets the hidden property, whose UA rule loses to any `display`
+   a component sets. */
+#root [hidden] {
+    display: none !important;
+}

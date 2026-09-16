@@ -1,0 +1,35 @@
+@import url("schematic.css");
+
+/* schematic.css reads the site's own tokens directly, so a diagram embedded in
+   an article needs no palette of its own. */
+[data-visual] {
+    margin: 1rem 0;
+}
+
+[data-visual] .sch-frame {
+    background-image:
+        linear-gradient(var(--sg-grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--sg-grid-line) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* The demo's button rule is scoped to #root and cannot reach here. */
+[data-visual] button {
+    font-family: var(--nacara-font-mono);
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--sg-border-strong);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--sg-bg);
+    color: var(--sg-ink-body);
+    cursor: pointer;
+}
+
+[data-visual] button:hover {
+    border-color: var(--sg-accent-text);
+    color: var(--sg-accent-text);
+}
+
+[data-visual] button:active {
+    transform: translateY(1px);
+}

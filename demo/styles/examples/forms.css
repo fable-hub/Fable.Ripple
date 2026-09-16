@@ -1,0 +1,60 @@
+/*
+    The package stylesheet of Fable.Ripple.Form.Plain, with its custom properties
+    pointed at the demo's tokens. base.css already styles inputs, selects and
+    buttons under `#root`, and those rules outrank the package's.
+*/
+
+@import "../../../src/Fable.Ripple.Form.Plain/assets/plain.css";
+
+#root {
+    --rf-gap: var(--nacara-space-3);
+    --rf-gap-small: var(--nacara-space-1);
+    --rf-font-size: var(--text-base);
+    --rf-font-size-label: var(--text-sm);
+    --rf-font-size-help: var(--text-xs);
+    --rf-radius: var(--nacara-radius);
+    --rf-color-text: var(--sg-ink);
+    --rf-color-muted: var(--sg-ink-muted);
+    --rf-color-bg: var(--sg-bg);
+    --rf-color-border: var(--sg-border-strong);
+    --rf-color-border-faint: var(--sg-border);
+    --rf-color-accent: var(--sg-accent);
+    --rf-color-accent-hover: var(--sg-accent-hover);
+    --rf-color-accent-contrast: var(--sg-accent-contrast);
+    --rf-color-accent-wash: var(--sg-accent-wash);
+    --rf-color-error: var(--nacara-danger);
+    --rf-color-error-wash: var(--alert-tint);
+    --rf-color-success: var(--nacara-tip);
+
+    /* base.css gives every `li + li` and `p` a margin; the package's rules cannot outrank `#root`. */
+    .rf-steps__segment,
+    .rf-help,
+    .rf-status,
+    .rf-wizard-step__title {
+        margin: 0;
+    }
+
+    .rf-label,
+    .rf-steps__segment {
+        font-family: var(--nacara-font-mono);
+        text-transform: uppercase;
+        letter-spacing: var(--track);
+    }
+
+    .rf-input--invalid {
+        border-color: var(--nacara-danger);
+        background: var(--alert-tint);
+    }
+
+    .rf-button--primary {
+        color: var(--sg-accent-contrast);
+        background: var(--sg-accent);
+        border-color: var(--sg-accent);
+    }
+
+    .rf-button--primary:hover:not(:disabled) {
+        color: var(--sg-accent-contrast);
+        background: var(--sg-accent-hover);
+        border-color: var(--sg-accent-hover);
+    }
+}

@@ -1,0 +1,43 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageVersion Include="Fable.Package.SDK" Version="1.4.0" />
+    <PackageVersion Include="EasyBuild.PackageReleaseNotes.Tasks" Version="2.1.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageVersion>
+    <PackageVersion Include="Fable.Browser.Css" Version="2.5.0" />
+    <PackageVersion Include="Fable.Browser.Dom" Version="2.20.0" />
+    <PackageVersion Include="Fable.Browser.Event" Version="1.7.0" />
+    <PackageVersion Include="Fable.Core" Version="5.2.0" />
+    <PackageVersion Include="Fable.Form" Version="3.0.0" />
+    <PackageVersion Include="Fable.Form.Simple" Version="5.0.1" />
+    <PackageVersion Include="Fable.Form.Simple.Fields.Html" Version="1.0.1" />
+    <PackageVersion Include="Fable.Elmish.UrlParser" Version="1.0.2" />
+    <PackageVersion Include="Fable.Promise" Version="3.2.0" />
+    <PackageVersion Include="FSharp.Core" Version="10.1.301" />
+    <PackageVersion Include="FSharp.Data.Adaptive" Version="1.2.26" />
+    <PackageVersion Include="Glutinum.Types" Version="0.1.0" />
+    <PackageVersion Include="Nacara.Core" Version="2.0.0-beta.6" />
+    <PackageVersion Include="Nacara.Plugin.Markdown" Version="1.0.0-beta.2" />
+    <PackageVersion Include="Nacara.Plugin.Highlight.TreeSitter" Version="1.0.0-beta.2" />
+    <PackageVersion Include="Nacara.Plugin.Search" Version="1.0.0-beta.1" />
+    <PackageVersion Include="Nacara.Plugin.Sitemap" Version="1.0.0-beta.1" />
+    <PackageVersion Include="Nacara.Plugin.Assets.LightningCss" Version="1.0.0-beta.1" />
+    <PackageVersion Include="Nacara.Plugin.Assets.Nuglify" Version="1.0.0-beta.1" />
+    <PackageVersion Include="Nacara.Plugin.Changelog" Version="1.0.0-beta.1" />
+    <PackageVersion Include="Nacara.Plugin.Deploy.GitHubPages" Version="1.0.0-beta.2" />
+    <PackageVersion Include="Nacara.Plugin.FSharpApi" Version="1.0.0-beta.3" />
+    <PackageVersion Include="Nacara.Plugin.LiveExample" Version="1.0.0-beta.9" />
+    <PackageVersion Include="Nacara.Theme.Default" Version="1.0.0-beta.10" />
+    <PackageVersion Include="Scriptorium.Hedgehog" Version="0.3.0" />
+    <PackageVersion Include="Scriptorium.Nib" Version="0.4.0" />
+    <PackageVersion Include="Scriptorium.Nib.Browser" Version="0.2.1" />
+    <PackageVersion Include="Scriptorium.Quill" Version="0.5.0" />
+    <PackageVersion Include="WebSharper.UI" Version="10.1.5.676" />
+    <PackageVersion Include="WebSharper.FSharp" Version="10.1.6.676" />
+  </ItemGroup>
+</Project>

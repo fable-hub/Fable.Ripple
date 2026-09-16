@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Fable.Ripple.Dom showcase: the 7GUIs + TodoMVC, wired up with hash routing -->
+    <Compile Include="7GUIs/Counter.fs" />
+    <Compile Include="7GUIs/TemperatureConverter.fs" />
+    <Compile Include="7GUIs/FlightBooker.fs" />
+    <Compile Include="7GUIs/Timer.fs" />
+    <Compile Include="7GUIs/Crud.fs" />
+    <Compile Include="7GUIs/CircleDrawer.fs" />
+    <Compile Include="7GUIs/Cells.fs" />
+    <Compile Include="7GUIs/Todos.fs" />
+    <!-- Shared demo infrastructure, compiled before every example that uses it:
+         measurement, then the graph drawn from those measurements, then the
+         demo's own styling. Nothing here depends on anything below it. -->
+    <Compile Include="Highlight.fs" />
+    <Compile Include="Examples/Widgets.fs" />
+    <Compile Include="Examples/Schematic.fs" />
+    <Compile Include="Examples/Components.fs" />
+    <!-- Signals -->
+    <Compile Include="Examples/Signals/Sources.fs" />
+    <Compile Include="Examples/Signals/Derived.fs" />
+    <Compile Include="Examples/Signals/AutoTracking.fs" />
+    <Compile Include="Examples/Signals/Combining.fs" />
+    <Compile Include="Examples/Signals/Builder.fs" />
+    <Compile Include="Examples/Signals/Effects.fs" />
+    <Compile Include="Examples/Signals/Sharing.fs" />
+    <Compile Include="Examples/Signals/Untracked.fs" />
+    <!-- Rendering -->
+    <Compile Include="Examples/Rendering/Elements.fs" />
+    <Compile Include="Examples/Rendering/Attributes.fs" />
+    <Compile Include="Examples/Rendering/Classes.fs" />
+    <Compile Include="Examples/Rendering/Bindings.fs" />
+    <Compile Include="Examples/Rendering/AttributeVsProperty.fs" />
+    <Compile Include="Examples/Rendering/Refs.fs" />
+    <Compile Include="Examples/Rendering/SvgBasics.fs" />
+    <!-- Control Flow -->
+    <Compile Include="Examples/ControlFlow/Show.fs" />
+    <Compile Include="Examples/ControlFlow/Fragments.fs" />
+    <Compile Include="Examples/ControlFlow/Switch.fs" />
+    <Compile Include="Examples/ControlFlow/KeyedLists.fs" />
+    <!-- Routing -->
+    <Compile Include="Examples/Routing/HashRouting.fs" />
+    <Compile Include="Examples/Routing/PathParameters.fs" />
+    <Compile Include="Examples/Routing/QueryStrings.fs" />
+    <Compile Include="Examples/Routing/ValuesDialect.fs" />
+    <Compile Include="Examples/Routing/UrlState.fs" />
+    <!-- Under the Hood -->
+    <Compile Include="Examples/UnderTheHood/Cutoff.fs" />
+    <Compile Include="Examples/UnderTheHood/WhenItRuns.fs" />
+    <Compile Include="Examples/UnderTheHood/Batching.fs" />
+    <Compile Include="Examples/UnderTheHood/Cleanup.fs" />
+    <!-- Recipes -->
+    <Compile Include="Examples/Recipes/AsyncData.fs" />
+    <Compile Include="Examples/Recipes/ClickToEdit.fs" />
+    <Compile Include="Examples/Recipes/ActiveSearch.fs" />
+    <Compile Include="Examples/Recipes/ModalDialog.fs" />
+    <Compile Include="Examples/Recipes/DragToReorder.fs" />
+    <Compile Include="Examples/Recipes/ManyRows.fs" />
+    <Compile Include="Examples/Recipes/SvgChart.fs" />
+    <Compile Include="Examples/Recipes/Wizard.fs" />
+    <!-- Forms -->
+    <Compile Include="Examples/Forms/SignUp.fs" />
+    <Compile Include="Examples/Forms/DynamicForm.fs" />
+    <Compile Include="Examples/Forms/FormList.fs" />
+    <Compile Include="Examples/Forms/Conditional.fs" />
+    <Compile Include="Examples/Forms/Wizard.fs" />
+    <Compile Include="Examples/Forms/FormState.fs" />
+    <Compile Include="Catalogue.fs" />
+    <Compile Include="Router.fs" />
+    <Compile Include="Sources.fs" />
+    <Compile Include="Shell.fs" />
+    <Compile Include="Home.fs" />
+    <Compile Include="Main.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fable.Promise" />
+    <ProjectReference Include="../src/Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
+    <ProjectReference Include="../src/Fable.Ripple.Form.Plain/Fable.Ripple.Form.Plain.fsproj" />
+    <ProjectReference Include="../src/Fable.UrlParser/Fable.UrlParser.fsproj" />
+  </ItemGroup>
+</Project>
