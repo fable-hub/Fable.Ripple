@@ -1,0 +1,107 @@
+body {
+    font-family: system-ui, sans-serif;
+    font-size: 15px;
+    margin: 1rem;
+    color: #1a1a1a;
+}
+
+button {
+    font: inherit;
+    padding: 0.3rem 0.9rem;
+    border: 1px solid #b8b8c0;
+    border-radius: 6px;
+    background: #f4f4f6;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #e8e8ee;
+}
+
+input,
+select {
+    font: inherit;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #b8b8c0;
+    border-radius: 6px;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+output {
+    font-variant-numeric: tabular-nums;
+}
+
+ul {
+    padding-left: 1.2rem;
+}
+
+/* Classes for the examples that demonstrate class composition. */
+.card {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #d6d6dd;
+    border-radius: 6px;
+}
+
+.card.active {
+    border-color: #3b45ff;
+    background: #eef0ff;
+}
+
+/* A target worth moving the pointer over, for the mousemove example. */
+.mouse-move-demo {
+    display: grid;
+    place-items: center;
+    min-height: 6rem;
+    border: 1px dashed #b8b8c0;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Classes used by the "Customize the view" example. */
+.my-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.6rem 0.75rem;
+    border-left: 3px solid #3b45ff;
+    background: #f7f7fb;
+    border-radius: 6px;
+}
+
+.my-field__label {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #62626e;
+}
+
+.my-field__input {
+    font: inherit;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #b8b8c0;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.my-field__input:focus {
+    outline: 2px solid #eef0ff;
+    border-color: #3b45ff;
+}
+
+.my-field__error {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #c0392b;
+}
+
+.my-field__error:empty {
+    display: none;
+}

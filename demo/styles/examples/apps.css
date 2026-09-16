@@ -1,0 +1,207 @@
+/*
+    The mini-apps: Circle Drawer's canvas and its non-modal dialog, the Cells
+    spreadsheet, the wizard's progress dots, the modal-dialog recipe and its
+    clipping ancestor, click-to-edit.
+*/
+
+#root .canvas {
+    position: relative;
+    height: 16rem;
+    border: 1px solid var(--sg-border);
+    overflow: hidden;
+    cursor: crosshair;
+    background: var(--sg-bg);
+}
+
+/* `pointer-events` must exist in exactly one place, or canvas clicks land on
+   the circles and adding one breaks. */
+#root .circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid var(--sg-ink);
+    pointer-events: none;
+}
+
+/* The task says the circle under the pointer is "filled with the color gray". */
+#root .circle.is-filled {
+    background: color-mix(in srgb, var(--sg-ink) 18%, transparent);
+}
+
+/* Positioned at the pointer, hence the inline left/top. */
+#root .context-menu {
+    position: absolute;
+    z-index: 5;
+    background: var(--sg-bg);
+    border: 1px solid var(--sg-border);
+    padding: 2px;
+}
+
+#root .context-menu button {
+    border: none;
+    background: none;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+}
+
+#root .context-menu button:hover {
+    background: var(--sg-bg-subtle);
+    color: var(--sg-ink);
+}
+
+/* Stands in for the ::backdrop a non-modal dialog does not get; being a real
+   element is what lets a click on it close the frame. */
+#root .canvas-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: color-mix(in srgb, var(--sg-ink) 12%, transparent);
+}
+
+/* Non-modal and inside .canvas, so left/top open it under the pointer. */
+#root .adjust-dialog {
+    position: absolute;
+    margin: 0;
+    min-width: 15rem;
+    padding: var(--nacara-space-4);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+    color: var(--sg-ink);
+    z-index: 6;
+}
+
+#root .adjust-dialog p {
+    margin-bottom: var(--nacara-space-3);
+}
+
+#root .adjust-dialog button {
+    margin-top: var(--nacara-space-4);
+}
+
+/*
+    Cells. Descendant selectors keep the 2,600 generated cells class-free.
+*/
+
+#root .sheet-scroll {
+    max-height: 25vh;
+    max-width: 100%;
+    overflow: auto;
+    border: 1px solid var(--sg-border);
+    align-self: start;
+}
+
+#root .sheet {
+    border-collapse: separate; /* sticky cells need separate borders */
+    border-spacing: 0;
+}
+
+#root .sheet th,
+#root .sheet td {
+    padding: 2px 4px;
+    border-right: 1px solid var(--sg-border);
+    border-bottom: 1px solid var(--sg-border);
+}
+
+/* Header row and row-number column stay put while scrolling. */
+#root .sheet thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+#root .sheet tbody th {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    text-align: right;
+}
+
+#root .sheet thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+}
+
+#root .sheet td {
+    width: 5rem;
+    min-width: 5rem;
+}
+
+#root .sheet td input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+}
+
+/* A block so the whole cell is a double-click target, with a reserved line so
+   rows do not jump when a cell is emptied. */
+#root .sheet .cell-value {
+    display: block;
+    min-height: 1.25em;
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+    cursor: cell;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* A value that reads as text until you notice it is clickable. */
+#root .click-to-edit {
+    appearance: none;
+    background: none;
+    border: 1px dashed transparent;
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: text;
+}
+
+#root .click-to-edit:hover {
+    border-color: var(--sg-border);
+    background: var(--sg-bg-subtle);
+}
+
+/* Proves the dialog is not confined by a clipping, stacked ancestor. */
+#root .clipper {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    max-height: 4rem;
+    padding: var(--nacara-space-3);
+    border: 1px dashed var(--sg-border);
+}
+
+#root .sheet-dialog {
+    max-width: 28rem;
+    padding: var(--nacara-space-4);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+    color: var(--sg-ink);
+}
+
+#root .sheet-dialog::backdrop {
+    background: color-mix(in srgb, var(--sg-ink) 35%, transparent);
+}
+
+#root .wizard-step {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-1) var(--nacara-space-3);
+    border: 1px solid var(--sg-border);
+    color: var(--sg-ink-muted);
+}
+
+#root .wizard-step.is-current {
+    background: var(--sg-accent-wash);
+    border-color: var(--sg-accent-text);
+    color: var(--sg-accent-text);
+}
+
+#root .wizard-step.is-done {
+    background: var(--sg-bg-subtle);
+}

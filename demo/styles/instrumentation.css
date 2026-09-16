@@ -1,0 +1,83 @@
+/*
+    Shared instrumentation: nearly every example puts a counter on screen.
+    `.probe-label`'s typography comes from the caption group in base.css.
+*/
+
+#root .probes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nacara-space-2);
+}
+
+#root .probe {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg-subtle);
+}
+
+#root .probe-count {
+    font-family: var(--nacara-font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+#root .log {
+    height: 9rem;
+    overflow: auto;
+    padding: var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+}
+
+#root .trace {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--nacara-space-2);
+}
+
+#root .trace-step {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    border: 1px solid var(--sg-ink);
+    background: var(--sg-bg);
+}
+
+/* A computation that never ran: hollowed out, so the hole in the sequence is
+   what you notice. */
+#root .trace-step.is-skipped {
+    border-style: dashed;
+    border-color: var(--sg-border);
+    color: var(--sg-ink-muted);
+    background: none;
+}
+
+#root .trace-order {
+    display: grid;
+    place-items: center;
+    min-width: 1.4rem;
+    padding: 0 var(--nacara-space-1);
+    background: var(--sg-ink);
+    color: var(--sg-bg);
+    font-family: var(--nacara-font-mono);
+    font-weight: 600;
+    font-size: var(--text-xs);
+}
+
+#root .trace-step.is-skipped .trace-order {
+    background: none;
+    color: var(--sg-ink-muted);
+    border: 1px dashed var(--sg-border);
+}
+
+#root .trace-name {
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+}

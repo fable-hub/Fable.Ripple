@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Signal.fs" />
+    <Compile Include="Main.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Fable.Ripple/Fable.Ripple.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Scriptorium.Hedgehog" />
+    <PackageReference Include="Scriptorium.Nib" />
+    <PackageReference Include="Scriptorium.Quill" />
+  </ItemGroup>
+</Project>

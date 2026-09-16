@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <FablePackageType>library</FablePackageType>
+    <PackageTags>fable-javascript</PackageTags>
+    <Description>Component tests for Fable.Ripple.Dom, run in Chromium through Playwright.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="ComponentLoader.fs" />
+    <Compile Include="RippleRegistry.fs" />
+    <Compile Include="RippleDomTest.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fable.Ripple.Dom\Fable.Ripple.Dom.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.Package.SDK">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fable.Core" />
+    <PackageReference Include="Fable.Browser.Dom" />
+    <PackageReference Include="Fable.Promise" />
+    <PackageReference Include="Glutinum.Types" />
+    <PackageReference Include="Scriptorium.Nib.Browser" />
+    <PackageReference Include="Scriptorium.Quill" />
+  </ItemGroup>
+
+</Project>

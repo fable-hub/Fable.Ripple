@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <FablePackageType>library</FablePackageType>
+    <PackageTags>fable-javascript</PackageTags>
+    <Description>Fine-grained reactive values for Fable: sources, derived signals, effects and batching.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="ReactiveNode.fs" />
+    <Compile Include="Internal/Graph.fs" />
+    <Compile Include="Internal/Tracking.fs" />
+    <Compile Include="Internal/Scheduler.fs" />
+    <Compile Include="Internal/Scope.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="Api.fs" />
+    <Compile Include="Builder.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.Package.SDK">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fable.Core" />
+  </ItemGroup>
+
+</Project>

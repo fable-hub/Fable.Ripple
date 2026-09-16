@@ -1,0 +1,254 @@
+/*
+    Element defaults inside the demo, so the demo's F# stays free of styling
+    noise. Mono for chrome, sans for the values the user types.
+
+    Prose, headings, links, inline code and table cells come from Nacara and are
+    not restated here. Everything is scoped to `#root` so it cannot reach the
+    site's navbar, sidebar or footer.
+*/
+
+#root ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#root small {
+    font-size: var(--text-sm);
+    color: var(--sg-ink-muted);
+}
+
+/*
+    Captions: the mono uppercase strip naming a control, a panel, a column or a
+    table. Grouped so they cannot drift apart; each keeps its own layout below.
+*/
+
+#root label,
+#root article > header,
+#root th,
+#root .probe-label,
+#root .code-name {
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--track);
+    color: var(--sg-ink-muted);
+}
+
+/* Labels wrap their control (`label [ text "Name"; input [] ]`) - the library
+   has no id generator. */
+#root label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-1);
+}
+
+/* A label wrapping a checkbox or radio is a control and its text on one line,
+   not a stacked caption over a field. */
+#root label.label-row,
+#root label:has(> input[type="checkbox"]),
+#root label:has(> input[type="radio"]) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--nacara-space-2);
+}
+
+/* Explicit: the reset makes controls inherit, so one inside a <label> would
+   otherwise pick up the label's mono. */
+#root input,
+#root select {
+    font-family: var(--sg-font-prose);
+    font-size: var(--text-base);
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    border: 1px solid var(--sg-border-strong);
+    border-radius: 0;
+    background: var(--sg-bg);
+    color: var(--sg-ink);
+}
+
+#root input:disabled,
+#root select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#root input[type="range"] {
+    accent-color: var(--sg-accent-text);
+    border: none;
+    padding: 0;
+    background: transparent;
+    width: 100%;
+}
+
+/* `margin: 0`: the UA default knocks a checkbox out of centre in a flex row. */
+#root input[type="checkbox"] {
+    accent-color: var(--sg-accent-text);
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* An empty aria-invalid attribute means true, so the F# side emits "false". */
+#root [aria-invalid="true"] {
+    border-color: var(--nacara-danger);
+    background: var(--alert-tint);
+}
+
+#root button {
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+    padding: var(--nacara-space-1) var(--nacara-space-3);
+    border: 1px solid var(--sg-border-strong);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--sg-bg);
+    color: var(--sg-ink-body);
+    cursor: pointer;
+}
+
+#root button:hover:not(:disabled) {
+    border-color: var(--sg-accent-text);
+    color: var(--sg-accent-text);
+}
+
+#root button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+#root button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* The landing page's `.button--primary` (docs/content/index.md), at the demo's button size. */
+#root button[aria-current="true"],
+#root .primary {
+    background: var(--sg-accent);
+    color: var(--sg-accent-contrast);
+    border-color: var(--sg-accent);
+}
+
+#root button[aria-current="true"]:hover:not(:disabled),
+#root .primary:hover:not(:disabled) {
+    background: var(--sg-accent-hover);
+    color: var(--sg-accent-contrast);
+    border-color: var(--sg-accent-hover);
+}
+
+/* The vendor pseudo-elements are unavoidable for a custom height. */
+#root progress {
+    appearance: none;
+    width: 100%;
+    height: 0.5rem;
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg-subtle);
+}
+
+#root progress::-webkit-progress-bar {
+    background: var(--sg-bg-subtle);
+}
+
+#root progress::-webkit-progress-value {
+    background: var(--sg-accent-text);
+}
+
+#root progress::-moz-progress-bar {
+    background: var(--sg-accent-text);
+}
+
+#root output {
+    display: inline-block;
+    min-width: 3ch;
+    font-variant-numeric: tabular-nums;
+}
+
+/* A caption over a value: `label [ text "hits"; output [ ... ] ]`. The caption
+   group above styles the label, so the value undoes its size and colour. */
+#root label > output {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--sg-ink);
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* `width: fit-content` rather than `align-self`: a readout sits both in a flex
+   ROW beside buttons and in the panel's flex COLUMN. */
+#root label:has(> output) {
+    width: fit-content;
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg-subtle);
+}
+
+/* A row of controls. `role="group"` rather than a class where the markup is
+   meant to be pasted; `.row` is the same shape behind the F# component. */
+#root [role="group"],
+#root .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nacara-space-3);
+}
+
+/* A group holding a stacked field - caption over control - aligns on the
+   controls. Centred, a bare checkbox lines up with neither line. */
+#root [role="group"]:has(> label > input:not([type="checkbox"]):not([type="radio"])),
+#root [role="group"]:has(> label > select) {
+    align-items: end;
+}
+
+/* Bottom-aligning alone puts the box on the inputs' bottom EDGE. A text
+   control's height plus centring makes the two centre lines coincide. */
+#root [role="group"] label:has(> input[type="checkbox"]),
+#root [role="group"] label:has(> input[type="radio"]) {
+    min-height: var(--control-h);
+    align-items: center;
+}
+
+/* A labelled panel, for one side of a comparison. */
+#root article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-2);
+    margin: 0;
+    padding: var(--nacara-space-3);
+    border: 1px solid var(--sg-border);
+}
+
+/* The article's own gap supplies the rhythm. */
+#root article > p {
+    margin: 0;
+}
+
+/* Two or more panels side by side, scoped to the demo panel so it cannot reach
+   the shell. */
+#root .panel div:has(> article + article) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--nacara-space-4);
+}
+
+#root table {
+    border-collapse: collapse;
+}
+
+#root th {
+    font-weight: 600;
+    text-align: left;
+    background: var(--sg-bg-subtle);
+    border: 1px solid var(--sg-border);
+    padding: var(--nacara-space-1) var(--nacara-space-2);
+}
+
+#root td {
+    vertical-align: top;
+    font-variant-numeric: tabular-nums;
+}
+
+#root pre {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-family: var(--nacara-font-mono);
+}

@@ -1,0 +1,82 @@
+/*
+    Drawn specimens: the SVG figures and their labels, the colour swatches, the
+    class-composition chip, and the grid that makes a stray wrapper visible.
+*/
+
+#root .swatch {
+    display: grid;
+    place-items: center;
+    min-width: 5rem;
+    padding: var(--nacara-space-3) var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--track);
+}
+
+/* The reactive swatches' inline `oklch(0.75 ...)` background is the same in both themes. */
+#root .swatch[style*="oklch"] {
+    color: #0b0b0d;
+}
+
+/* `align-self` hugs the text: the enclosing `.stack` is a flex column, which
+   would otherwise stretch this to the full width. */
+#root .chip-demo {
+    display: inline-block;
+    align-self: flex-start;
+    padding: var(--nacara-space-2) var(--nacara-space-3);
+    border: 1px solid var(--sg-border);
+    font-family: var(--nacara-font-mono);
+}
+
+#root .chip-demo.is-active {
+    background: var(--sg-accent-wash);
+    color: var(--sg-accent-text);
+    border-color: var(--sg-accent-text);
+}
+
+#root .chip-demo.is-danger {
+    border-color: var(--nacara-danger);
+    border-width: 2px;
+}
+
+/* A grid, so a stray wrapper element is visible as a collapsed layout. */
+#root .cells {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--nacara-space-2);
+}
+
+#root .cells > * {
+    padding: var(--nacara-space-2);
+    border: 1px solid var(--sg-border);
+    text-align: center;
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+}
+
+#root .figure {
+    max-width: 100%;
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+}
+
+/* Only the bars are clickable; the circle beside them is not. */
+#root .figure .bar {
+    fill: var(--sg-ink-muted);
+    cursor: pointer;
+}
+
+#root .figure .bar.is-selected,
+#root .figure .dot {
+    fill: var(--sg-accent);
+}
+
+/* Sized in the SVG's own coordinates: the viewBox is 560 wide and renders
+   around 950, so 10.5 here lands near the 14px of the body text beside it. */
+#root .axis-label {
+    font-family: var(--nacara-font-mono);
+    font-size: 10.5px;
+    fill: var(--sg-ink-muted);
+}

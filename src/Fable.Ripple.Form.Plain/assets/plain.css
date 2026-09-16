@@ -1,0 +1,320 @@
+/*
+    Stylesheet for the `rf-*` classes of Fable.Ripple.Form.Plain.
+
+    Every colour, size and font comes from a custom property declared below.
+    Set them on `:root` after this file, or on any ancestor of the form, to
+    match a design; the rules themselves need no change.
+*/
+
+:root {
+    --rf-gap: 0.75rem;
+    --rf-gap-small: 0.25rem;
+    --rf-font-size: 1rem;
+    --rf-font-size-label: 0.875rem;
+    --rf-font-size-help: 0.75rem;
+    --rf-font-family: inherit;
+    --rf-radius: 6px;
+    --rf-color-text: #1a1a1a;
+    --rf-color-muted: #62626e;
+    --rf-color-bg: #ffffff;
+    --rf-color-border: #d6d6dd;
+    --rf-color-border-faint: #e4e4e8;
+    --rf-color-accent: #3b45ff;
+    --rf-color-accent-hover: #2a33e0;
+    --rf-color-accent-contrast: #ffffff;
+    --rf-color-accent-wash: #eef0ff;
+    --rf-color-error: #c0392b;
+    --rf-color-error-wash: #fdf3f2;
+    --rf-color-success: #008350;
+}
+
+.rf-form,
+.rf-list,
+.rf-list__items,
+.rf-wizard-step,
+.rf-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rf-gap);
+}
+
+.rf-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rf-gap-small);
+}
+
+.rf-label {
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size-label);
+    font-weight: 600;
+    color: var(--rf-color-text);
+}
+
+.rf-input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--rf-gap-small) calc(var(--rf-gap-small) * 2);
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size);
+    color: var(--rf-color-text);
+    background: var(--rf-color-bg);
+    border: 1px solid var(--rf-color-border);
+    border-radius: var(--rf-radius);
+}
+
+.rf-input:focus {
+    outline: 2px solid var(--rf-color-accent-wash);
+    border-color: var(--rf-color-accent);
+}
+
+.rf-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rf-input--invalid {
+    border-color: var(--rf-color-error);
+    background: var(--rf-color-error-wash);
+}
+
+.rf-textarea {
+    resize: vertical;
+    min-height: 4rem;
+}
+
+.rf-help {
+    margin: 0;
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size-help);
+    color: var(--rf-color-muted);
+}
+
+.rf-help--error {
+    color: var(--rf-color-error);
+}
+
+.rf-help:empty {
+    display: none;
+}
+
+.rf-field--validating .rf-label::after {
+    content: " (checking)";
+    font-weight: normal;
+    color: var(--rf-color-muted);
+}
+
+.rf-checkbox,
+.rf-radio {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--rf-gap-small);
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size);
+    color: var(--rf-color-text);
+}
+
+.rf-checkbox input,
+.rf-radio input {
+    margin: 0;
+    accent-color: var(--rf-color-accent);
+}
+
+.rf-radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rf-gap);
+}
+
+.rf-section {
+    margin: 0;
+    padding: var(--rf-gap);
+    border: 1px solid var(--rf-color-border-faint);
+    border-radius: var(--rf-radius);
+}
+
+.rf-section__title {
+    padding: 0 var(--rf-gap-small);
+    font-family: var(--rf-font-family);
+    font-weight: 600;
+    color: var(--rf-color-text);
+}
+
+.rf-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--rf-gap);
+}
+
+.rf-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rf-gap-small);
+    padding-left: var(--rf-gap);
+    border-left: 3px solid var(--rf-color-border);
+}
+
+.rf-button {
+    padding: var(--rf-gap-small) var(--rf-gap);
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size-label);
+    color: var(--rf-color-text);
+    background: var(--rf-color-bg);
+    border: 1px solid var(--rf-color-border);
+    border-radius: var(--rf-radius);
+    cursor: pointer;
+}
+
+.rf-button:hover:not(:disabled) {
+    border-color: var(--rf-color-accent);
+    color: var(--rf-color-accent);
+}
+
+.rf-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rf-button--small {
+    align-self: flex-start;
+}
+
+.rf-button--primary,
+.rf-button--primary:hover:not(:disabled) {
+    color: var(--rf-color-accent-contrast);
+    background: var(--rf-color-accent);
+    border-color: var(--rf-color-accent);
+}
+
+.rf-button--primary:hover:not(:disabled) {
+    background: var(--rf-color-accent-hover);
+    border-color: var(--rf-color-accent-hover);
+}
+
+.rf-button--loading {
+    opacity: 0.6;
+}
+
+.rf-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--rf-gap-small);
+}
+
+.rf-status {
+    margin: 0;
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size-label);
+}
+
+.rf-status--success {
+    color: var(--rf-color-success);
+}
+
+.rf-steps {
+    display: flex;
+    gap: var(--rf-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rf-steps__segment {
+    margin: 0;
+    padding-bottom: var(--rf-gap-small);
+    border-bottom: 3px solid var(--rf-color-border-faint);
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size-label);
+    color: var(--rf-color-muted);
+}
+
+.rf-steps__segment--active {
+    border-color: var(--rf-color-accent);
+    color: var(--rf-color-text);
+    font-weight: 600;
+}
+
+.rf-steps__segment--done {
+    border-color: var(--rf-color-accent);
+}
+
+.rf-wizard-step__title {
+    margin: 0;
+    font-family: var(--rf-font-family);
+    font-size: calc(var(--rf-font-size) * 1.25);
+    color: var(--rf-color-text);
+}
+
+.rf-sortable {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rf-gap);
+}
+
+.rf-sortable__row {
+    border: 1px solid var(--rf-color-border-faint);
+    border-radius: var(--rf-radius);
+}
+
+.rf-sortable__row--before {
+    box-shadow: 0 -2px 0 var(--rf-color-accent);
+}
+
+.rf-sortable__row--after {
+    box-shadow: 0 2px 0 var(--rf-color-accent);
+}
+
+.rf-sortable__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--rf-gap-small);
+    padding: var(--rf-gap-small) var(--rf-gap);
+    background: var(--rf-color-accent-wash);
+    font-family: var(--rf-font-family);
+    font-size: var(--rf-font-size-label);
+    color: var(--rf-color-text);
+}
+
+.rf-sortable__handle {
+    cursor: grab;
+    color: var(--rf-color-muted);
+}
+
+.rf-sortable__spacer {
+    flex: 1;
+}
+
+.rf-sortable__button {
+    padding: 0 var(--rf-gap-small);
+    font: inherit;
+    color: var(--rf-color-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.rf-sortable__button:hover {
+    color: var(--rf-color-accent);
+}
+
+.rf-sortable__button--danger:hover {
+    color: var(--rf-color-error);
+}
+
+.rf-sortable__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rf-gap);
+    padding: var(--rf-gap);
+}
+
+.rf-sortable__empty {
+    margin: 0;
+    padding: var(--rf-gap);
+    text-align: center;
+    font-family: var(--rf-font-family);
+    color: var(--rf-color-muted);
+    border: 1px dashed var(--rf-color-border);
+    border-radius: var(--rf-radius);
+}

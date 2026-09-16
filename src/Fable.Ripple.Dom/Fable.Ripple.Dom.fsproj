@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <FablePackageType>library</FablePackageType>
+    <PackageTags>fable-javascript</PackageTags>
+    <Description>HTML and SVG elements, attributes and events bound to Fable.Ripple, with no virtual DOM.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Base.fs" />
+    <Compile Include="Dom.fs" />
+    <Compile Include="Attributes.fs" />
+    <Compile Include="Events.fs" />
+    <Compile Include="Html.fs" />
+    <Compile Include="Svg.fs" />
+    <Compile Include="Routing.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.Package.SDK">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fable.Core" />
+    <PackageReference Include="Fable.Browser.Dom" />
+    <PackageReference Include="Fable.Browser.Css" />
+    <PackageReference Include="Fable.Browser.Event" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fable.Ripple/Fable.Ripple.fsproj" />
+  </ItemGroup>
+
+</Project>

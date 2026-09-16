@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <!-- Live snippets are compiled outside the repository's central versioning. -->
+        <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+        <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="../../src/Fable.UrlParser/Extensions/String.fs" />
+        <Compile Include="../../src/Fable.UrlParser/Base.fs" />
+        <Compile Include="../../src/Fable.UrlParser/Parser.fs" />
+        <Compile Include="../../src/Fable.UrlParser/UrlCodec.fs" />
+        <Compile Include="../../src/Fable.Ripple/ReactiveNode.fs" />
+        <Compile Include="../../src/Fable.Ripple/Internal/Graph.fs" />
+        <Compile Include="../../src/Fable.Ripple/Internal/Tracking.fs" />
+        <Compile Include="../../src/Fable.Ripple/Internal/Scheduler.fs" />
+        <Compile Include="../../src/Fable.Ripple/Internal/Scope.fs" />
+        <Compile Include="../../src/Fable.Ripple/Types.fs" />
+        <Compile Include="../../src/Fable.Ripple/Api.fs" />
+        <Compile Include="../../src/Fable.Ripple/Builder.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Base.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Dom.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Attributes.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Events.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Html.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Svg.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Routing.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form/Types.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form/Base.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form/Wizard.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/View.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/PlainView.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/TextField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/EmailField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/PasswordField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/NumberField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/TextareaField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/CheckboxField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/SelectField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/RadioField.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Fields/FormList.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Form.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/Sortable.fs" />
+        <Compile Include="../../src/Fable.Ripple.Form.Plain/WizardView.fs" />
+        <Compile Include="../../demo/Examples/Widgets.fs" />
+        <Compile Include="../../demo/Examples/Schematic.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Update="FSharp.Core" Version="10.1.301" />
+        <PackageReference Include="Fable.Core" Version="5.2.0" />
+        <PackageReference Include="Fable.Browser.Dom" Version="2.20.0" />
+        <PackageReference Include="Fable.Promise" Version="3.2.0" />
+        <PackageReference Include="Fable.Browser.Css" Version="2.5.0" />
+        <PackageReference Include="Fable.Browser.Event" Version="1.7.0" />
+    </ItemGroup>
+</Project>

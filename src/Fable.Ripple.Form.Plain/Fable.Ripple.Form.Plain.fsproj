@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <FablePackageType>library</FablePackageType>
+    <PackageTags>fable-javascript;form</PackageTags>
+    <Description>The default renderer for Fable.Ripple.Form: field kinds (text, email, password, number, textarea, checkbox, select, radio, list), form and wizard views, a sortable list. Class-based markup, no CSS framework.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="View.fs" />
+    <Compile Include="PlainView.fs" />
+    <Compile Include="Fields/TextField.fs" />
+    <Compile Include="Fields/EmailField.fs" />
+    <Compile Include="Fields/PasswordField.fs" />
+    <Compile Include="Fields/NumberField.fs" />
+    <Compile Include="Fields/TextareaField.fs" />
+    <Compile Include="Fields/CheckboxField.fs" />
+    <Compile Include="Fields/SelectField.fs" />
+    <Compile Include="Fields/RadioField.fs" />
+    <Compile Include="Fields/FormList.fs" />
+    <Compile Include="Form.fs" />
+    <Compile Include="Sortable.fs" />
+    <Compile Include="WizardView.fs" />
+    <None Include="assets/plain.css" Pack="true" PackagePath="fable/assets/plain.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.Package.SDK">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fable.Core" />
+    <PackageReference Include="Fable.Browser.Dom" />
+    <PackageReference Include="Fable.Promise" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fable.Ripple.Form/Fable.Ripple.Form.fsproj" />
+    <ProjectReference Include="../Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
+  </ItemGroup>
+
+</Project>

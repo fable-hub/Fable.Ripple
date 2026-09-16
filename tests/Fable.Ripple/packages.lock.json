@@ -1,0 +1,100 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "FSharp.Core": {
+        "type": "Direct",
+        "requested": "[10.1.301, )",
+        "resolved": "10.1.301",
+        "contentHash": "excLf2zM/qUB3WhRUfI0xvOOaPwcRAEdYT/BXe9eiTKySnWVuIKMQTf5+6ETy5nsb1dpLp1s2j2yAM/XcRgFMg=="
+      },
+      "Scriptorium.Hedgehog": {
+        "type": "Direct",
+        "requested": "[0.3.0, )",
+        "resolved": "0.3.0",
+        "contentHash": "5aZp4rgEfncXmm/jKmQ/liAlLEMBfGaCWyOJJiejXoIvzsbZ4T4pMrSIqd+OWSw2/vnlHSkYboxkAfpn36CTEA==",
+        "dependencies": {
+          "FSharp.Core": "10.0.101",
+          "Fable.Core": "5.2.0",
+          "Hedgehog": "2.0.4",
+          "Scriptorium.Quill": "0.5.0"
+        }
+      },
+      "Scriptorium.Nib": {
+        "type": "Direct",
+        "requested": "[0.4.0, )",
+        "resolved": "0.4.0",
+        "contentHash": "32oCJNVPkhgEL+FsR+V2CxOwWL6esd7/UMucsTrAS0t+ENNVew7Jz337opzTQR5t4SAn+UcUBaFhXvf/iUFFCA==",
+        "dependencies": {
+          "FSharp.Core": "10.0.101",
+          "Scriptorium.Ink": "0.5.0"
+        }
+      },
+      "Scriptorium.Quill": {
+        "type": "Direct",
+        "requested": "[0.5.0, )",
+        "resolved": "0.5.0",
+        "contentHash": "F/j4n5jKoz2lv8Qoa8pWqx8EzWdQoia1nZQHz/gJ3YwIawZoaxaUpWeHAkX0wwhTaJ1PIeq27bsjSMTgXsA/MA==",
+        "dependencies": {
+          "FSharp.Core": "10.0.101",
+          "Fable.Core": "5.2.0",
+          "Scriptorium.Ink": "0.5.0",
+          "Scriptorium.Nib": "0.4.0",
+          "Scriptorium.Parchment": "0.6.0"
+        }
+      },
+      "Hedgehog": {
+        "type": "Transitive",
+        "resolved": "2.0.4",
+        "contentHash": "1i9P9indoy02mB3Xf/6FCcr3hy/d9kXh4zzgoUdGaxfP+O8qzSNv5Sn0Latddj7v0i3IyWT9ssj4aS653CY7pw==",
+        "dependencies": {
+          "FSharp.Core": "8.0.403",
+          "TypeShape": "9.0.0"
+        }
+      },
+      "Scriptorium.Ink": {
+        "type": "Transitive",
+        "resolved": "0.5.0",
+        "contentHash": "yWZx3xl7QHyFf0kZCQOF0C1AkVO4YfY1VxxICZC4MI9PDgHWXdLtxrMIP2Hu4DREzoEvWRjjkA3A1IbSk5a6QA==",
+        "dependencies": {
+          "FSharp.Core": "10.0.101",
+          "Fable.Core": "5.2.0"
+        }
+      },
+      "Scriptorium.Parchment": {
+        "type": "Transitive",
+        "resolved": "0.6.0",
+        "contentHash": "uLfrbtLEIJxXc5lgtbAsGg0x4/DMtUb0w7veMHw6e3wgTUvp43KaA1PdkAVhrEJIu9QDoAj9KreeNdkWcmEzYA==",
+        "dependencies": {
+          "FSharp.Core": "10.0.101",
+          "Fable.Core": "5.2.0",
+          "Scriptorium.Ink": "0.5.0"
+        }
+      },
+      "TypeShape": {
+        "type": "Transitive",
+        "resolved": "9.0.0",
+        "contentHash": "TFBwzUVpnJT8W4UAGNb0uQ+ZtA9wKUOZA9a825DzOZ0ejUFmLKF/QOVhMt6x9d1TsP1TxuUs/aYilKPCnttryg==",
+        "dependencies": {
+          "FSharp.Core": "4.3.2"
+        }
+      },
+      "fable.signals": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.301, )",
+          "Fable.Core": "[5.2.0, )"
+        }
+      },
+      "Fable.Core": {
+        "type": "CentralTransitive",
+        "requested": "[5.2.0, )",
+        "resolved": "5.2.0",
+        "contentHash": "3+HVoyYMjPGeKJEhMzRti0coDS6AkLVOWXmGwSvqokeTuwdZLyiKMoNgQrE6ZeJ0cSy9qHBB4VBpw5RAfb6zmQ==",
+        "dependencies": {
+          "FSharp.Core": "4.7.2"
+        }
+      }
+    }
+  }
+}

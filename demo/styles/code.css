@@ -1,0 +1,112 @@
+/*
+    The source listing. The panel never sticks to the page: only the code inside scrolls.
+    `.code-name`'s typography comes from the caption group in base.css.
+*/
+
+/* flex-grow 0 keeps a short listing snug, flex-shrink 1 caps a long one. */
+#root .code-panel {
+    flex: 0 1 auto;
+    min-height: 10rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--sg-border);
+    background: var(--sg-bg);
+}
+
+#root .code-name {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--nacara-space-3);
+    padding: var(--nacara-space-2) var(--nacara-space-3);
+    border-bottom: 1px solid var(--sg-border);
+    background: var(--sg-bg-subtle);
+}
+
+#root .code-name > :last-child {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nacara-space-3);
+}
+
+#root .code-status {
+    opacity: 0;
+}
+
+/* A keyframe, not a transition: the panel is new on every route, and a new element does not transition. */
+#root .code-panel:has(nacara-highlight[data-state="loading"]) .code-status {
+    animation: code-status-in 0.2s 0.15s both;
+}
+
+@keyframes code-status-in {
+    to {
+        opacity: 1;
+    }
+}
+
+#root .code-copy {
+    appearance: none;
+    background: none;
+    border: 1px solid var(--sg-border-strong);
+    padding: 0 var(--nacara-space-2);
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: var(--sg-ink-muted);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#root .code-copy:hover {
+    color: var(--sg-ink);
+    border-color: var(--sg-ink-muted);
+}
+
+#root .code-copy.is-failed {
+    color: var(--nacara-danger);
+    border-color: var(--nacara-danger);
+}
+
+/* `min-height: 0` lets a flex item shrink below its content and scroll. */
+#root .code-body {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    background: var(--sg-bg);
+    line-height: 1.55;
+}
+
+/* Sticky keeps the numbers in place when a long line scrolls the listing sideways. */
+#root .code-lines {
+    position: sticky;
+    left: 0;
+    min-width: calc(3ch + var(--nacara-space-4));
+    padding: var(--nacara-space-4) 0 var(--nacara-space-4) var(--nacara-space-4);
+    white-space: pre;
+    text-align: right;
+    font-family: var(--nacara-font-mono);
+    font-size: var(--text-sm);
+    color: var(--sg-ink-muted);
+    background: var(--sg-bg);
+    user-select: none;
+}
+
+#root nacara-highlight {
+    display: block;
+}
+
+
+#root .code-panel pre {
+    padding: var(--nacara-space-4);
+}
+
+/* A specimen inside an example's own panel, as opposed to the file listing. */
+#root .specimen pre {
+    padding: var(--nacara-space-2);
+    background-color: var(--sg-bg-subtle);
+    overflow-x: auto;
+}
