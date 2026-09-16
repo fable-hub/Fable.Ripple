@@ -1,0 +1,1 @@
+export function SignalBuilder_$reflection(){return n("Fable.Ripple.SignalBuilder",undefined,SignalBuilder)}export function SignalBuilder_$ctor(){return new SignalBuilder}import{class_type as n}from"fable-library-js/Reflection.js";export class SignalBuilder{constructor(){}}export const SignalBuilderAuto_signal=SignalBuilder_$ctor();

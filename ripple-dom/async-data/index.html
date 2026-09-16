@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Async data · Fable.Ripple</title><link rel="canonical" href="https://fable-hub.github.io/Fable.Ripple/ripple-dom/async-data/" /><meta property="og:url" content="https://fable-hub.github.io/Fable.Ripple/ripple-dom/async-data/" /><meta property="og:site_name" content="Fable.Ripple" /><meta property="og:locale" content="en" /><meta name="twitter:card" content="summary_large_image" /><meta property="og:title" content="Async data" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/Fable.Ripple/assets/css/nacara.3011413c.css" /><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/Fable.Ripple/assets/changelog.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/fsharp-api.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/search.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/live-example/live-example.css" /><link rel="stylesheet" href="/Fable.Ripple/theme.css" /></head><body data-section="ripple-dom"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg></span></button><a class="nacara-navbar__brand" href="/Fable.Ripple/">Fable.Ripple</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/Fable.Ripple/guide/introduction/" data-active="false">Guide</a></li><li class="nacara-dropdown"><button class="nacara-navbar__link" type="button" data-nacara-dropdown aria-expanded="false">Packages</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple/introduction/"><span>Fable.Ripple</span><span class="nacara-dropdown__description">Reactive values and derived signals.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple-dom/introduction/"><span>Fable.Ripple.Dom</span><span class="nacara-dropdown__description">HTML DSL with no virtual tree.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/urlparser/introduction/"><span>Fable.UrlParser</span><span class="nacara-dropdown__description">URLs parsed into your own types.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple-form/introduction/"><span>Fable.Ripple.Form</span><span class="nacara-dropdown__description">Typed forms, one Var per field.</span></a></li></ul></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/reference/" data-active="false">Reference</a></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/changelog/fable-ripple/" data-active="false">Changelog</a></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/demo/" data-active="false">Demo</a></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end"><li><button class="nacara-search__trigger" type="button" data-nacara-search data-bundle="/Fable.Ripple/pagefind/" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><span>Search</span><span class="nacara-search__kbd" data-nacara-search-shortcut>Ctrl K</span></button></li><li><a class="nacara-icon-button" href="https://github.com/fable-hub/Fable.Ripple" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg></span></a></li><li><select class="nacara-theme-select" data-nacara-theme aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/guide/introduction/">Guide</a></li><li><p class="nacara-sidebar__title">Packages</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple/introduction/">Fable.Ripple</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/introduction/">Fable.Ripple.Dom</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/urlparser/introduction/">Fable.UrlParser</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/introduction/">Fable.Ripple.Form</a></li></ul></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/reference/">Reference</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/changelog/fable-ripple/">Changelog</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/demo/">Demo</a></li></ul><ul class="nacara-sidebar__list"><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Getting started</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/introduction/"><span>Introduction</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Rendering</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/elements/"><span>Elements and attributes</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/events/"><span>Events</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/bindings/"><span>Bindings</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/control-flow/"><span>Control flow</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/svg/"><span>SVG</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Navigation</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/routing/"><span>Routing</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Testing</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/testing/"><span>Testing</span></a></li></ul></div></li></ul></nav><main id="nacara-content" tabindex="-1" class="nacara-content"><h1>Async data</h1><div><p>Async data is two pieces of plain F#: a union for the state, and a generation counter so a late response cannot overwrite a newer one.</p><aside class="nacara-callout" data-kind="note" data-title="Not in the menu"><p>This page describes a pattern you assemble yourself, not library API. It is kept for reference while the approach settles, and may change or be replaced by a dedicated primitive.</p></aside><h2 id="a-state-that-can-say-what-it-means">A state that can say what it means<a class="nacara-heading-anchor" href="#a-state-that-can-say-what-it-means" aria-label="Link to this section" data-pagefind-ignore></a></h2><p>A <code>RemoteData</code> union as the state, so the view is a <code><span class="tok-keyword">match</span></code> - and "loading, but with previous data to keep showing" is representable rather than two booleans:</p><figure class="nacara-code" data-language="fsharp" data-frame="code" data-source="type RemoteData&lt;'T&gt; =
+    | NotAsked
+    | Loading
+    | Reloading of 'T
+    | Loaded of 'T
+    | Failed of string"><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">RemoteData</span><span class="tok-operator">&lt;</span><span class="tok-type">'T</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">NotAsked</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Loading</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Reloading</span> <span class="tok-keyword">of</span> <span class="tok-type">'T</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Loaded</span> <span class="tok-keyword">of</span> <span class="tok-type">'T</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Failed</span> <span class="tok-keyword">of</span> <span class="tok-type">string</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><h2 id="a-generation-counter">A generation counter<a class="nacara-heading-anchor" href="#a-generation-counter" aria-label="Link to this section" data-pagefind-ignore></a></h2><p>Requests come back out of order: ask for #3, then #4, and #3 may answer last. Without a guard it wins and the screen shows the wrong thing, silently. Every request captures the generation it was issued under and drops its own result if a newer one has started.</p><p>Press the race button - the slow request resolves last, and is dropped:</p><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live preset=app" data-source='open Fable.Core
+open Fable.Ripple
+open Fable.Ripple.Dom
+
+type RemoteData&lt;&#39;T&gt; =
+    | NotAsked
+    | Loading
+    | Reloading of &#39;T
+    | Loaded of &#39;T
+
+let fetchUser (id: int) (delay: int) : JS.Promise&lt;string&gt; =
+    Promise.create (fun resolve _ -&gt;
+        JS.setTimeout (fun () -&gt; resolve $"user %d{id}") delay |&gt; ignore
+    )
+
+let app () =
+    let user = Var.create NotAsked
+    let mutable generation = 0
+
+    let load (id: int) (delay: int) =
+        generation &lt;- generation + 1
+        let mine = generation
+
+        user.Value &lt;-
+            match user.Value with
+            | Loaded previous
+            | Reloading previous -&gt; Reloading previous
+            | _ -&gt; Loading
+
+        fetchUser id delay
+        |&gt; Promise.iter (fun value -&gt;
+            if mine = generation then
+                user.Value &lt;- Loaded value
+        )
+
+    Html.div
+        [
+            Html.div
+                [
+                    Html.button
+                        [
+                            on.click (fun _ -&gt; load 1 400)
+                            Html.text "Load user 1"
+                        ]
+                    Html.button
+                        [
+                            on.click (fun _ -&gt;
+                                load 3 900
+                                load 4 150
+                            )
+                            Html.text "Race: slow #3, then fast #4"
+                        ]
+                ]
+
+            Html.switch
+                user
+                (function
+                | NotAsked -&gt; Html.p "Not asked yet."
+                | Loading -&gt; Html.p "Loading..."
+                | Reloading previous -&gt; Html.p $"Refreshing - still showing %s{previous}."
+                | Loaded value -&gt; Html.p $"Loaded: %s{value}.")
+        ]
+
+Html.mount "app" (app ())'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Core</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">RemoteData</span><span class="tok-operator">&lt;</span><span class="tok-type">'T</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">NotAsked</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Loading</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Reloading</span> <span class="tok-keyword">of</span> <span class="tok-type">'T</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Loaded</span> <span class="tok-keyword">of</span> <span class="tok-type">'T</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">fetchUser</span> <span class="tok-punctuation">(</span><span class="tok-parameter">id</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">delay</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span><span class="tok-punctuation">)</span> <span class="tok-punctuation">:</span> <span class="tok-type">JS</span><span class="tok-punctuation">.</span><span class="tok-type">Promise</span><span class="tok-operator">&lt;</span><span class="tok-type">string</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Promise</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">resolve</span> _ <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">        <span class="tok-type">JS</span><span class="tok-punctuation">.</span><span class="tok-property">setTimeout</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span> <span class="tok-function">resolve</span> <span class="tok-string">$"user %d{id</span><span class="tok-punctuation">}</span><span class="tok-string">"</span><span class="tok-punctuation">)</span> delay <span class="tok-operator">|></span> ignore
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">app</span> <span class="tok-punctuation">()</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">user</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> NotAsked
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-keyword">mutable</span> <span class="tok-function">generation</span> <span class="tok-operator">=</span> <span class="tok-constant">0</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">load</span> <span class="tok-punctuation">(</span><span class="tok-parameter">id</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">delay</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        generation <span class="tok-operator">&lt;-</span> generation <span class="tok-operator">+</span> <span class="tok-constant">1</span>
+</span><span class="nacara-code__line">        <span class="tok-keyword">let</span> <span class="tok-function">mine</span> <span class="tok-operator">=</span> generation
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">        user<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">match</span> user<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-keyword">with</span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">|</span> <span class="tok-constructor">Loaded</span> <span class="tok-variable">previous</span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">|</span> <span class="tok-constructor">Reloading</span> <span class="tok-variable">previous</span> <span class="tok-keyword">-></span> <span class="tok-constructor">Reloading</span> previous
+</span><span class="nacara-code__line">            <span class="tok-keyword">|</span> _ <span class="tok-keyword">-></span> Loading
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">        <span class="tok-function">fetchUser</span> id delay
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Promise</span><span class="tok-punctuation">.</span><span class="tok-property">iter</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">value</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">if</span> mine <span class="tok-operator">=</span> generation <span class="tok-keyword">then</span>
+</span><span class="nacara-code__line">                user<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> <span class="tok-constructor">Loaded</span> value
+</span><span class="nacara-code__line">        <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">button</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                            on<span class="tok-punctuation">.</span><span class="tok-property">click</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> _ <span class="tok-keyword">-></span> <span class="tok-function">load</span> <span class="tok-constant">1</span> <span class="tok-constant">400</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-string">"Load user 1"</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">button</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                            on<span class="tok-punctuation">.</span><span class="tok-property">click</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> _ <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                                <span class="tok-function">load</span> <span class="tok-constant">3</span> <span class="tok-constant">900</span>
+</span><span class="nacara-code__line">                                <span class="tok-function">load</span> <span class="tok-constant">4</span> <span class="tok-constant">150</span>
+</span><span class="nacara-code__line">                            <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-string">"Race: slow #3, then fast #4"</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">switch</span>
+</span><span class="nacara-code__line">                user
+</span><span class="nacara-code__line">                <span class="tok-punctuation">(</span><span class="tok-keyword">function</span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">|</span> <span class="tok-constructor">NotAsked</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span> <span class="tok-string">"Not asked yet."</span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">|</span> <span class="tok-constructor">Loading</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span> <span class="tok-string">"Loading..."</span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">|</span> <span class="tok-constructor">Reloading</span> <span class="tok-variable">previous</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span> <span class="tok-string">$"Refreshing - still showing %s{previous</span><span class="tok-punctuation">}</span><span class="tok-string">."</span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">|</span> <span class="tok-constructor">Loaded</span> <span class="tok-variable">value</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span> <span class="tok-string">$"Loaded: %s{value</span><span class="tok-punctuation">}</span><span class="tok-string">."</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> <span class="tok-punctuation">(</span><span class="tok-function">app</span> <span class="tok-constant">()</span><span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>The race lands on <code>user 4</code> - request #3 resolves afterwards, finds <code>generation</code> has moved on, and throws its own result away. Without the <code>mine <span class="tok-operator">=</span> generation</code> check it would overwrite the newer answer.</p><p><code>Reloading</code> is why a refresh does not blank the screen: the previous value rides along in the state, and the view can keep showing it.</p><p>A failure is one more case (<code><span class="tok-constructor">Failed</span> of string</code>) and one more <code><span class="tok-keyword">match</span></code> arm - the demo application's Async data example shows the full shape with errors.</p></div><a class="nacara-edit-link" href="https://github.com/fable-hub/Fable.Ripple/edit/main/docs/content/ripple-dom/async-data.md"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></span><span>Edit this page</span></a></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="2" href="#a-state-that-can-say-what-it-means">A state that can say what it means</a></li><li><a class="nacara-toc__link" data-level="2" href="#a-generation-counter">A generation counter</a></li></ul></nav></div><footer class="nacara-footer"><p>Built with <a href="https://mangelmaxime.github.io/Nacara/">Nacara</a></p></footer><script src="/Fable.Ripple/assets/nacara.3472cd30.js" defer="defer"></script><script src="/Fable.Ripple/assets/tree-sitter/highlight.js" defer="defer"></script><script src="/Fable.Ripple/assets/fsharp-api.js" defer="defer"></script><script src="/Fable.Ripple/assets/search.js" defer="defer"></script><script src="/Fable.Ripple/assets/live-example/live-example.js" defer="defer"></script></body></html>

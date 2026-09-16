@@ -1,0 +1,263 @@
+/*
+    Docs site theme. Only the deltas from Nacara's own default CSS
+    (assets/css/*.css) live here.
+
+    IBM Plex Mono for the interface, IBM Plex Sans for running prose,
+    Space Grotesk 700 for headings and member names.
+*/
+
+@font-face {
+    font-family: "IBM Plex Mono";
+    src: url("/Fable.Ripple/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "IBM Plex Mono";
+    src: url("/Fable.Ripple/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "IBM Plex Mono";
+    src: url("/Fable.Ripple/fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "IBM Plex Sans";
+    src: url("/Fable.Ripple/fonts/ibm-plex-sans-latin-wght-normal.woff2") format("woff2");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Space Grotesk";
+    src: url("/Fable.Ripple/fonts/space-grotesk-latin-700-normal.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --sg-bg: #ffffff;
+    --sg-bg-subtle: #fafafb;
+    --sg-ink: #0b0b0d;
+    --sg-ink-body: #3a3a46;
+    --sg-ink-muted: #62626e;
+    --sg-border: #e4e4e8;
+    --sg-border-strong: #d6d6dd;
+    --sg-border-faint: #f0f0f3;
+    --sg-ink-faint: #c8c8d2;
+    --sg-grid-line: #f4f4f7;
+    --sg-accent: #3b45ff;
+    --sg-accent-hover: #2a33e0;
+    --sg-accent-contrast: #ffffff;
+    --sg-accent-wash: #eef0ff;
+    --sg-accent-text: #3b45ff;
+
+    --sg-font-prose: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --nacara-font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --nacara-font-mono: "IBM Plex Mono", ui-monospace, "Fira Code", monospace;
+
+    --nacara-radius: 5px;
+    --nacara-code-max-height: 28rem;
+    --nacara-shadow: none;
+    --nacara-shadow-floating:
+        0 1px 2px rgb(0 0 0 / 0.06),
+        0 12px 32px -8px rgb(0 0 0 / 0.22);
+
+    --nacara-bg: var(--sg-bg);
+    --nacara-bg-subtle: var(--sg-bg-subtle);
+    --nacara-border: var(--sg-border);
+    --nacara-text: var(--sg-ink-body);
+    --nacara-text-muted: var(--sg-ink-muted);
+    --nacara-heading: var(--sg-ink);
+
+    --nacara-primary: var(--sg-accent);
+    --nacara-primary-contrast: #ffffff;
+    --nacara-primary-subtle: var(--sg-accent-wash);
+
+    /* Nacara's light token colours, darkened at the same hue to reach 4.5:1 on --sg-bg-subtle. */
+    --nacara-tip: #008350;
+    --tok-comment: #717277;
+    --tok-string: #308231;
+    --tok-inserted: #308231;
+    --tok-constructor: #346be3;
+    --tok-function: #346be3;
+    --tok-namespace: #346be3;
+    --tok-property: #cd4035;
+    --tok-tag: #cd4035;
+    --tok-invalid: #cd4035;
+    --tok-deleted: #cd4035;
+    --tok-escape: #0079b0;
+    --tok-operator: #0079b0;
+    --tok-type: #a06500;
+}
+
+:root[data-theme="dark"] {
+    --nacara-shadow-floating:
+        0 1px 2px rgb(0 0 0 / 0.4),
+        0 12px 32px -8px rgb(0 0 0 / 0.7);
+    --sg-bg: #0c0c10;
+    --sg-bg-subtle: #14141a;
+    --sg-ink: #e8e8ee;
+    --sg-ink-body: #b4b4c2;
+    --sg-ink-muted: #9a9aae;
+    --sg-border: #23232c;
+    --sg-border-strong: #2e2e3a;
+    --sg-border-faint: #1b1b22;
+    --sg-ink-faint: #4d4d5c;
+    --sg-grid-line: #16161c;
+    --sg-accent: #6b73ff;
+    --sg-accent-wash: #181a2e;
+    --sg-accent-hover: #828aff;
+    --sg-accent-contrast: #0c0c10;
+    --sg-accent-text: #8a90ff;
+
+    --nacara-primary: var(--sg-accent-text);
+    --nacara-primary-contrast: #0c0c10;
+}
+
+body {
+    font-family: var(--nacara-font-mono);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.nacara-heading,
+.nacara-navbar__brand {
+    font-family: var(--nacara-font-sans);
+}
+
+/* Headings and code both have their own, more specific font-family rules
+   that win over this. */
+.nacara-content,
+.nacara-navbar,
+.nacara-sidebar {
+    font-family: var(--sg-font-prose);
+}
+
+.nacara-sidebar__link {
+    color: var(--sg-ink-body);
+}
+
+.nacara-page-nav__link {
+    border-radius: 6px;
+}
+
+.nacara-page-nav__link > span:last-child {
+    font-weight: 600;
+}
+
+.nacara-callout {
+    border: none;
+    border-radius: 6px;
+    background: var(--sg-accent-wash);
+}
+
+.nacara-callout code,
+.nacara-api__body code {
+    background: none;
+    border: none;
+}
+
+.nacara-content > p {
+    max-width: 66ch;
+}
+
+@media (max-width: 1200px) {
+    /* Nacara.Plugin.Search sets a 18rem minimum on the trigger, which overflows
+       this navbar's seven sections before the theme's own 860px rule applies. */
+    .nacara-search__trigger {
+        min-width: 0;
+    }
+
+    .nacara-search__trigger > span:not(.nacara-search__kbd),
+    .nacara-search__kbd {
+        display: none;
+    }
+
+    /* Nacara's responsive.css re-declares `.nacara-layout` below 1200px at the
+       same specificity as `.nacara-layout--bare`, restoring a sidebar column
+       and padding on a layout that has neither. */
+    .nacara-layout--bare {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0;
+    }
+}
+
+@media (max-width: 940px) {
+    .nacara-navbar__items:not(.nacara-navbar__items--end) {
+        display: none;
+    }
+
+    [data-nacara-menu-toggle] {
+        display: inline-flex;
+    }
+}
+
+/* Live example card, per the design addendum's "Code card additions". */
+.nacara-live__actions {
+    padding: 9px 13px;
+    gap: 7px;
+}
+
+.nacara-live__actions button {
+    height: auto;
+    padding: 5px 11px;
+    font-size: 12.5px;
+}
+
+.nacara-live__expand,
+.nacara-live__reset {
+    border-color: var(--sg-border-strong);
+}
+
+.nacara-live__actions .nacara-live__run {
+    font-weight: 600;
+}
+
+.nacara-live__tabs {
+    gap: 16px;
+    padding: 0 13px;
+    border-bottom: 1px solid var(--sg-border);
+}
+
+.nacara-live__tabs .nacara-live__tab {
+    padding: 7px 0;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+}
+
+.nacara-live__tabs .nacara-live__tab[aria-selected="true"] {
+    margin-bottom: -1px;
+    color: var(--sg-accent);
+}
+
+.nacara-live__pane.nacara-live__pane--console,
+.nacara-live__pane.nacara-live__pane--output {
+    padding: 12px 13px;
+    font-size: 12.5px;
+    line-height: 1.85;
+}
+
+.nacara-live__editor .cm-gutters {
+    background: var(--sg-bg-subtle);
+    border-right-color: var(--sg-border-faint);
+}
+
+.nacara-live__editor .cm-lineNumbers .cm-gutterElement {
+    color: var(--sg-ink-faint);
+}

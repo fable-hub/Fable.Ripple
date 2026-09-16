@@ -1,0 +1,592 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Fable.Ripple</title><meta name="description" content="Focused F# libraries for building reactive Fable applications" /><link rel="canonical" href="https://fable-hub.github.io/Fable.Ripple/" /><meta property="og:url" content="https://fable-hub.github.io/Fable.Ripple/" /><meta property="og:site_name" content="Fable.Ripple" /><meta property="og:locale" content="en" /><meta name="twitter:card" content="summary_large_image" /><meta property="og:description" content="Focused F# libraries for building reactive Fable applications" /><meta property="og:title" content="Fable.Ripple" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/Fable.Ripple/assets/css/nacara.3011413c.css" /><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/Fable.Ripple/assets/changelog.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/fsharp-api.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/search.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/live-example/live-example.css" /><link rel="stylesheet" href="/Fable.Ripple/theme.css" /></head><body data-section=""><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg></span></button><a class="nacara-navbar__brand" href="/Fable.Ripple/">Fable.Ripple</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/Fable.Ripple/guide/introduction/" data-active="false">Guide</a></li><li class="nacara-dropdown"><button class="nacara-navbar__link" type="button" data-nacara-dropdown aria-expanded="false">Packages</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple/introduction/"><span>Fable.Ripple</span><span class="nacara-dropdown__description">Reactive values and derived signals.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple-dom/introduction/"><span>Fable.Ripple.Dom</span><span class="nacara-dropdown__description">HTML DSL with no virtual tree.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/urlparser/introduction/"><span>Fable.UrlParser</span><span class="nacara-dropdown__description">URLs parsed into your own types.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple-form/introduction/"><span>Fable.Ripple.Form</span><span class="nacara-dropdown__description">Typed forms, one Var per field.</span></a></li></ul></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/reference/" data-active="false">Reference</a></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/changelog/fable-ripple/" data-active="false">Changelog</a></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/demo/" data-active="false">Demo</a></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end"><li><button class="nacara-search__trigger" type="button" data-nacara-search data-bundle="/Fable.Ripple/pagefind/" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><span>Search</span><span class="nacara-search__kbd" data-nacara-search-shortcut>Ctrl K</span></button></li><li><a class="nacara-icon-button" href="https://github.com/fable-hub/Fable.Ripple" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg></span></a></li><li><select class="nacara-theme-select" data-nacara-theme aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout nacara-layout--bare"><nav class="nacara-sidebar nacara-sidebar--drawer" aria-label="Section"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/guide/introduction/">Guide</a></li><li><p class="nacara-sidebar__title">Packages</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple/introduction/">Fable.Ripple</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/introduction/">Fable.Ripple.Dom</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/urlparser/introduction/">Fable.UrlParser</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/introduction/">Fable.Ripple.Form</a></li></ul></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/reference/">Reference</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/changelog/fable-ripple/">Changelog</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/demo/">Demo</a></li></ul></nav><main id="nacara-content" tabindex="-1"><div><style>
+    :root {
+        --band-max: 1180px;
+    }
+
+    .section {
+        border-bottom: 1px solid var(--sg-border);
+    }
+
+    .section--alt {
+        background: var(--sg-bg-subtle);
+    }
+
+    .section--hero {
+        background-image:
+            linear-gradient(var(--sg-grid-line) 1px, transparent 1px),
+            linear-gradient(90deg, var(--sg-grid-line) 1px, transparent 1px);
+        background-size: 32px 32px;
+    }
+
+    .section__inner {
+        max-width: var(--band-max);
+        margin: 0 auto;
+    }
+
+    /* Grid children default to min-width: auto, which lets a code block's
+       longest line push the whole page sideways. */
+    .hero > *,
+    .band > * {
+        min-width: 0;
+    }
+
+    .hero {
+        display: grid;
+        grid-template-columns: 1fr 1.16fr;
+        gap: 40px;
+        align-items: center;
+        padding: 72px 48px 56px;
+    }
+
+    .hero__eyebrow {
+        font-family: var(--nacara-font-mono);
+        font-size: 11.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sg-accent);
+        margin: 0 0 12px;
+    }
+
+    .hero__title {
+        margin: 0 0 16px;
+        font-size: 44px;
+        line-height: 1.06;
+        letter-spacing: -0.034em;
+    }
+
+    .hero__lede {
+        max-width: 38ch;
+        font-family: var(--nacara-font-mono);
+        font-size: 14.5px;
+        line-height: 1.72;
+        color: var(--sg-ink-body);
+        margin: 0 0 24px;
+    }
+
+    .hero__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 20px;
+    }
+
+    .button {
+        display: inline-flex;
+        align-items: center;
+        font-family: var(--nacara-font-mono);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 9px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .button:hover {
+        text-decoration: none;
+    }
+
+    .button--primary {
+        background: var(--sg-accent);
+        color: var(--sg-accent-contrast);
+        border: 1px solid var(--sg-accent);
+        transition: background-color 0.15s, transform 0.15s;
+    }
+
+    .button--primary:hover {
+        background: var(--sg-accent-hover);
+    }
+
+    .hero .button--primary:hover {
+        transform: translateY(-1px);
+    }
+
+    .button--secondary {
+        background: transparent;
+        color: var(--sg-ink-body);
+        border: 1px solid var(--sg-border);
+    }
+
+    .button--secondary:hover {
+        border-color: var(--sg-accent);
+        color: var(--sg-accent);
+    }
+
+    .install-command {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        max-width: 100%;
+        overflow-x: auto;
+        font-family: var(--nacara-font-mono);
+        font-size: 13px;
+        border: 1px solid var(--sg-border);
+        border-radius: 5px;
+        padding: 9px 12px;
+        background: var(--sg-bg);
+    }
+
+    .install-command > span {
+        white-space: nowrap;
+    }
+
+    .install-command__cursor {
+        flex: 0 0 auto;
+    }
+
+    .install-command__prompt {
+        color: var(--sg-accent);
+    }
+
+    .install-command__cursor {
+        width: 7px;
+        height: 14px;
+        background: var(--sg-accent);
+        animation: install-command-blink 1.1s step-end infinite;
+    }
+
+    @keyframes install-command-blink {
+        0%,
+        50% {
+            opacity: 1;
+        }
+        50.01%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    .hero .nacara-code {
+        border-radius: 7px;
+    }
+
+    .hero .nacara-code__title::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 8px;
+        border-radius: 50%;
+        background: var(--sg-accent);
+    }
+
+    .feature-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .feature {
+        padding: 26px 24px;
+        border-left: 1px solid var(--sg-border);
+    }
+
+    .feature:first-child {
+        border-left: none;
+    }
+
+    .feature h3 {
+        font-size: 16px;
+        margin: 0 0 7px;
+    }
+
+    .feature p {
+        font-family: var(--sg-font-prose);
+        font-size: 1rem;
+        line-height: 1.62;
+        color: var(--sg-ink-body);
+        margin: 0;
+    }
+
+    .band {
+        display: grid;
+        gap: 40px;
+        align-items: center;
+        padding: 40px 48px;
+    }
+
+    .band--code-left {
+        grid-template-columns: 1.16fr 1fr;
+    }
+
+    .band--code-right {
+        grid-template-columns: 1fr 1.16fr;
+    }
+
+    .band--code-below {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .band--code-below .band__copy,
+    .band--code-below .band__claims li > span {
+        max-width: none;
+    }
+
+    .band__text .hero__eyebrow {
+        font-size: 11.5px;
+        margin: 0 0 13px;
+    }
+
+    .band__title {
+        font-size: 28px;
+        line-height: 1.14;
+        letter-spacing: -0.03em;
+        margin: 0;
+    }
+
+    .band__copy {
+        max-width: 46ch;
+        font-family: var(--sg-font-prose);
+        font-size: 1rem;
+        line-height: 1.62;
+        color: var(--sg-ink-body);
+        margin: 15px 0 0;
+    }
+
+    .band__claims {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-family: var(--sg-font-prose);
+        font-size: 1rem;
+        line-height: 1.55;
+        color: var(--sg-ink-body);
+        margin: 15px 0 0;
+        padding: 0;
+    }
+
+    .band__claims li {
+        display: flex;
+        gap: 9px;
+    }
+
+    .band__claims li::before {
+        content: "\2014";
+        flex: 0 0 auto;
+        font-size: 13px;
+        color: var(--sg-ink-faint);
+    }
+
+    .band__claims li > span {
+        max-width: 42ch;
+    }
+
+    .band__claims strong {
+        color: var(--sg-ink);
+        font-weight: 600;
+    }
+
+    /* Unchipped, per the design addendum: an identifier inside a claim is set
+       in accent mono rather than Nacara's boxed inline code. */
+    .band__claims code {
+        font-family: var(--nacara-font-mono);
+        font-size: 12.5px;
+        color: var(--sg-accent);
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .band__text .hero__actions {
+        margin: 19px 0 0;
+    }
+
+    .band__text .install-command {
+        margin-top: 15px;
+    }
+
+    /* Two columns still fit here, but the display sizes authored for a 1040px
+       card do not. */
+    @media (max-width: 1100px) {
+        .hero__title {
+            font-size: 36px;
+        }
+
+        .band__title {
+            font-size: 26px;
+        }
+    }
+
+    @media (max-width: 860px) {
+        .hero {
+            grid-template-columns: 1fr;
+            padding: 44px 20px 36px;
+        }
+
+        .band,
+        .band--code-left,
+        .band--code-right {
+            grid-template-columns: 1fr;
+            padding: 36px 20px;
+        }
+
+        .band__text {
+            order: -1;
+        }
+
+        .feature-row {
+            grid-template-columns: 1fr;
+        }
+
+        .feature {
+            padding: 22px 20px;
+            border-left: none;
+            border-top: 1px solid var(--sg-border);
+        }
+
+        .feature:first-child {
+            border-top: none;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .hero__title {
+            font-size: 30px;
+        }
+
+        .hero__actions .button {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+    }
+</style><section class="section section--hero"><div class="section__inner hero"><div><p class="hero__eyebrow">// Fine-grained reactivity for F#</p><h1 class="hero__title">Reactive values.<br />Nothing else<br />recomputes.</h1><p class="hero__lede">Focused F# libraries for reactive Fable applications. Each library does one thing and can be used on its own.</p><div class="hero__actions"><a class="button button--primary" href="/Fable.Ripple/guide/introduction/">Get started</a> <a class="button button--secondary" href="https://github.com/fable-hub/Fable.Ripple">GitHub</a></div><div class="install-command"><span class="install-command__prompt">></span> <span>dotnet add package Fable.Ripple --prerelease</span> <span class="install-command__cursor"></span></div></div><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live" data-source='open Fable.Ripple
+
+type Todo = { Text: string; Done: bool }
+
+let todos =
+    Var.create [
+        { Text = "Write the guide"; Done = true }
+        { Text = "Ship 1.0"; Done = false }
+    ]
+
+let remaining =
+    Signal.computed (fun () -&gt;
+        todos.Value
+        |&gt; List.filter (fun t -&gt; not t.Done)
+        |&gt; List.length
+    )
+
+printfn "Remaining = %d" remaining.Value
+
+todos.Value &lt;-
+    todos.Value
+    |&gt; List.map (fun t -&gt;
+        if t.Text = "Ship 1.0" then
+            printfn "Completed: Ship 1.0"
+            { t with Done = true }
+        else
+            t
+    )
+
+printfn "Remaining = %d" remaining.Value'><figcaption class="nacara-code__title">Todos.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">Todo</span> <span class="tok-operator">=</span> <span class="tok-punctuation">{</span> <span class="tok-property">Text</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span><span class="tok-punctuation">;</span> <span class="tok-property">Done</span><span class="tok-punctuation">:</span> <span class="tok-type">bool</span> <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">todos</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">{</span> <span class="tok-property">Text</span> <span class="tok-operator">=</span> <span class="tok-string">"Write the guide"</span><span class="tok-punctuation">;</span> <span class="tok-property">Done</span> <span class="tok-operator">=</span> <span class="tok-constant">true</span> <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">{</span> <span class="tok-property">Text</span> <span class="tok-operator">=</span> <span class="tok-string">"Ship 1.0"</span><span class="tok-punctuation">;</span> <span class="tok-property">Done</span> <span class="tok-operator">=</span> <span class="tok-constant">false</span> <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">remaining</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Signal</span><span class="tok-punctuation">.</span><span class="tok-property">computed</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">        todos<span class="tok-punctuation">.</span><span class="tok-property">Value</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">filter</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">t</span> <span class="tok-keyword">-></span> <span class="tok-keyword">not</span> t<span class="tok-punctuation">.</span><span class="tok-property">Done</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">length</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-function">printfn</span> <span class="tok-string">"Remaining = %d"</span> remaining<span class="tok-punctuation">.</span><span class="tok-property">Value</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">todos<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span>
+</span><span class="nacara-code__line">    todos<span class="tok-punctuation">.</span><span class="tok-property">Value</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">map</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">t</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">        <span class="tok-keyword">if</span> t<span class="tok-punctuation">.</span><span class="tok-property">Text</span> <span class="tok-operator">=</span> <span class="tok-string">"Ship 1.0"</span> <span class="tok-keyword">then</span>
+</span><span class="nacara-code__line">            <span class="tok-function">printfn</span> <span class="tok-string">"Completed: Ship 1.0"</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">{</span> t <span class="tok-keyword">with</span> <span class="tok-property">Done</span> <span class="tok-operator">=</span> <span class="tok-constant">true</span> <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">        <span class="tok-keyword">else</span>
+</span><span class="nacara-code__line">            t
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-function">printfn</span> <span class="tok-string">"Remaining = %d"</span> remaining<span class="tok-punctuation">.</span><span class="tok-property">Value</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div></section><section class="section"><div class="section__inner feature-row"><div class="feature"><h3>Synchronous</h3><p>A write settles before the next line runs. No scheduler, no tick.</p></div><div class="feature"><h3>Glitch-free</h3><p>A node runs once per write, after all its inputs are current.</p></div><div class="feature"><h3>Renderer-agnostic</h3><p>The core knows nothing about the DOM. Rendering ships separately.</p></div></div></section><section class="section section--alt"><div class="section__inner band band--code-left"><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live preset=app" data-source='open Fable.Ripple
+open Fable.Ripple.Dom
+
+let counter () =
+    let count = Var.create 0
+
+    Html.div
+        [
+            Html.button
+                [
+                    on.click (fun _ -&gt;
+                        count.Value &lt;- count.Value + 1
+                    )
+                    Html.text "Count"
+                ]
+            Html.output count
+        ]
+
+Html.mount "app" (counter ())'><figcaption class="nacara-code__title">Counter.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">counter</span> <span class="tok-punctuation">()</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">count</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-constant">0</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">button</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                    on<span class="tok-punctuation">.</span><span class="tok-property">click</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> _ <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                        count<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> count<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">+</span> <span class="tok-constant">1</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-string">"Count"</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">output</span> count
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> <span class="tok-punctuation">(</span><span class="tok-function">counter</span> <span class="tok-constant">()</span><span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><div class="band__text"><p class="hero__eyebrow">// Rendering</p><h2 class="band__title">Signals, bound<br />straight to the DOM.</h2><p class="band__copy"><strong>Fable.Ripple.Dom</strong> is an HTML DSL with no virtual tree. A signal knows which nodes read it, so a write updates those nodes and nothing else - no diff, no re-render of the component around them.</p><ul class="band__claims"><li><span><strong>One list model</strong> - attributes, events and children are items in the same list.</span></li><li><span><strong>Two-way bindings</strong> - <code>attr.bindValue</code> keeps an input and a <code>Var</code> in sync.</span></li><li><span><strong>Control flow</strong> - <code>Html.show</code> and keyed <code>Html.each</code> add and remove real nodes.</span></li></ul><div class="hero__actions"><a class="button button--primary" href="/Fable.Ripple/ripple-dom/introduction/">Read the guide</a> <a class="button button--secondary" href="/Fable.Ripple/demo/">Browse the examples</a></div><div class="install-command"><span class="install-command__prompt">></span> <span>dotnet add package Fable.Ripple.Dom --prerelease</span></div></div></div></section><section class="section"><div class="section__inner band band--code-right"><div class="band__text"><p class="hero__eyebrow">// Routing</p><h2 class="band__title">URLs parsed into<br />your own types.</h2><p class="band__copy"><strong>Fable.UrlParser</strong> turns a URL into a value of your route type. Parsers compose left to right, in the order of the URL, and a failure reports the attempt that got furthest rather than a blank no-match.</p><ul class="band__claims"><li><span><strong>Typed segments</strong> - <code>string</code>, <code>int</code>, and your own conversions.</span></li><li><span><strong>Query and fragment</strong> - required, optional, repeated and flag parameters.</span></li><li><span><strong>Two-way codecs</strong> - one description parses a URL and builds it back.</span></li></ul><div class="hero__actions"><a class="button button--primary" href="/Fable.Ripple/urlparser/introduction/">Read the guide</a> <a class="button button--secondary" href="/Fable.Ripple/demo/">Browse the examples</a></div><div class="install-command"><span class="install-command__prompt">></span> <span>dotnet add package Fable.UrlParser --prerelease</span></div></div><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live" data-source='open Fable.UrlParser
+
+type Route =
+    | Home
+    | Blog of id: int
+    | Search of query: string * page: int option
+
+let routes =
+    [
+        Parser.succeed Home
+
+        Parser.succeed (fun id -&gt; Blog id)
+        |&gt; Parser.segment "blog"
+        |&gt; Parser.int
+
+        Parser.succeed (fun q page -&gt; Search(q, page))
+        |&gt; Parser.segment "search"
+        |&gt; Parser.Query.Required.string "q"
+        |&gt; Parser.Query.Optional.int "page"
+    ]
+
+[ "/blog/42"; "/search?q=signals&amp;page=3"; "/blog/latest" ]
+|&gt; List.iter (fun url -&gt;
+    Parser.tryParsePath routes url |&gt; printfn "%s -&gt; %A" url
+)'><figcaption class="nacara-code__title">Routes.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">UrlParser</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">Route</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Home</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Blog</span> <span class="tok-keyword">of</span> <span class="tok-property">id</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">|</span> <span class="tok-constructor">Search</span> <span class="tok-keyword">of</span> <span class="tok-property">query</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span> <span class="tok-operator">*</span> <span class="tok-property">page</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span> <span class="tok-type">option</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">routes</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">        <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">succeed</span> Home
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">        <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">succeed</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">id</span> <span class="tok-keyword">-></span> <span class="tok-constructor">Blog</span> id<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">segment</span> <span class="tok-string">"blog"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">int</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">        <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">succeed</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">q</span> <span class="tok-parameter">page</span> <span class="tok-keyword">-></span> <span class="tok-constructor">Search</span><span class="tok-punctuation">(</span>q<span class="tok-punctuation">,</span> page<span class="tok-punctuation">))</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">segment</span> <span class="tok-string">"search"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-type">Query</span><span class="tok-punctuation">.</span><span class="tok-type">Required</span><span class="tok-punctuation">.</span><span class="tok-property">string</span> <span class="tok-string">"q"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-type">Query</span><span class="tok-punctuation">.</span><span class="tok-type">Optional</span><span class="tok-punctuation">.</span><span class="tok-property">int</span> <span class="tok-string">"page"</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-punctuation">[</span> <span class="tok-string">"/blog/42"</span><span class="tok-punctuation">;</span> <span class="tok-string">"/search?q=signals&amp;page=3"</span><span class="tok-punctuation">;</span> <span class="tok-string">"/blog/latest"</span> <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line"><span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">iter</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">url</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">    <span class="tok-type">Parser</span><span class="tok-punctuation">.</span><span class="tok-property">tryParsePath</span> routes url <span class="tok-operator">|></span> <span class="tok-function">printfn</span> <span class="tok-string">"%s -> %A"</span> url
+</span><span class="nacara-code__line"><span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div></section><section class="section section--alt"><div class="section__inner band band--code-below"><div class="band__text"><p class="hero__eyebrow">// Forms</p><h2 class="band__title">Typed forms,<br />one Var per field.</h2><p class="band__copy"><strong>Fable.Ripple.Form</strong> composes fields into a form whose output is your own record. A parser turns each value into a typed result, and a parser that reads another field re-runs when that field changes. A keystroke writes one Var and touches no node.</p><ul class="band__claims"><li><span><strong>Combinators</strong> - <code>append</code>, <code>andThen</code>, <code>optional</code>, <code>showIf</code>, <code>list</code>.</span></li><li><span><strong>Validation</strong> - on submit, blur or change; async checks with debounce.</span></li><li><span><strong>Renderers</strong> - Bulma, plain classes, or in-place editing. Or write your own.</span></li></ul><div class="hero__actions"><a class="button button--primary" href="/Fable.Ripple/ripple-form/introduction/">Read the guide</a> <a class="button button--secondary" href="/Fable.Ripple/demo/">Browse the examples</a></div><div class="install-command"><span class="install-command__prompt">></span> <span>dotnet add package Fable.Ripple.Form.Plain --prerelease</span></div></div><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live preset=app" data-source='open Fable.Ripple
+open Fable.Ripple.Dom
+open Fable.Ripple.Form
+open Fable.Ripple.Form.Plain
+
+let email = Var.create ""
+let password = Var.create ""
+let repeat = Var.create ""
+
+let form =
+    Form.succeed (fun email password _ -&gt; email, password)
+    |&gt; Form.append (
+        EmailField.create "email"
+        |&gt; EmailField.withLabel "Email"
+        |&gt; Field.create email (fun value -&gt;
+            if value.Contains "@" then Ok value else Error "An email needs an @"
+        )
+        |&gt; Form.emailField
+    )
+    |&gt; Form.append (
+        PasswordField.create "password"
+        |&gt; PasswordField.withLabel "Password"
+        |&gt; Field.create password Ok
+        |&gt; Form.passwordField
+    )
+    |&gt; Form.append (
+        PasswordField.create "repeat"
+        |&gt; PasswordField.withLabel "Repeat password"
+        |&gt; Field.create repeat (fun value -&gt;
+            if value = password.Value then Ok() else Error "The passwords do not match"
+        )
+        |&gt; Form.passwordField
+    )
+
+let state = Var.create View.Idle
+
+Html.mount
+    "app"
+    (Form.View.asHtml
+        {
+            OnSubmit = fun (email, _) -&gt; state.Value &lt;- View.Success $"Welcome, %s{email}."
+            State = state
+            ErrorVisibility = View.errorVisibility ()
+            Action = View.Action.SubmitOnly "Sign up"
+            Validation = ValidateOnBlur
+        }
+        form)'><figcaption class="nacara-code__title">SignUp.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plain</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">email</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">""</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">password</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">""</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">repeat</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">""</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">form</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">succeed</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">email</span> <span class="tok-parameter">password</span> _ <span class="tok-keyword">-></span> email<span class="tok-punctuation">,</span> password<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">append</span> <span class="tok-punctuation">(</span>
+</span><span class="nacara-code__line">        <span class="tok-type">EmailField</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"email"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">EmailField</span><span class="tok-punctuation">.</span><span class="tok-property">withLabel</span> <span class="tok-string">"Email"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Field</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> email <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">value</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">if</span> value<span class="tok-punctuation">.</span><span class="tok-property">Contains</span> <span class="tok-string">"@"</span> <span class="tok-keyword">then</span> <span class="tok-constructor">Ok</span> value <span class="tok-keyword">else</span> <span class="tok-constructor">Error</span> <span class="tok-string">"An email needs an @"</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">emailField</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">append</span> <span class="tok-punctuation">(</span>
+</span><span class="nacara-code__line">        <span class="tok-type">PasswordField</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"password"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">PasswordField</span><span class="tok-punctuation">.</span><span class="tok-property">withLabel</span> <span class="tok-string">"Password"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Field</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> password Ok
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">passwordField</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">append</span> <span class="tok-punctuation">(</span>
+</span><span class="nacara-code__line">        <span class="tok-type">PasswordField</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"repeat"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">PasswordField</span><span class="tok-punctuation">.</span><span class="tok-property">withLabel</span> <span class="tok-string">"Repeat password"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Field</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> repeat <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">value</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">if</span> value <span class="tok-operator">=</span> password<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-keyword">then</span> <span class="tok-constructor">Ok</span><span class="tok-constant">()</span> <span class="tok-keyword">else</span> <span class="tok-constructor">Error</span> <span class="tok-string">"The passwords do not match"</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">passwordField</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">state</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Idle</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span>
+</span><span class="nacara-code__line">    <span class="tok-string">"app"</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">(</span><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">            <span class="tok-property">OnSubmit</span> <span class="tok-operator">=</span> <span class="tok-keyword">fun</span> <span class="tok-punctuation">(</span><span class="tok-parameter">email</span><span class="tok-punctuation">,</span> _<span class="tok-punctuation">)</span> <span class="tok-keyword">-></span> state<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Success</span> <span class="tok-string">$"Welcome, %s{email</span><span class="tok-punctuation">}</span><span class="tok-string">."</span>
+</span><span class="nacara-code__line">            <span class="tok-property">State</span> <span class="tok-operator">=</span> state
+</span><span class="nacara-code__line">            <span class="tok-property">ErrorVisibility</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">errorVisibility</span> <span class="tok-constant">()</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Action</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-type">Action</span><span class="tok-punctuation">.</span><span class="tok-property">SubmitOnly</span> <span class="tok-string">"Sign up"</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Validation</span> <span class="tok-operator">=</span> ValidateOnBlur
+</span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">        form<span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div></section></div></main></div><footer class="nacara-footer"><p>Built with <a href="https://mangelmaxime.github.io/Nacara/">Nacara</a></p></footer><script src="/Fable.Ripple/assets/nacara.3472cd30.js" defer="defer"></script><script src="/Fable.Ripple/assets/tree-sitter/highlight.js" defer="defer"></script><script src="/Fable.Ripple/assets/fsharp-api.js" defer="defer"></script><script src="/Fable.Ripple/assets/search.js" defer="defer"></script><script src="/Fable.Ripple/assets/live-example/live-example.js" defer="defer"></script></body></html>

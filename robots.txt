@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fable-hub.github.io/Fable.Ripple/sitemap.xml

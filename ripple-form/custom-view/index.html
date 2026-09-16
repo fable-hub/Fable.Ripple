@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Customize the view · Fable.Ripple</title><link rel="canonical" href="https://fable-hub.github.io/Fable.Ripple/ripple-form/custom-view/" /><meta property="og:url" content="https://fable-hub.github.io/Fable.Ripple/ripple-form/custom-view/" /><meta property="og:site_name" content="Fable.Ripple" /><meta property="og:locale" content="en" /><meta name="twitter:card" content="summary_large_image" /><meta property="og:title" content="Customize the view" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/Fable.Ripple/assets/css/nacara.3011413c.css" /><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/Fable.Ripple/assets/changelog.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/fsharp-api.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/search.css" /><link rel="stylesheet" href="/Fable.Ripple/assets/live-example/live-example.css" /><link rel="stylesheet" href="/Fable.Ripple/theme.css" /></head><body data-section="ripple-form"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg></span></button><a class="nacara-navbar__brand" href="/Fable.Ripple/">Fable.Ripple</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/Fable.Ripple/guide/introduction/" data-active="false">Guide</a></li><li class="nacara-dropdown"><button class="nacara-navbar__link" type="button" data-nacara-dropdown aria-expanded="false">Packages</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple/introduction/"><span>Fable.Ripple</span><span class="nacara-dropdown__description">Reactive values and derived signals.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple-dom/introduction/"><span>Fable.Ripple.Dom</span><span class="nacara-dropdown__description">HTML DSL with no virtual tree.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/urlparser/introduction/"><span>Fable.UrlParser</span><span class="nacara-dropdown__description">URLs parsed into your own types.</span></a></li><li><a class="nacara-dropdown__item" href="/Fable.Ripple/ripple-form/introduction/"><span>Fable.Ripple.Form</span><span class="nacara-dropdown__description">Typed forms, one Var per field.</span></a></li></ul></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/reference/" data-active="false">Reference</a></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/changelog/fable-ripple/" data-active="false">Changelog</a></li><li><a class="nacara-navbar__link" href="/Fable.Ripple/demo/" data-active="false">Demo</a></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end"><li><button class="nacara-search__trigger" type="button" data-nacara-search data-bundle="/Fable.Ripple/pagefind/" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><span>Search</span><span class="nacara-search__kbd" data-nacara-search-shortcut>Ctrl K</span></button></li><li><a class="nacara-icon-button" href="https://github.com/fable-hub/Fable.Ripple" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg></span></a></li><li><select class="nacara-theme-select" data-nacara-theme aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/guide/introduction/">Guide</a></li><li><p class="nacara-sidebar__title">Packages</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple/introduction/">Fable.Ripple</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-dom/introduction/">Fable.Ripple.Dom</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/urlparser/introduction/">Fable.UrlParser</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/introduction/">Fable.Ripple.Form</a></li></ul></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/reference/">Reference</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/changelog/fable-ripple/">Changelog</a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/demo/">Demo</a></li></ul><ul class="nacara-sidebar__list"><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Getting started</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/introduction/"><span>Introduction</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/first-form/"><span>Your first form</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Guides</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/fields/"><span>Fields</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/validation/"><span>Validation</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/dynamic-forms/"><span>Dynamic forms</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/lists/"><span>Lists</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/wizards/"><span>Wizards</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/saving/"><span>Saving and loading</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/styling/"><span>Styling</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Extending</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/custom-field/"><span>Custom field</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/custom-view/" aria-current="page"><span>Customize the view</span></a></li><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/custom-renderer/"><span>Writing a renderer</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Under the hood</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Fable.Ripple/ripple-form/performance/"><span>Performance</span></a></li></ul></div></li></ul></nav><main id="nacara-content" tabindex="-1" class="nacara-content"><h1>Customize the view</h1><div><p>You can provide your own markup for any built-in field.</p><p>Write a render function for the same attributes and a constructor with the same name, then shadow the built-in field by opening your module after <code><span class="tok-type">Fable</span><span class="tok-punctuation">.</span><span class="tok-type">Ripple</span><span class="tok-punctuation">.</span><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">Plain</span></code>.</p><p><code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">textField</span></code> then refers to your implementation, while the rest of <code>Form</code> stays the package's.</p><p>This page gives the text field a different layout: the label above the control, the error under it, in your own classes.</p><ol class="nacara-steps"><li class="nacara-steps__step"><span class="nacara-steps__number" aria-hidden="true">Step 01</span><h3 id="write-the-render-function" class="nacara-steps__title">Write the render function<a class="nacara-heading-anchor" href="#write-the-render-function" aria-label="Link to this section" data-pagefind-ignore></a></h3><p>Same signature as the package's <code><span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-property">render</span></code>. Four things wire a control into the form:</p><ul><li><code><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">controlAttributes</span></code> for the id and the ARIA attributes.</li><li><code>config<span class="tok-punctuation">.</span><span class="tok-property">OnBlur</span></code> on the control's <code>blur</code> event.</li><li><code>config<span class="tok-punctuation">.</span><span class="tok-property">Disabled</span></code> and <code>config<span class="tok-punctuation">.</span><span class="tok-property">ReadOnly</span></code> on the control.</li><li><code><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">shownError</span></code> for the message to display, <code>None</code> until the validation mode says to show it.</li></ul><figure class="nacara-code" data-language="fsharp" data-frame="code" data-source='module Fields =
+
+    let text (config: FieldRenderConfig&lt;string, TextField.Attributes&gt;) : DomItem =
+        Html.div
+            [
+                attr.className "my-field"
+                Html.p
+                    [
+                        attr.className "my-field__label"
+                        View.labelText config.Attributes.Label config
+                    ]
+                Html.input
+                    [
+                        View.controlAttributes config
+                        attr.className "my-field__input"
+                        attr.bindValue config.Value
+                        on.blur (fun _ -&gt; config.OnBlur())
+                        attr.disabled config.Disabled
+                        attr.readOnly config.ReadOnly
+                    ]
+                Html.p
+                    [
+                        attr.className "my-field__error"
+                        Html.text (fun () -&gt; View.shownError config () |&gt; Option.defaultValue "")
+                    ]
+            ]'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Fields</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">text</span> <span class="tok-punctuation">(</span><span class="tok-parameter">config</span><span class="tok-punctuation">:</span> <span class="tok-type">FieldRenderConfig</span><span class="tok-operator">&lt;</span><span class="tok-type">string</span><span class="tok-punctuation">,</span> <span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-type">Attributes</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-punctuation">:</span> <span class="tok-type">DomItem</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field"</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field__label"</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">labelText</span> config<span class="tok-punctuation">.</span><span class="tok-property">Attributes</span><span class="tok-punctuation">.</span><span class="tok-property">Label</span> config
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">input</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">controlAttributes</span> config
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field__input"</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">bindValue</span> config<span class="tok-punctuation">.</span><span class="tok-property">Value</span>
+</span><span class="nacara-code__line">                        on<span class="tok-punctuation">.</span><span class="tok-property">blur</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> _ <span class="tok-keyword">-></span> config<span class="tok-punctuation">.</span><span class="tok-property">OnBlur</span><span class="tok-constant">()</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">disabled</span> config<span class="tok-punctuation">.</span><span class="tok-property">Disabled</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">readOnly</span> config<span class="tok-punctuation">.</span><span class="tok-property">ReadOnly</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field__error"</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">shownError</span> config <span class="tok-constant">()</span> <span class="tok-operator">|></span> <span class="tok-type">Option</span><span class="tok-punctuation">.</span><span class="tok-property">defaultValue</span> <span class="tok-string">""</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">]</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></li><li class="nacara-steps__step"><span class="nacara-steps__number" aria-hidden="true">Step 02</span><h3 id="shadow-the-constructor" class="nacara-steps__title">Shadow the constructor<a class="nacara-heading-anchor" href="#shadow-the-constructor" aria-label="Link to this section" data-pagefind-ignore></a></h3><p>Same name and same empty check as the package's, with your render function.</p><figure class="nacara-code" data-language="fsharp" data-frame="code" data-source="[&lt;RequireQualifiedAccess&gt;]
+module Form =
+
+    let textField (config: FieldConfig&lt;TextField.Attributes, string, 'Output&gt;) : Form&lt;'Output&gt; =
+        Base.field System.String.IsNullOrEmpty Fields.text config"><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-punctuation">[&lt;</span><span class="tok-attribute">RequireQualifiedAccess</span><span class="tok-punctuation">>]</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Form</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">textField</span> <span class="tok-punctuation">(</span><span class="tok-parameter">config</span><span class="tok-punctuation">:</span> <span class="tok-type">FieldConfig</span><span class="tok-operator">&lt;</span><span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-type">Attributes</span><span class="tok-punctuation">,</span> <span class="tok-type">string</span><span class="tok-punctuation">,</span> <span class="tok-type">'Output</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-punctuation">:</span> <span class="tok-type">Form</span><span class="tok-operator">&lt;</span><span class="tok-type">'Output</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        <span class="tok-type">Base</span><span class="tok-punctuation">.</span><span class="tok-property">field</span> <span class="tok-type">System</span><span class="tok-punctuation">.</span><span class="tok-property">String</span><span class="tok-punctuation">.</span><span class="tok-property">IsNullOrEmpty</span> <span class="tok-type">Fields</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> config
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></li></ol><h2 id="using-it">Using it<a class="nacara-heading-anchor" href="#using-it" aria-label="Link to this section" data-pagefind-ignore></a></h2><p>Both pieces together, in a form. The text field has the new markup; the number field is still the package's.</p><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live preset=app" data-source='open Fable.Ripple
+open Fable.Ripple.Dom
+open Fable.Ripple.Form
+open Fable.Ripple.Form.Plain
+
+module Fields =
+
+    let text (config: FieldRenderConfig&lt;string, TextField.Attributes&gt;) : DomItem =
+        Html.div
+            [
+                attr.className "my-field"
+                Html.p
+                    [
+                        attr.className "my-field__label"
+                        View.labelText config.Attributes.Label config
+                    ]
+                Html.input
+                    [
+                        View.controlAttributes config
+                        attr.className "my-field__input"
+                        attr.bindValue config.Value
+                        on.blur (fun _ -&gt; config.OnBlur())
+                        attr.disabled config.Disabled
+                        attr.readOnly config.ReadOnly
+                    ]
+                Html.p
+                    [
+                        attr.className "my-field__error"
+                        Html.text (fun () -&gt; View.shownError config () |&gt; Option.defaultValue "")
+                    ]
+            ]
+
+[&lt;RequireQualifiedAccess&gt;]
+module Form =
+
+    let textField (config: FieldConfig&lt;TextField.Attributes, string, &#39;Output&gt;) : Form&lt;&#39;Output&gt; =
+        Base.field System.String.IsNullOrEmpty Fields.text config
+
+let name = Var.create ""
+let age = Var.create ""
+
+let form =
+    Form.succeed (fun name age -&gt; name, age)
+    |&gt; Form.append (
+        TextField.create "name"
+        |&gt; TextField.withLabel "Name"
+        |&gt; Field.create
+            name
+            (fun value -&gt;
+                if value.Length &lt; 2 then
+                    Error "At least 2 characters"
+                else
+                    Ok value
+            )
+        |&gt; Form.textField
+    )
+    |&gt; Form.append (
+        NumberField.create "age"
+        |&gt; NumberField.withLabel "Age"
+        |&gt; Field.create
+            age
+            (fun value -&gt;
+                match System.Int32.TryParse value with
+                | true, age -&gt; Ok age
+                | _ -&gt; Error "A whole number"
+            )
+        |&gt; Form.numberField
+    )
+
+let state = Var.create View.Idle
+
+Html.mount
+    "app"
+    (Form.View.asHtml
+        {
+            OnSubmit = fun (name, age) -&gt; state.Value &lt;- View.Success $"%s{name}, %d{age}"
+            State = state
+            ErrorVisibility = View.errorVisibility ()
+            Action = View.Action.SubmitOnly "Save"
+            Validation = ValidateOnBlur
+        }
+        form)'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plain</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Fields</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">text</span> <span class="tok-punctuation">(</span><span class="tok-parameter">config</span><span class="tok-punctuation">:</span> <span class="tok-type">FieldRenderConfig</span><span class="tok-operator">&lt;</span><span class="tok-type">string</span><span class="tok-punctuation">,</span> <span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-type">Attributes</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-punctuation">:</span> <span class="tok-type">DomItem</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field"</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field__label"</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">labelText</span> config<span class="tok-punctuation">.</span><span class="tok-property">Attributes</span><span class="tok-punctuation">.</span><span class="tok-property">Label</span> config
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">input</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">controlAttributes</span> config
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field__input"</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">bindValue</span> config<span class="tok-punctuation">.</span><span class="tok-property">Value</span>
+</span><span class="nacara-code__line">                        on<span class="tok-punctuation">.</span><span class="tok-property">blur</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> _ <span class="tok-keyword">-></span> config<span class="tok-punctuation">.</span><span class="tok-property">OnBlur</span><span class="tok-constant">()</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">disabled</span> config<span class="tok-punctuation">.</span><span class="tok-property">Disabled</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">readOnly</span> config<span class="tok-punctuation">.</span><span class="tok-property">ReadOnly</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">p</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"my-field__error"</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">shownError</span> config <span class="tok-constant">()</span> <span class="tok-operator">|></span> <span class="tok-type">Option</span><span class="tok-punctuation">.</span><span class="tok-property">defaultValue</span> <span class="tok-string">""</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-punctuation">[&lt;</span><span class="tok-attribute">RequireQualifiedAccess</span><span class="tok-punctuation">>]</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Form</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">textField</span> <span class="tok-punctuation">(</span><span class="tok-parameter">config</span><span class="tok-punctuation">:</span> <span class="tok-type">FieldConfig</span><span class="tok-operator">&lt;</span><span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-type">Attributes</span><span class="tok-punctuation">,</span> <span class="tok-type">string</span><span class="tok-punctuation">,</span> <span class="tok-type">'Output</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-punctuation">:</span> <span class="tok-type">Form</span><span class="tok-operator">&lt;</span><span class="tok-type">'Output</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        <span class="tok-type">Base</span><span class="tok-punctuation">.</span><span class="tok-property">field</span> <span class="tok-type">System</span><span class="tok-punctuation">.</span><span class="tok-property">String</span><span class="tok-punctuation">.</span><span class="tok-property">IsNullOrEmpty</span> <span class="tok-type">Fields</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> config
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">name</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">""</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">age</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">""</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">form</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">succeed</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">name</span> <span class="tok-parameter">age</span> <span class="tok-keyword">-></span> name<span class="tok-punctuation">,</span> age<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">append</span> <span class="tok-punctuation">(</span>
+</span><span class="nacara-code__line">        <span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"name"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">TextField</span><span class="tok-punctuation">.</span><span class="tok-property">withLabel</span> <span class="tok-string">"Name"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Field</span><span class="tok-punctuation">.</span><span class="tok-property">create</span>
+</span><span class="nacara-code__line">            name
+</span><span class="nacara-code__line">            <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">value</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">if</span> value<span class="tok-punctuation">.</span><span class="tok-property">Length</span> <span class="tok-operator">&lt;</span> <span class="tok-constant">2</span> <span class="tok-keyword">then</span>
+</span><span class="nacara-code__line">                    <span class="tok-constructor">Error</span> <span class="tok-string">"At least 2 characters"</span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">else</span>
+</span><span class="nacara-code__line">                    <span class="tok-constructor">Ok</span> value
+</span><span class="nacara-code__line">            <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">textField</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">append</span> <span class="tok-punctuation">(</span>
+</span><span class="nacara-code__line">        <span class="tok-type">NumberField</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"age"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">NumberField</span><span class="tok-punctuation">.</span><span class="tok-property">withLabel</span> <span class="tok-string">"Age"</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Field</span><span class="tok-punctuation">.</span><span class="tok-property">create</span>
+</span><span class="nacara-code__line">            age
+</span><span class="nacara-code__line">            <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">value</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">match</span> <span class="tok-type">System</span><span class="tok-punctuation">.</span><span class="tok-type">Int32</span><span class="tok-punctuation">.</span><span class="tok-property">TryParse</span> value <span class="tok-keyword">with</span>
+</span><span class="nacara-code__line">                <span class="tok-keyword">|</span> <span class="tok-constant">true</span><span class="tok-punctuation">,</span> <span class="tok-variable">age</span> <span class="tok-keyword">-></span> <span class="tok-constructor">Ok</span> age
+</span><span class="nacara-code__line">                <span class="tok-keyword">|</span> _ <span class="tok-keyword">-></span> <span class="tok-constructor">Error</span> <span class="tok-string">"A whole number"</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">numberField</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">state</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Idle</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span>
+</span><span class="nacara-code__line">    <span class="tok-string">"app"</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">(</span><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">            <span class="tok-property">OnSubmit</span> <span class="tok-operator">=</span> <span class="tok-keyword">fun</span> <span class="tok-punctuation">(</span><span class="tok-parameter">name</span><span class="tok-punctuation">,</span> <span class="tok-parameter">age</span><span class="tok-punctuation">)</span> <span class="tok-keyword">-></span> state<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Success</span> <span class="tok-string">$"%s{name</span><span class="tok-punctuation">}</span><span class="tok-string">, %d{age</span><span class="tok-punctuation">}</span><span class="tok-string">"</span>
+</span><span class="nacara-code__line">            <span class="tok-property">State</span> <span class="tok-operator">=</span> state
+</span><span class="nacara-code__line">            <span class="tok-property">ErrorVisibility</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">errorVisibility</span> <span class="tok-constant">()</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Action</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-type">Action</span><span class="tok-punctuation">.</span><span class="tok-property">SubmitOnly</span> <span class="tok-string">"Save"</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Validation</span> <span class="tok-operator">=</span> ValidateOnBlur
+</span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">        form<span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div><a class="nacara-edit-link" href="https://github.com/fable-hub/Fable.Ripple/edit/main/docs/content/ripple-form/custom-view.md"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></span><span>Edit this page</span></a><nav class="nacara-page-nav"><a class="nacara-page-nav__link nacara-page-nav__link--previous" href="/Fable.Ripple/ripple-form/custom-field/"><span class="nacara-page-nav__label">Previous</span><span>Custom field</span></a><a class="nacara-page-nav__link nacara-page-nav__link--next" href="/Fable.Ripple/ripple-form/custom-renderer/"><span class="nacara-page-nav__label">Next</span><span>Writing a renderer</span></a></nav></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="3" href="#write-the-render-function">Write the render function</a></li><li><a class="nacara-toc__link" data-level="3" href="#shadow-the-constructor">Shadow the constructor</a></li><li><a class="nacara-toc__link" data-level="2" href="#using-it">Using it</a></li></ul></nav></div><footer class="nacara-footer"><p>Built with <a href="https://mangelmaxime.github.io/Nacara/">Nacara</a></p></footer><script src="/Fable.Ripple/assets/nacara.3472cd30.js" defer="defer"></script><script src="/Fable.Ripple/assets/tree-sitter/highlight.js" defer="defer"></script><script src="/Fable.Ripple/assets/fsharp-api.js" defer="defer"></script><script src="/Fable.Ripple/assets/search.js" defer="defer"></script><script src="/Fable.Ripple/assets/live-example/live-example.js" defer="defer"></script></body></html>

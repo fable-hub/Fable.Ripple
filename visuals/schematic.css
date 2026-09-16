@@ -1,0 +1,183 @@
+/*
+    The dependency schematic. Shapes carry the meaning: square = a source,
+    rounded = a cached derived node, dashed = a DOM binding, no border = a
+    plain function with no node behind it.
+*/
+
+.schematic {
+    max-width: 100%;
+    overflow: visible;
+    color: var(--sg-ink);
+}
+
+/* `figure` carries a UA margin that would break the panel's rhythm. */
+.sch-figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-2);
+    margin: 0;
+}
+
+.sch-frame {
+    padding: var(--nacara-space-3);
+    border: 1px solid var(--sg-border);
+    overflow-x: auto;
+}
+
+/* One frame, not two: inside a comparison the <article> already is the card. */
+article .sch-frame {
+    padding: 0;
+    border: none;
+    overflow-x: visible;
+}
+
+/* transform-box/origin so the flash scales about the node, not the SVG root. */
+.sch-node {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.sch-node rect {
+    fill: var(--sg-bg);
+    stroke: var(--sg-ink);
+    stroke-width: 1.5;
+}
+
+.sch-source rect {
+    fill: var(--sg-bg-subtle);
+}
+
+.sch-reader rect {
+    fill: none;
+    stroke-dasharray: 4 3;
+    stroke: var(--sg-ink-muted);
+}
+
+/* Dotted rather than absent: drawing nothing left the arrows meeting an
+   invisible rectangle, and the legend promised an outline. */
+.sch-ghost rect {
+    fill: none;
+    stroke: var(--sg-border);
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+}
+
+.sch-ghost .sch-label,
+.sch-ghost .sch-value {
+    fill: var(--sg-ink-muted);
+}
+
+/* No extra tracking, unlike the chips: a label has to clear the run badge in
+   its own corner. */
+.sch-label {
+    font-family: var(--nacara-font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    fill: var(--sg-ink-muted);
+}
+
+.sch-value {
+    font-family: var(--nacara-font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    fill: var(--sg-ink);
+}
+
+.sch-badge rect {
+    fill: var(--sg-ink);
+    stroke: none;
+}
+
+.sch-badge text {
+    font-family: var(--nacara-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--sg-bg);
+}
+
+.sch-edge path {
+    fill: none;
+    stroke: var(--sg-ink-muted);
+    stroke-width: 1.5;
+}
+
+.sch-edge path[marker-end] {
+    marker-end: url(#sch-arrow);
+}
+
+#sch-arrow path {
+    fill: var(--sg-ink-muted);
+    stroke: none;
+}
+
+/* Parked at zero opacity; the travel animation reveals it. `paint-order` puts
+   the fill over the inner half of the stroke, so it reads as a halo. */
+.sch-pulse {
+    fill: var(--sg-accent-text);
+    stroke: color-mix(in srgb, var(--sg-accent-text) 22%, transparent);
+    stroke-width: 7;
+    paint-order: stroke;
+    opacity: 0;
+    offset-rotate: 0deg;
+}
+
+.sch-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nacara-space-4);
+    margin-top: var(--nacara-space-2);
+    font-family: var(--nacara-font-mono);
+    font-size: 0.75rem;
+    color: var(--sg-ink-muted);
+}
+
+.sch-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+}
+
+.sch-swatch {
+    width: 1.1rem;
+    height: 0.85rem;
+    border: 1.5px solid var(--sg-ink);
+    background: var(--sg-bg);
+}
+
+.sch-swatch.sch-source {
+    background: var(--sg-bg-subtle);
+}
+
+.sch-swatch.sch-derived {
+    border-radius: 5px;
+}
+
+.sch-swatch.sch-reader {
+    border-style: dashed;
+    border-color: var(--sg-ink-muted);
+    background: none;
+}
+
+.sch-swatch.sch-ghost {
+    border: 1px dotted var(--sg-border);
+    background: none;
+}
+
+/* Same fill as `.sch-badge rect`, so key and thing cannot drift apart. */
+.sch-swatch.sch-count {
+    display: grid;
+    place-items: center;
+    border: none;
+    background: var(--sg-ink);
+    color: var(--sg-bg);
+    font-family: var(--nacara-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sch-pulse {
+        display: none;
+    }
+}

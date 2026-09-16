@@ -1,0 +1,1 @@
+export function SettledValue_toResult(i){const r=i.status;return r==="rejected"?new t(1,[n(i.reason)]):new t(0,[n(i.value)])}import{PromiseBuilder_$ctor as i}from"./Promise.fs.js";import{value as n}from"fable-library-js/Option.js";import{FSharpResult$2 as t}from"fable-library-js/Result.js";export const promise=i();
