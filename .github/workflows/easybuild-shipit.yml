@@ -1,0 +1,63 @@
+name: EasyBuild ShipIt
+
+on:
+  workflow_run:
+    workflows: ["test"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  shipit-pr:
+    name: ShipIt - Pull Request
+    runs-on: ubuntu-latest
+    if: "github.event.workflow_run.conclusion == 'success' && !startsWith(github.event.workflow_run.head_commit.message, 'chore: release ')"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The changelog is written from the commit history, so one commit is not enough.
+          fetch-depth: 200
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore the tools
+        run: dotnet tool restore
+
+      - name: ShipIt (pull request)
+        run: dotnet shipit --pre-release beta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    # Only the commit ShipIt writes publishes anything.
+    if: "startsWith(github.event.workflow_run.head_commit.message, 'chore: release ')"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # Trusted publishing: NuGet hands out a short-lived key in exchange for this run's OIDC
+      # token, so the repository holds no API key. Register this repository as a trusted
+      # publisher on nuget.org for the account below.
+      - name: NuGet login (OIDC to temporary API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: MangelMaxime
+
+      - name: Pack and push
+        run: ./build.sh release
+        env:
+          NUGET_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}

@@ -1,0 +1,74 @@
+# The documentation site: checked on every pull request, published from main.
+#
+# `check` renders every page and writes none of it, so a broken link, an unknown directive or a
+# snippet that no longer compiles fails the pull request while nothing is produced.
+#
+# Publishing writes the gh-pages branch, which is what GitHub Pages serves. The deploy plugin
+# writes it from what the build produced, so one job does both: nothing is carried between jobs.
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The changelog pages are written from each package's history.
+          fetch-depth: 1000
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check the site
+        run: ./build.sh docs check
+
+  publish:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    # The deploy pushes with the credentials the checkout leaves behind.
+    permissions:
+      contents: write
+
+    # Two deploys writing the branch at once would lose one of them.
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1000
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the site
+        run: ./build.sh docs build
+
+      - name: Publish it
+        run: ./build.sh docs deploy

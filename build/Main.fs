@@ -5,6 +5,7 @@ open EasyBuild.Commands.Demo
 open EasyBuild.Commands.Test
 open EasyBuild.Commands.Bench
 open EasyBuild.Commands.Docs
+open EasyBuild.Commands.Release
 open SimpleExec
 
 [<EntryPoint>]
@@ -35,6 +36,12 @@ let main args =
             .AddCommand<BenchCommand>("bench")
             .WithDescription("Measure bundle size + large-list performance")
             .WithExample("bench")
+        |> ignore
+
+        config
+            .AddCommand<ReleaseCommand>("release")
+            .WithDescription("Pack every package and push it to nuget.org")
+            .WithExample("release")
         |> ignore
 
         config.AddBranch(
