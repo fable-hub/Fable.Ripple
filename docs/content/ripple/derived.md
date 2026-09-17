@@ -36,7 +36,25 @@ quantity.Value <- 5
 printfn "%.2f" total.Value // 50.00
 ```
 
-An `if`{fsharp} decides what gets tracked: `b`{fsharp} is a dependency only while `read b` is on. Bump it with the switch off and nothing runs - there is no edge to carry the change:
+### Tracking under an if
+
+An `if`{fsharp} decides what gets tracked. `b`{fsharp} is read only while `readB`{fsharp} is `true`{fsharp}, so it is a dependency only then:
+
+```fsharp
+let a = Var.create 1
+let b = Var.create 10
+let readB = Var.create false
+
+let total =
+    Signal.computed (fun () ->
+        if readB.Value then
+            a.Value + b.Value
+        else
+            a.Value
+    )
+```
+
+Bump `b`{fsharp} with the switch off and nothing runs - there is no edge to carry the change:
 
 <div data-visual="signals-autotrack"></div>
 <link rel="stylesheet" href="/Fable.Ripple/visuals/visuals.css">
