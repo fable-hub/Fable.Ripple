@@ -11,6 +11,12 @@ type internal NodeState =
     /// A direct dependency changed
     | Dirty = 2
 
+/// Shared defaults, so a field with a function default costs a reference copy per
+/// node rather than a fresh closure.
+module private Defaults =
+
+    let noRecompute: unit -> bool = fun () -> false
+
 /// Non-generic graph node: dependency edges, marking state, and the type-erased
 /// re-evaluation hook.
 type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
@@ -57,7 +63,7 @@ type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
     /// A computed's recompute hook: re-evaluate and return true if the value
     /// changed. Sources and effects leave the shared no-op default - a source is
     /// never evaluated, and an effect runs through `EffectFn` instead.
-    member val internal Recompute: unit -> bool = (fun () -> false) with get, set
+    member val internal Recompute: unit -> bool = Defaults.noRecompute with get, set
 
     /// An effect's body, stored directly so an effect needs no `Recompute`
     /// wrapper closure. `ValueSome` only on effects.
