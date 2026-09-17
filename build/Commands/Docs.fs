@@ -37,9 +37,10 @@ let private forwarded (context: CommandContext) =
     Seq.append options positionals
 
 let private compileVisuals () =
+    // The Pages deploy commits `docs/output`, where a generated `.gitignore` would exclude these.
     Command.Run(
         "dotnet",
-        "fable docs/visuals/Visuals.fsproj --outDir docs/static/visuals",
+        "fable docs/visuals/Visuals.fsproj --outDir docs/static/visuals --noGitignore",
         workingDirectory = Workspace.``.``
     )
 
