@@ -26,7 +26,16 @@ The writes to `2` and `4` recompute `isEven`{fsharp}, find it still `true`{fshar
 
 ## The cutoff, drawn
 
-Three nodes in a line. Press `+2`: `parity`{fsharp} recomputes to the same string and the dot dies there - `upper`{fsharp} never runs. Press `+1` and the change travels the whole chain.
+Three nodes in a line. `parity`{fsharp} maps a number to a word, and `upper`{fsharp} maps that word again:
+
+```fsharp
+let n = Var.create 4
+
+let parity = n |> Signal.map (fun v -> if v % 2 = 0 then "even" else "odd")
+let upper = parity |> Signal.map (fun p -> p.ToUpper() + "!")
+```
+
+Press `+2`: `parity`{fsharp} recomputes to the same string and the dot dies there - `upper`{fsharp} never runs. Press `+1` and the change travels the whole chain.
 
 <div data-visual="signals-cutoff"></div>
 <link rel="stylesheet" href="/Fable.Ripple/visuals/visuals.css">
