@@ -126,5 +126,53 @@ let tests =
                                 (haveText "http://www.w3.org/2000/svg")
                     }
             )
+
+            testList (
+                "Html.mount",
+                [
+                    testComponent (
+                        "mounts the view and keeps it reactive",
+                        "MountDisposal",
+                        fun root ->
+                            promise {
+                                do! assertLocator (root.locator "#inner") (haveCount 0)
+                                do! click (root.locator "#mount")
+                                do! assertLocator (root.locator "#inner") (haveText "0")
+                                do! click (root.locator "#tick")
+                                do! assertLocator (root.locator "#inner") (haveText "1")
+                                do! click (root.locator "#measure")
+                                do! assertLocator (root.locator "#observers") (haveText "1")
+                            }
+                    )
+
+                    testComponent (
+                        "disposing removes the element and tears the scope down",
+                        "MountDisposal",
+                        fun root ->
+                            promise {
+                                do! click (root.locator "#mount")
+                                do! click (root.locator "#dispose")
+                                do! assertLocator (root.locator "#inner") (haveCount 0)
+                                do! assertLocator (root.locator "#cleanups") (haveText "1")
+                                do! click (root.locator "#measure")
+                                do! assertLocator (root.locator "#observers") (haveText "0")
+                            }
+                    )
+
+                    testComponent (
+                        "disposing twice is a no-op",
+                        "MountDisposal",
+                        fun root ->
+                            promise {
+                                do! click (root.locator "#mount")
+                                do! click (root.locator "#dispose")
+                                do! click (root.locator "#dispose")
+                                do! assertLocator (root.locator "#cleanups") (haveText "1")
+                                do! click (root.locator "#tick")
+                                do! assertLocator (root.locator "#cleanups") (haveText "1")
+                            }
+                    )
+                ]
+            )
         ]
     )

@@ -24,7 +24,7 @@ let app () =
             Html.show (visible, (fun () -> Html.p "Built when it appears, disposed when it leaves."))
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 The condition can be a `Var`{fsharp}/`Signal`{fsharp} of `bool`{fsharp}, as above, or any `unit -> bool`{fsharp} - it is auto-tracked either way.
@@ -73,7 +73,7 @@ let app () =
                 | Settings -> Html.p "The settings tab.")
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 Press Tick. The second line moves, the first does not, and the box keeps what you typed - `ticks`{fsharp} is not what `switch`{fsharp} is watching.
@@ -114,7 +114,7 @@ let app () =
             )
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 Type in the box, then press Tick. The box clears, because the interpolated read of `ticks`{fsharp} made it a rebuild trigger.
@@ -194,7 +194,7 @@ let app () =
                 ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 Reversing moves the existing `<li>`{html} nodes; nothing is rebuilt - reconciliation computes the minimal set of moves. Each row runs in its own scope, disposed when its key disappears, so a `Var`{fsharp} created in the row renderer belongs to that row.

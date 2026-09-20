@@ -91,7 +91,7 @@ let app () =
                 | Loaded value -> Html.p $"Loaded: %s{value}.")
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 The race lands on `user 4` - request #3 resolves afterwards, finds `generation`{fsharp} has moved on, and throws its own result away. Without the `mine = generation`{fsharp} check it would overwrite the newer answer.

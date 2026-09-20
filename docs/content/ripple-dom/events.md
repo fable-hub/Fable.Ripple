@@ -22,7 +22,7 @@ let app () =
             Html.text (fun () -> $"mouseX = %.0f{mouseX.Value} - mouseY = %.0f{mouseY.Value}")
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 ## Value-extracting shortcuts
@@ -61,7 +61,7 @@ let app () =
             Html.p [ Html.text (fun () -> $"agreed: %b{agreed.Value}") ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 `on.input`{fsharp} fires on every keystroke; `on.change`{fsharp} when the field is left. Both also exist as raw `Event`{fsharp} overloads when you need the event itself.

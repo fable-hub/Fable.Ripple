@@ -40,4 +40,4 @@ type RippleRegistry =
     /// Register a component by name so Playwright tests can load it. `view` is a
     /// `unit -> DomItem` factory, evaluated fresh (new DOM + reactive scope) per mount.
     static member register(name: string, view: unit -> DomItem) =
-        Registry.add name (fun containerId -> Html.mount containerId (view ()))
+        Registry.add name (fun containerId -> Html.mount containerId view |> ignore)

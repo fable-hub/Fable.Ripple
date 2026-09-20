@@ -85,7 +85,7 @@ open Fable.Ripple.Dom
 
 let count = Var.create 0
 
-let view =
+let view () =
     Html.div
         [
             Html.button
@@ -96,10 +96,13 @@ let view =
             Html.output count
         ]
 
-Html.mount "root" view
+Html.mount "root" view |> ignore
 ```
 
-`Html.mount`{fsharp} renders an item into the element with the given id.
+`Html.mount`{fsharp} builds the view and renders it into the element with the given
+id. It returns an `IDisposable`{fsharp}: disposing it removes the element and tears
+down every effect the view created. An app that runs until the page closes has
+nothing to dispose, so it ignores the result.
 
 ### Run it
 

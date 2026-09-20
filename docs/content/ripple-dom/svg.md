@@ -42,7 +42,7 @@ let app () =
                 ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 ## Reactive geometry

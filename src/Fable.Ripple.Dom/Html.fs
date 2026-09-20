@@ -464,6 +464,24 @@ type Html =
     /// Realise a root item to its element.
     static member render(item: DomItem) : HTMLElement = toElement item
 
-    /// Mount a root item into the element with the given id.
-    static member mount (id: string) (item: DomItem) : unit =
-        (document.getElementById id).appendChild (toElement item) |> ignore
+    /// Mount `view` into the element with the given id, inside its own
+    /// `Signal.root`. Disposing the result tears that scope down and removes the
+    /// mounted element; disposing twice is a no-op.
+    ///
+    /// `view` is a function, not a `DomItem`: a `DomItem` argument would be built -
+    /// effects and all - before `mount` opened the scope that is meant to own it.
+    static member mount (id: string) (view: unit -> DomItem) : IDisposable =
+        let container = document.getElementById id
+        let node, scope = Signal.root (fun () -> toElement (view ()))
+
+        container.appendChild node |> ignore
+
+        let mutable live = true
+
+        { new IDisposable with
+            member _.Dispose() =
+                if live then
+                    live <- false
+                    scope.Dispose()
+                    container.removeChild node |> ignore
+        }

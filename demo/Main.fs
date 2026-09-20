@@ -164,4 +164,4 @@ Examples.Routing.UrlState.connect
     (fun () -> router.Jump -1)
 
 Router.validate ()
-Html.mount "root" (render ())
+Html.mount "root" render |> ignore

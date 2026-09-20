@@ -27,9 +27,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun name -> state.Value <- View.Success $"Hello, %s{name}."
             State = state
@@ -37,7 +36,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Greet"
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Press Greet with the field empty: the error shows and the field gets focus. Type two letters and press again.

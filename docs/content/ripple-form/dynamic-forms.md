@@ -66,9 +66,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun value -> state.Value <- View.Success $"Contact: %s{value}"
             State = state
@@ -76,7 +75,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Pick Email, type an address, pick Phone, then Email again: the address is still there. The email field was rebuilt, but its value lives in the `email`{fsharp} `Var`{fsharp}, which was not.
@@ -114,9 +115,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun pet -> state.Value <- View.Success pet
             State = state
@@ -124,7 +124,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Tick the box: a required field appears. Untick it: the form is valid again. Tick it once more: the name you typed is back.

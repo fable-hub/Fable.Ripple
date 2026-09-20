@@ -24,9 +24,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun name -> state.Value <- View.Success $"Saved %s{name}"
             State = state
@@ -47,7 +46,9 @@ Html.mount
                 )
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Save is disabled. Change the name: it lights up. Type `Ada` back: it goes off again, because the value equals the baseline.
@@ -80,9 +81,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun name -> state.Value <- View.Success $"Saved %s{name}"
             State = state
@@ -115,7 +115,9 @@ Html.mount
                 )
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Clear the name and leave the field: the error shows and Reset lights up. Press it: `Ada`{fsharp} is back and the error is gone.
@@ -140,9 +142,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Html.div
+let view () =
+    Html.div
         [
             Form.View.asHtml
                 {
@@ -179,7 +180,9 @@ Html.mount
                             "Everything saved"
                     )
                 ]
-        ])
+        ]
+
+Html.mount "app" view |> ignore
 ```
 
 Change the name and press Save: the line under the form goes back to "Everything saved" and the button goes off, with the new name in the field.
@@ -239,9 +242,8 @@ let values: FormValues<Profile> =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Html.div
+let view () =
+    Html.div
         [
             Html.button
                 [
@@ -278,7 +280,9 @@ Html.mount
                             "Everything saved"
                     )
                 ]
-        ])
+        ]
+
+Html.mount "app" view |> ignore
 ```
 
 Press Load Grace: both fields fill and the form is clean. Edit a field: unsaved. `Form.snapshot values`{fsharp} is the other direction, the record as it is typed, for a draft or a preview.
@@ -301,9 +305,8 @@ let form =
     |> Field.create name Ok
     |> Form.textField
 
-Html.mount
-    "app"
-    (Html.div
+let view () =
+    Html.div
         [
             Html.button
                 [
@@ -329,5 +332,7 @@ Html.mount
                             "Unchanged"
                     )
                 ]
-        ])
+        ]
+
+Html.mount "app" view |> ignore
 ```

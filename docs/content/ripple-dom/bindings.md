@@ -44,7 +44,7 @@ let app () =
                 ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 Type in the field and the readout follows; press the button and the field follows. One line, both directions.
@@ -74,7 +74,7 @@ let app () =
             Html.p [ Html.text (fun () -> $"quantity: %i{quantity.Value}") ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 Anything that does not parse is refused: the signal keeps its last good value.

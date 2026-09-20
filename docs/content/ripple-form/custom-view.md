@@ -140,9 +140,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun (name, age) -> state.Value <- View.Success $"%s{name}, %d{age}"
             State = state
@@ -150,5 +149,7 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```

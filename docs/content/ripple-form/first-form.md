@@ -180,9 +180,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit =
                 fun user -> state.Value <- View.Success $"Welcome, %s{Email.value user.Email}."
@@ -191,7 +190,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Sign up"
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Fill the password, then type something else in the repeat: its error appears as soon as you leave the field. Fix the password instead: the repeat's error goes away, because its parser re-ran.

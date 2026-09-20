@@ -33,18 +33,23 @@ let counter () =
             Html.output count
         ]
 
-Html.mount "app" (counter ())
+Html.mount "app" counter |> ignore
 ```
 
 Clicking the button writes `count.Value`{fsharp}. The `<output>`{html} element reads `count`{fsharp}, so it is the only node that updates - no re-render of the component, no diff.
 
 ## Mounting
 
-`Html.mount`{fsharp} renders an item into the element with the given id:
+`Html.mount`{fsharp} builds the view and renders it into the element with the given id:
 
 ```fsharp
-Html.mount "app" (counter ())
+Html.mount "app" counter |> ignore
 ```
+
+It takes a `unit -> DomItem`{fsharp}, not a `DomItem`{fsharp}, so that the view is
+built inside the scope that owns it. It returns an `IDisposable`{fsharp}: disposing
+it removes the element and tears down every effect, computed and cleanup the view
+created. An app that runs until the page closes ignores the result.
 
 `Html.render`{fsharp} returns the `HTMLElement`{fsharp} instead of mounting it, for you to place yourself:
 

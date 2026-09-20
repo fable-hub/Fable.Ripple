@@ -147,9 +147,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun summary -> state.Value <- View.Success summary
             State = state
@@ -157,7 +156,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Order"
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 ## The kinds

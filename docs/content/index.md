@@ -453,7 +453,7 @@ let counter () =
             Html.output count
         ]
 
-Html.mount "app" (counter ())
+Html.mount "app" counter |> ignore
 ```
 
 <div class="band__text">
@@ -601,9 +601,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun (email, _) -> state.Value <- View.Success $"Welcome, %s{email}."
             State = state
@@ -611,7 +610,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Sign up"
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 </div>

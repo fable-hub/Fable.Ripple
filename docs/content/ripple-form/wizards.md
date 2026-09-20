@@ -70,9 +70,8 @@ let wizard =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (WizardView.asHtml
+let view () =
+    WizardView.asHtml
         {
             OnSubmit = fun registration -> state.Value <- View.Success $"%A{registration}"
             State = state
@@ -81,7 +80,9 @@ Html.mount
             Next = "Next"
             Submit = "Register"
         }
-        wizard)
+        wizard
+
+Html.mount "app" view |> ignore
 ```
 
 Tick the company box: a step appears between the two others. Press Next with a bad email: it refuses to move on. Enter in a field is Next.

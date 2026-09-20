@@ -1,5 +1,6 @@
 module Fable.Ripple.Dom.Test.Components.Rendering
 
+open System
 open Browser
 open Fable.Ripple
 open Fable.Ripple.Dom
@@ -180,6 +181,71 @@ let private svg () : DomItem =
                 ]
         ]
 
+let private mountDisposal () : DomItem =
+    let ticks = Var.create 0
+    let cleanups = Var.create 0
+    let observers = Var.create 0
+    let mutable handle: IDisposable option = None
+
+    let inner () =
+        Signal.onCleanup (fun () -> cleanups.Value <- cleanups.Value + 1)
+
+        Html.div
+            [
+                attr.id "inner"
+                Html.text (fun () -> string ticks.Value)
+            ]
+
+    Html.div
+        [
+            Html.div [ attr.id "slot" ]
+
+            Html.button
+                [
+                    attr.id "mount"
+                    on.click (fun _ ->
+                        if handle.IsNone then
+                            handle <- Some(Html.mount "slot" inner)
+                    )
+                    Html.text "Mount"
+                ]
+
+            Html.button
+                [
+                    attr.id "dispose"
+                    on.click (fun _ -> handle |> Option.iter (fun d -> d.Dispose()))
+                    Html.text "Dispose"
+                ]
+
+            Html.button
+                [
+                    attr.id "tick"
+                    on.click (fun _ -> ticks.Value <- ticks.Value + 1)
+                    Html.text "Tick"
+                ]
+
+            // Snapshot on demand: `observerCount` reads no signal, so an effect
+            // around it would never re-run.
+            Html.button
+                [
+                    attr.id "measure"
+                    on.click (fun _ -> observers.Value <- Signal.observerCount ticks.Signal)
+                    Html.text "Measure"
+                ]
+
+            Html.output
+                [
+                    attr.id "cleanups"
+                    Html.text (fun () -> string cleanups.Value)
+                ]
+
+            Html.output
+                [
+                    attr.id "observers"
+                    Html.text (fun () -> string observers.Value)
+                ]
+        ]
+
 let all: (string * (unit -> DomItem)) list =
     [
         "ReactiveText", reactiveText
@@ -190,4 +256,5 @@ let all: (string * (unit -> DomItem)) list =
         "ForeignNode", foreignNode
         "Ref", reference
         "Svg", svg
+        "MountDisposal", mountDisposal
     ]

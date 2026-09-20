@@ -65,9 +65,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun books -> state.Value <- View.Success $"%d{List.length books} book(s)"
             State = state
@@ -75,7 +74,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Add a book, type in it, then remove the first one: the second keeps its text and its labels say #1.
@@ -169,9 +170,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun names -> state.Value <- View.Success(String.concat ", " names)
             State = state
@@ -179,7 +179,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Send invitations"
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 `withAutoFocus`{fsharp} puts the cursor in the new guest's name as soon as it appears. The rows have a container of their own: `Html.each`{fsharp} adds new rows at the end of its parent, so a button placed after it in the same element would end up between the rows.

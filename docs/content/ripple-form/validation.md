@@ -55,9 +55,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun _ -> state.Value <- View.Success "Saved"
             State = state
@@ -65,7 +64,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 ## Checks across fields
@@ -122,9 +123,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun name -> state.Value <- View.Success $"Registered %s{name}"
             State = state
@@ -132,7 +132,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Register"
             Validation = ValidateOnSubmit
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Type `admin`. The check starts 300 ms after the last keystroke and answers 600 ms later. A result that arrives after the value changed again is ignored.
@@ -163,9 +165,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun name -> state.Value <- View.Success $"Saved %s{name}"
             State = state
@@ -196,7 +197,9 @@ Html.mount
                 )
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Press Save with the field empty: the error shows. Press Start over: the field is cleared and the error is gone. Without `errors.Reset()`{fsharp} the field would be cleared but still marked as failed, and "This field is required" would stay.

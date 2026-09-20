@@ -223,9 +223,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun city -> state.Value <- View.Success $"Going to %s{city}"
             State = state
@@ -233,7 +232,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Go"
             Validation = ValidateOnBlur
         }
-        form)
+        form
+
+Html.mount "app" view |> ignore
 ```
 
 Type `P`: the suggestions narrow as you type.

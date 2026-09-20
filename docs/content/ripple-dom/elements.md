@@ -39,7 +39,7 @@ let app () =
             Html.p count
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 ## Attributes
@@ -72,7 +72,7 @@ let app () =
                 ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 ## Classes
@@ -108,7 +108,7 @@ let app () =
                 ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 ## Form properties
@@ -141,7 +141,7 @@ let app () =
                 ]
         ]
 
-Html.mount "app" (app ())
+Html.mount "app" app |> ignore
 ```
 
 ## Custom attributes
