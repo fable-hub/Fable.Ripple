@@ -93,4 +93,50 @@ let private keyedList () : DomItem =
                 ]
         ]
 
-let all: (string * (unit -> DomItem)) list = [ "KeyedList", keyedList ]
+let private eachPosition () : DomItem =
+    // Starts EMPTY, so the first rows arrive after the following sibling has
+    // already been appended.
+    let items = Var.create ([||]: string[])
+
+    Html.div
+        [
+            attr.id "host"
+            Html.span
+                [
+                    attr.className "before"
+                    Html.text "BEFORE"
+                ]
+            Html.each
+                (fun () -> items.Value)
+                id
+                (fun x ->
+                    Html.span
+                        [
+                            attr.className "item"
+                            Html.text x
+                        ]
+                )
+            Html.span
+                [
+                    attr.className "after"
+                    Html.text "AFTER"
+                ]
+            Html.button
+                [
+                    attr.id "fill"
+                    on.click (fun _ ->
+                        items.Value <-
+                            [|
+                                "a"
+                                "b"
+                            |]
+                    )
+                    Html.text "fill"
+                ]
+        ]
+
+let all: (string * (unit -> DomItem)) list =
+    [
+        "KeyedList", keyedList
+        "EachPosition", eachPosition
+    ]

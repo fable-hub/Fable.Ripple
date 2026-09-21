@@ -74,5 +74,16 @@ let tests =
                         do! assertLocator (root.locator "#builds") (haveText "3")
                     }
             )
+            testComponent (
+                "each that starts empty inserts later rows at its own position",
+                "EachPosition",
+                fun root ->
+                    promise {
+                        do! assertLocator (root.locator "#host") (haveText "BEFOREAFTERfill")
+                        do! click (root.locator "#fill")
+                        do! assertLocator (root.locator "#host") (haveText "BEFOREabAFTERfill")
+                    }
+            )
+
         ]
     )

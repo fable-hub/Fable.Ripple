@@ -349,7 +349,13 @@ type Html =
         : DomItem
         =
         Apply(fun parent ->
-            Dom.keyedEach parent null getItems keyOf (fun x -> toElement (render x))
+            // An anchor, not `null`: rows are inserted before it rather than
+            // appended, so a list that is empty when it is built still puts its
+            // rows where it was declared instead of after its later siblings.
+            let anchor = document.createComment "each" :> Node
+            parent.appendChild anchor |> ignore
+
+            Dom.keyedEach parent anchor getItems keyOf (fun x -> toElement (render x))
             |> ignore
         )
 
