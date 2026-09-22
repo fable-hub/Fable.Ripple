@@ -12,6 +12,7 @@ open EasyBuild.Workspace
 let private packages =
     [
         Workspace.src.``Fable.Ripple``.``.``
+        Workspace.src.``Fable.Ripple.Plugin``.``.``
         Workspace.src.``Fable.Ripple.Dom``.``.``
         Workspace.src.``Fable.Ripple.Dom.Test``.``.``
         Workspace.src.``Fable.UrlParser``.``.``
