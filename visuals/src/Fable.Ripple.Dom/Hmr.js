@@ -77,11 +77,8 @@ function leave(saved) {
 /**
  * Keep a `Var` across a swap, keyed by the name it was bound to.
  * 
- * Takes the expression that *makes* the Var, not its initial value, so it covers
- * `Var.create`, `Var.createWith`, and anything else that yields one - a
- * conditional, a helper call. `create` is only run the first time.
- * 
- * A type change between versions falls back to a fresh Var rather than throwing.
+ * `create` runs only the first time. A type change between versions falls back to
+ * a fresh Var rather than throwing.
  */
 export function adopt(name, create) {
     addToSet(name, frame.Seen);

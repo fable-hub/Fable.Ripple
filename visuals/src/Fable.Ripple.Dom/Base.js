@@ -78,10 +78,8 @@ export function Base_trackNode(node, update) {
 }
 
 /**
- * Repoint whoever holds `oldNode` at `newNode`.
- * 
- * Nodes are tracked only in a debug build, so in a release build this finds
- * nothing and does nothing.
+ * Repoint whoever holds `oldNode` at `newNode`. Nodes are tracked only in a
+ * debug build, so this does nothing in a release one.
  */
 export function Base_replaceTrackedNode(oldNode, newNode) {
     const update = oldNode.__rippleOwner;
