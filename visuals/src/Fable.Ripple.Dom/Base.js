@@ -1,6 +1,7 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.13.0/List.js";
+import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Core.js";
 import { disposeSafe, getEnumerator, Exception } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { Signal_batch, Signal_effect } from "../Fable.Ripple/Api.js";
 import { Var$1__get_Value } from "../Fable.Ripple/Types.js";
@@ -67,6 +68,27 @@ export function Base_createElementNS(ns, tag, items) {
     const element = document.createElementNS(ns, tag);
     Base_applyItems(element, items);
     return element;
+}
+
+/**
+ * Record how to repoint whoever holds `node` when it is replaced.
+ */
+export function Base_trackNode(node, update) {
+    node.__rippleOwner = update;
+}
+
+/**
+ * Repoint whoever holds `oldNode` at `newNode`.
+ * 
+ * Nodes are tracked only in a debug build, so in a release build this finds
+ * nothing and does nothing.
+ */
+export function Base_replaceTrackedNode(oldNode, newNode) {
+    const update = oldNode.__rippleOwner;
+    if (!Operators_IsNull(update)) {
+        update(newNode);
+        newNode.__rippleOwner = update;
+    }
 }
 
 /**

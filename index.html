@@ -428,7 +428,7 @@ let counter () =
             Html.output count
         ]
 
-Html.mount "app" (counter ())'><figcaption class="nacara-code__title">Counter.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+Html.mount "app" counter |&gt; ignore'><figcaption class="nacara-code__title">Counter.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
 </span><span class="nacara-code__line">
 </span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">counter</span> <span class="tok-punctuation">()</span> <span class="tok-operator">=</span>
@@ -446,7 +446,7 @@ Html.mount "app" (counter ())'><figcaption class="nacara-code__title">Counter.fs
 </span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">output</span> count
 </span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">
-</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> <span class="tok-punctuation">(</span><span class="tok-function">counter</span> <span class="tok-constant">()</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> counter <span class="tok-operator">|></span> ignore
 </span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><div class="band__text"><p class="hero__eyebrow">// Rendering</p><h2 class="band__title">Signals, bound<br />straight to the DOM.</h2><p class="band__copy"><strong>Fable.Ripple.Dom</strong> is an HTML DSL with no virtual tree. A signal knows which nodes read it, so a write updates those nodes and nothing else - no diff, no re-render of the component around them.</p><ul class="band__claims"><li><span><strong>One list model</strong> - attributes, events and children are items in the same list.</span></li><li><span><strong>Two-way bindings</strong> - <code>attr.bindValue</code> keeps an input and a <code>Var</code> in sync.</span></li><li><span><strong>Control flow</strong> - <code>Html.show</code> and keyed <code>Html.each</code> add and remove real nodes.</span></li></ul><div class="hero__actions"><a class="button button--primary" href="/Fable.Ripple/ripple-dom/introduction/">Read the guide</a> <a class="button button--secondary" href="/Fable.Ripple/demo/">Browse the examples</a></div><div class="install-command"><span class="install-command__prompt">></span> <span>dotnet add package Fable.Ripple.Dom --prerelease</span></div></div></div></section><section class="section"><div class="section__inner band band--code-right"><div class="band__text"><p class="hero__eyebrow">// Routing</p><h2 class="band__title">URLs parsed into<br />your own types.</h2><p class="band__copy"><strong>Fable.UrlParser</strong> turns a URL into a value of your route type. Parsers compose left to right, in the order of the URL, and a failure reports the attempt that got furthest rather than a blank no-match.</p><ul class="band__claims"><li><span><strong>Typed segments</strong> - <code>string</code>, <code>int</code>, and your own conversions.</span></li><li><span><strong>Query and fragment</strong> - required, optional, repeated and flag parameters.</span></li><li><span><strong>Two-way codecs</strong> - one description parses a URL and builds it back.</span></li></ul><div class="hero__actions"><a class="button button--primary" href="/Fable.Ripple/urlparser/introduction/">Read the guide</a> <a class="button button--secondary" href="/Fable.Ripple/demo/">Browse the examples</a></div><div class="install-command"><span class="install-command__prompt">></span> <span>dotnet add package Fable.UrlParser --prerelease</span></div></div><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live" data-source='open Fable.UrlParser
 
 type Route =
@@ -532,9 +532,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun (email, _) -&gt; state.Value &lt;- View.Success $"Welcome, %s{email}."
             State = state
@@ -542,7 +541,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Sign up"
             Validation = ValidateOnBlur
         }
-        form)'><figcaption class="nacara-code__title">SignUp.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+        form
+
+Html.mount "app" view |&gt; ignore'><figcaption class="nacara-code__title">SignUp.fs</figcaption><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plain</span>
@@ -578,9 +579,8 @@ Html.mount
 </span><span class="nacara-code__line">
 </span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">state</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Idle</span>
 </span><span class="nacara-code__line">
-</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span>
-</span><span class="nacara-code__line">    <span class="tok-string">"app"</span>
-</span><span class="nacara-code__line">    <span class="tok-punctuation">(</span><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">view</span> <span class="tok-punctuation">()</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
 </span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
 </span><span class="nacara-code__line">            <span class="tok-property">OnSubmit</span> <span class="tok-operator">=</span> <span class="tok-keyword">fun</span> <span class="tok-punctuation">(</span><span class="tok-parameter">email</span><span class="tok-punctuation">,</span> _<span class="tok-punctuation">)</span> <span class="tok-keyword">-></span> state<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Success</span> <span class="tok-string">$"Welcome, %s{email</span><span class="tok-punctuation">}</span><span class="tok-string">."</span>
 </span><span class="nacara-code__line">            <span class="tok-property">State</span> <span class="tok-operator">=</span> state
@@ -588,5 +588,7 @@ Html.mount
 </span><span class="nacara-code__line">            <span class="tok-property">Action</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-type">Action</span><span class="tok-punctuation">.</span><span class="tok-property">SubmitOnly</span> <span class="tok-string">"Sign up"</span>
 </span><span class="nacara-code__line">            <span class="tok-property">Validation</span> <span class="tok-operator">=</span> ValidateOnBlur
 </span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
-</span><span class="nacara-code__line">        form<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        form
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> view <span class="tok-operator">|></span> ignore
 </span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div></section></div></main></div><footer class="nacara-footer"><p>Built with <a href="https://mangelmaxime.github.io/Nacara/">Nacara</a></p></footer><script src="/Fable.Ripple/assets/nacara.3472cd30.js" defer="defer"></script><script src="/Fable.Ripple/assets/tree-sitter/highlight.js" defer="defer"></script><script src="/Fable.Ripple/assets/fsharp-api.js" defer="defer"></script><script src="/Fable.Ripple/assets/search.js" defer="defer"></script><script src="/Fable.Ripple/assets/live-example/live-example.js" defer="defer"></script></body></html>

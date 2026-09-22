@@ -55,6 +55,9 @@
     <loc>https://fable-hub.github.io/Fable.Ripple/reference/fable-ripple-dom/fable-ripple-dom/emptymarker/</loc>
   </url>
   <url>
+    <loc>https://fable-hub.github.io/Fable.Ripple/reference/fable-ripple-dom/fable-ripple-dom/hmr/</loc>
+  </url>
+  <url>
     <loc>https://fable-hub.github.io/Fable.Ripple/reference/fable-ripple-dom/fable-ripple-dom/html/</loc>
   </url>
   <url>
@@ -392,6 +395,9 @@
   </url>
   <url>
     <loc>https://fable-hub.github.io/Fable.Ripple/ripple-dom/events/</loc>
+  </url>
+  <url>
+    <loc>https://fable-hub.github.io/Fable.Ripple/ripple-dom/hot-reload/</loc>
   </url>
   <url>
     <loc>https://fable-hub.github.io/Fable.Ripple/ripple-dom/introduction/</loc>

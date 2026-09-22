@@ -56,9 +56,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun value -&gt; state.Value &lt;- View.Success $"Contact: %s{value}"
             State = state
@@ -66,7 +65,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnSubmit
         }
-        form)'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+        form
+
+Html.mount "app" view |&gt; ignore'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plain</span>
@@ -123,9 +124,8 @@ Html.mount
 </span><span class="nacara-code__line">
 </span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">state</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Idle</span>
 </span><span class="nacara-code__line">
-</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span>
-</span><span class="nacara-code__line">    <span class="tok-string">"app"</span>
-</span><span class="nacara-code__line">    <span class="tok-punctuation">(</span><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">view</span> <span class="tok-punctuation">()</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
 </span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
 </span><span class="nacara-code__line">            <span class="tok-property">OnSubmit</span> <span class="tok-operator">=</span> <span class="tok-keyword">fun</span> <span class="tok-parameter">value</span> <span class="tok-keyword">-></span> state<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Success</span> <span class="tok-string">$"Contact: %s{value</span><span class="tok-punctuation">}</span><span class="tok-string">"</span>
 </span><span class="nacara-code__line">            <span class="tok-property">State</span> <span class="tok-operator">=</span> state
@@ -133,7 +133,9 @@ Html.mount
 </span><span class="nacara-code__line">            <span class="tok-property">Action</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-type">Action</span><span class="tok-punctuation">.</span><span class="tok-property">SubmitOnly</span> <span class="tok-string">"Save"</span>
 </span><span class="nacara-code__line">            <span class="tok-property">Validation</span> <span class="tok-operator">=</span> ValidateOnSubmit
 </span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
-</span><span class="nacara-code__line">        form<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        form
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> view <span class="tok-operator">|></span> ignore
 </span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>Pick Email, type an address, pick Phone, then Email again: the address is still there. The email field was rebuilt, but its value lives in the <code>email</code> <code>Var</code>, which was not.</p><p>The result of the whole form is the result of the part that is currently shown. A branch that needs several fields is a form of its own, built with <code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">succeed</span></code> and <code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">append</span></code>, and <code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">section</span></code> gives it a frame and a title.</p><h2 id="a-field-that-shows-on-a-condition">A field that shows on a condition<a class="nacara-heading-anchor" href="#a-field-that-shows-on-a-condition" aria-label="Link to this section" data-pagefind-ignore></a></h2><p><code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">showIf</span></code> takes a condition and a form. While the condition holds the form is there; otherwise it renders nothing, yields <code>None</code>, and cannot fail. The condition is a tracked read, so a <code>Var</code> read inside it drives it.</p><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live preset=app" data-source='open Fable.Ripple
 open Fable.Ripple.Dom
 open Fable.Ripple.Form
@@ -160,9 +162,8 @@ let form =
 
 let state = Var.create View.Idle
 
-Html.mount
-    "app"
-    (Form.View.asHtml
+let view () =
+    Form.View.asHtml
         {
             OnSubmit = fun pet -&gt; state.Value &lt;- View.Success pet
             State = state
@@ -170,7 +171,9 @@ Html.mount
             Action = View.Action.SubmitOnly "Save"
             Validation = ValidateOnSubmit
         }
-        form)'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
+        form
+
+Html.mount "app" view |&gt; ignore'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Dom</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span>
 </span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Fable</span><span class="tok-punctuation">.</span><span class="tok-namespace">Ripple</span><span class="tok-punctuation">.</span><span class="tok-namespace">Form</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plain</span>
@@ -196,9 +199,8 @@ Html.mount
 </span><span class="nacara-code__line">
 </span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">state</span> <span class="tok-operator">=</span> <span class="tok-type">Var</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Idle</span>
 </span><span class="nacara-code__line">
-</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span>
-</span><span class="nacara-code__line">    <span class="tok-string">"app"</span>
-</span><span class="nacara-code__line">    <span class="tok-punctuation">(</span><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">view</span> <span class="tok-punctuation">()</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">asHtml</span>
 </span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
 </span><span class="nacara-code__line">            <span class="tok-property">OnSubmit</span> <span class="tok-operator">=</span> <span class="tok-keyword">fun</span> <span class="tok-parameter">pet</span> <span class="tok-keyword">-></span> state<span class="tok-punctuation">.</span><span class="tok-property">Value</span> <span class="tok-operator">&lt;-</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-property">Success</span> pet
 </span><span class="nacara-code__line">            <span class="tok-property">State</span> <span class="tok-operator">=</span> state
@@ -206,6 +208,8 @@ Html.mount
 </span><span class="nacara-code__line">            <span class="tok-property">Action</span> <span class="tok-operator">=</span> <span class="tok-type">View</span><span class="tok-punctuation">.</span><span class="tok-type">Action</span><span class="tok-punctuation">.</span><span class="tok-property">SubmitOnly</span> <span class="tok-string">"Save"</span>
 </span><span class="nacara-code__line">            <span class="tok-property">Validation</span> <span class="tok-operator">=</span> ValidateOnSubmit
 </span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
-</span><span class="nacara-code__line">        form<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">        form
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">mount</span> <span class="tok-string">"app"</span> view <span class="tok-operator">|></span> ignore
 </span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>Tick the box: a required field appears. Untick it: the form is valid again. Tick it once more: the name you typed is back.</p><h2 id="disabling-on-a-condition">Disabling on a condition<a class="nacara-heading-anchor" href="#disabling-on-a-condition" aria-label="Link to this section" data-pagefind-ignore></a></h2><p><code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">disableIf</span></code> and <code><span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">readOnlyIf</span></code> keep the field visible and its value in the result, but the user cannot change it while the condition holds:</p><figure class="nacara-code" data-language="fsharp" data-frame="code" data-source="notesField |&gt; Form.disableIf (fun () -&gt; locked.Value)"><div class="nacara-code__body"><pre><code><span class="nacara-code__line">notesField <span class="tok-operator">|></span> <span class="tok-type">Form</span><span class="tok-punctuation">.</span><span class="tok-property">disableIf</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span> locked<span class="tok-punctuation">.</span><span class="tok-property">Value</span><span class="tok-punctuation">)</span>
 </span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><h2 id="which-one-to-use">Which one to use<a class="nacara-heading-anchor" href="#which-one-to-use" aria-label="Link to this section" data-pagefind-ignore></a></h2><ul><li>The shape of the rest of the form depends on a value: <code>andThen</code>.</li><li>One field or group comes and goes: <code>showIf</code>.</li><li>The field stays, the user just cannot edit it: <code>disableIf</code>.</li></ul></div><a class="nacara-edit-link" href="https://github.com/fable-hub/Fable.Ripple/edit/main/docs/content/ripple-form/dynamic-forms.md"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></span><span>Edit this page</span></a><nav class="nacara-page-nav"><a class="nacara-page-nav__link nacara-page-nav__link--previous" href="/Fable.Ripple/ripple-form/validation/"><span class="nacara-page-nav__label">Previous</span><span>Validation</span></a><a class="nacara-page-nav__link nacara-page-nav__link--next" href="/Fable.Ripple/ripple-form/lists/"><span class="nacara-page-nav__label">Next</span><span>Lists</span></a></nav></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="2" href="#a-part-that-depends-on-a-value">A part that depends on a value</a></li><li><a class="nacara-toc__link" data-level="2" href="#a-field-that-shows-on-a-condition">A field that shows on a condition</a></li><li><a class="nacara-toc__link" data-level="2" href="#disabling-on-a-condition">Disabling on a condition</a></li><li><a class="nacara-toc__link" data-level="2" href="#which-one-to-use">Which one to use</a></li></ul></nav></div><footer class="nacara-footer"><p>Built with <a href="https://mangelmaxime.github.io/Nacara/">Nacara</a></p></footer><script src="/Fable.Ripple/assets/nacara.3472cd30.js" defer="defer"></script><script src="/Fable.Ripple/assets/tree-sitter/highlight.js" defer="defer"></script><script src="/Fable.Ripple/assets/fsharp-api.js" defer="defer"></script><script src="/Fable.Ripple/assets/search.js" defer="defer"></script><script src="/Fable.Ripple/assets/live-example/live-example.js" defer="defer"></script></body></html>

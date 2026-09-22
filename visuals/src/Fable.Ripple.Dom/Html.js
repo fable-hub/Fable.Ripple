@@ -4,7 +4,7 @@ import { EmptyMarker, Base_toElement, Base_applyItems, Base_emptyMarker, Base_cr
 import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signal_effect } from "../Fable.Ripple/Api.js";
 import { singleton } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { keyedEach } from "./Dom.js";
-import { Exception, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { Exception, disposeSafe } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { Var$1__get_Value } from "../Fable.Ripple/Types.js";
 
 /**
@@ -610,7 +610,9 @@ export function Html_fragment_Z714D7FBE(items) {
  */
 export function Html_each(getItems, keyOf, render) {
     return (parent) => {
-        keyedEach(parent, defaultOf(), getItems, keyOf, (x) => Base_toElement(render(x)));
+        const anchor = document.createComment("each");
+        parent.appendChild(anchor);
+        keyedEach(parent, anchor, getItems, keyOf, (x) => Base_toElement(render(x)));
     };
 }
 
@@ -700,9 +702,27 @@ export function Html_render_62D6BEC0(item) {
 }
 
 /**
- * Mount a root item into the element with the given id.
+ * Mount `view` into the element with the given id, inside its own
+ * `Signal.root`. Disposing the result tears that scope down and removes the
+ * mounted element; disposing twice is a no-op.
+ * 
+ * `view` is a function, not a `DomItem`: a `DomItem` argument would be built -
+ * effects and all - before `mount` opened the scope that is meant to own it.
  */
-export function Html_mount(id, item) {
-    document.getElementById(id).appendChild(Base_toElement(item));
+export function Html_mount(id, view) {
+    const container = document.getElementById(id);
+    const patternInput = Signal_root(() => Base_toElement(view()));
+    let node = patternInput[0];
+    container.appendChild(node);
+    let live = true;
+    return {
+        Dispose() {
+            if (live) {
+                live = false;
+                disposeSafe(patternInput[1]);
+                container.removeChild(node);
+            }
+        },
+    };
 }
 
