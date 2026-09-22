@@ -7,6 +7,7 @@
     the docs site also loads on its own pages.
 */
 
+@import "./standalone.css";
 @import "./tokens.css";
 @import "./base.css";
 @import "./shell.css";

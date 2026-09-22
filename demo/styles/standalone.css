@@ -1,0 +1,24 @@
+/* Layered, so the docs site's unlayered stylesheets win when the demo ships inside it. */
+
+@import "../../docs/static/theme.css" layer(standalone);
+
+@layer standalone {
+    :root {
+        /* Nacara defines these in its generated stylesheet, so there is no file to import. */
+        --nacara-danger: #cf3b3b;
+        --nacara-radius-sm: 0.25rem;
+        --nacara-space-1: 0.25rem;
+        --nacara-space-2: 0.5rem;
+        --nacara-space-3: 0.75rem;
+        --nacara-space-4: 1rem;
+        --nacara-space-6: 1.5rem;
+    }
+
+    body {
+        margin: 0;
+        padding: var(--nacara-space-6);
+        background: var(--nacara-bg);
+        color: var(--nacara-text);
+        font-family: var(--nacara-font-sans);
+    }
+}
