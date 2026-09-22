@@ -103,7 +103,7 @@ let theme =
             NavbarDivider
             NavbarSection("Reference", "reference", "/reference/")
             NavbarSection("Changelog", "changelog", "/changelog/fable-ripple/")
-            NavbarSection("Demo", "demo", "/demo/")
+            NavbarSection("Demos", "demo", "/demo/")
         ]
     |> Theme.menu
         "guide"
