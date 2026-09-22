@@ -8,6 +8,7 @@ open BlackFox.CommandLine
 open EasyBuild.Tools.Fable
 open EasyBuild.Tools.Npm
 open EasyBuild.Workspace
+open EasyBuild
 
 type DocsSettings() =
     inherit CommandSettings()
@@ -73,12 +74,12 @@ let private writeSnippetCss () =
 
 let private compileDemo () =
     Npm.install ()
-    Fable.build (workingDirectory = Workspace.demo.``.``)
+    Fable.build (workingDirectory = Workspace.demo.``.``, exclude = [ "Fable.Ripple.Plugin" ])
 
     // The site's base flows into the demo's asset URLs; the demo's own commands
     // keep serving it from '/'.
     Command.Run(
-        "npx",
+        Utils.npx,
         "vite build --base=/Fable.Ripple/demo/",
         workingDirectory = Workspace.demo.``.``
     )

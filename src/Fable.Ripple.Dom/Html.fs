@@ -393,6 +393,17 @@ type Html =
 
                 node |> Option.iter (fun n -> parent.insertBefore (n, anchor) |> ignore)
                 current <- Some(node, dispose)
+
+#if DEBUG
+                node
+                |> Option.iter (fun n ->
+                    Base.trackNode
+                        n
+                        (fun fresh ->
+                            current <- current |> Option.map (fun (_, d) -> Some fresh, d)
+                        )
+                )
+#endif
             )
             |> ignore
 
@@ -478,9 +489,14 @@ type Html =
     /// effects and all - before `mount` opened the scope that is meant to own it.
     static member mount (id: string) (view: unit -> DomItem) : IDisposable =
         let container = document.getElementById id
-        let node, scope = Signal.root (fun () -> toElement (view ()))
+        let built, scope = Signal.root (fun () -> toElement (view ()))
+        let mutable node = built :> Node
 
         container.appendChild node |> ignore
+
+#if DEBUG
+        Base.trackNode node (fun fresh -> node <- fresh)
+#endif
 
         let mutable live = true
 

@@ -4,6 +4,7 @@ open System
 open System.Collections.Generic
 open Browser
 open Browser.Types
+open Fable.Core
 open Fable.Ripple
 
 /// Low-level DOM binding built directly on the signal core - no intermediate
@@ -118,12 +119,19 @@ module Dom =
         let make (item: 'a) (index: int) : Row =
             let node, dispose = Signal.root (fun () -> render item)
 
-            {
-                Node = node
-                Dispose = dispose
-                Seen = 0
-                Index = index
-            }
+            let row =
+                {
+                    Node = node
+                    Dispose = dispose
+                    Seen = 0
+                    Index = index
+                }
+
+#if DEBUG
+            Base.trackNode node (fun fresh -> row.Node <- unbox fresh)
+#endif
+
+            row
 
         /// Fill `byKey` from the current rows. Called only when a diff actually
         /// needs key lookups; a mount that only ever appends never pays for it.

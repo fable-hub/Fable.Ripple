@@ -15,9 +15,11 @@
     <Project Path="src/Fable.UrlParser/Fable.UrlParser.fsproj" />
     <Project Path="src/Fable.Ripple.Form/Fable.Ripple.Form.fsproj" />
     <Project Path="src/Fable.Ripple.Form.Plain/Fable.Ripple.Form.Plain.fsproj" />
+    <Project Path="src/Fable.Ripple.Plugin/Fable.Ripple.Plugin.fsproj" />
   </Folder>
   <Folder Name="/tests/">
       <Project Path="tests/Fable.Ripple/Fable.Ripple.Tests.fsproj" />
+      <Project Path="tests/Fable.Ripple.Dom.Hmr/Fable.Ripple.Dom.Hmr.Tests.fsproj" />
       <Project Path="tests/Fable.Ripple.Dom/Fable.Ripple.Dom.Tests.fsproj" />
       <Project Path="tests/Fable.UrlParser/Fable.UrlParser.Tests.fsproj" />
       <Project Path="tests/Fable.Ripple.Form/Fable.Ripple.Form.Tests.fsproj" />

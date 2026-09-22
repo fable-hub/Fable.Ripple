@@ -27,7 +27,11 @@ type DemoCommand() =
 
         if settings.IsWatch then
             [
-                Fable.watch (workingDirectory = Workspace.demo.``.``, verbose = true)
+                Fable.watch (
+                    workingDirectory = Workspace.demo.``.``,
+                    verbose = true,
+                    exclude = [ "Fable.Ripple.Plugin" ]
+                )
                 Vite.watch (workingDirectory = Workspace.demo.``.``)
             ]
             |> List.map Async.AwaitTask
@@ -40,7 +44,11 @@ type DemoCommand() =
             // through Vite's `?raw` suffix, and those relative specifiers only
             // resolve while Fable emits next to the sources - an outDir would
             // re-base them into the output directory, where no .fs files exist.
-            Fable.build (workingDirectory = Workspace.demo.``.``)
+            Fable.build (
+                workingDirectory = Workspace.demo.``.``,
+                exclude = [ "Fable.Ripple.Plugin" ]
+            )
+
             Vite.build (workingDirectory = Workspace.demo.``.``)
 
         0

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <DisableImplicitFSharpCoreReference>false</DisableImplicitFSharpCoreReference>
+    <!-- Outside the repository's central versioning and lock files, to pin the
+         FSharp.Core the Fable CLI loads when it runs the plugin. -->
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src/Shared.fs" />
+    <Compile Include="src/Widgets.fs" />
+    <Compile Include="src/Table.fs" />
+    <Compile Include="src/Counter.fs" />
+    <Compile Include="src/Pair.fs" />
+    <Compile Include="src/Rows.fs" />
+    <Compile Include="src/Main.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Directory.Build.props adds a version-less FSharp.Core for central package
+         management, which this project opts out of. -->
+    <PackageReference Remove="FSharp.Core" />
+    <ProjectReference Include="../../src/Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
+    <ProjectReference Include="../../src/Fable.Ripple.Plugin/Fable.Ripple.Plugin.fsproj" />
+    <PackageReference Include="Fable.Core" Version="5.2.0" />
+    <PackageReference Include="Fable.Browser.Dom" Version="2.20.0" />
+    <PackageReference Include="FSharp.Core" Version="10.1.301" />
+  </ItemGroup>
+</Project>

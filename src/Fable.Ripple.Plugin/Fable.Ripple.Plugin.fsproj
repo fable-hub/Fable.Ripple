@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageId>Fable.Ripple.Plugin</PackageId>
+    <Description>Fable compiler plugin for Fable.Ripple: the [&lt;Component&gt;] attribute.</Description>
+    <PackageTags>fable-plugin</PackageTags>
+
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Plugin.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="FSharp.Core" />
+    <PackageReference Include="Fable.AST" Version="5.0.0" />
+    <!-- No newer than the FSharp.Core the Fable CLI loads, or Transform throws
+         Could-not-load-file-or-assembly inside the user's build. PrivateAssets keeps
+         it out of the nuspec. -->
+    <PackageReference Include="FSharp.Core" Version="8.0.401" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

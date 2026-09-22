@@ -116,7 +116,7 @@ dotnet fable watch
 npx vite
 ```
 
-Open the address Vite prints. Click the button and the number changes. Editing `Program.fs` recompiles it and reloads the page.
+Open the address Vite prints. Click the button and the number changes. Editing `Program.fs` recompiles it and reloads the page. See [Hot reload](../ripple-dom/hot-reload.md) to update the page without a reload.
 
 :::
 

@@ -1,0 +1,7 @@
+bin/
+obj/
+localfeed/
+fable_modules/
+node_modules/
+src/*.js
+*.log

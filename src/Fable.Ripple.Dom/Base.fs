@@ -3,6 +3,7 @@ namespace Fable.Ripple.Dom
 open System.Collections.Generic
 open Browser
 open Browser.Types
+open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Ripple
 
@@ -64,6 +65,30 @@ module Base =
         let element = document.createElementNS (ns, tag)
         applyItems element items
         Child(element :> Node)
+
+    // Hot reload swaps the element a component rendered, so a list row, a dynamic
+    // branch or a mount holding that element to remove later has to be told.
+
+    [<Fable.Core.Emit("$0.__rippleOwner = $1")>]
+    let private setOwner (node: Node) (update: obj) : unit = jsNative
+
+    [<Fable.Core.Emit("$0.__rippleOwner")>]
+    let private ownerOf (node: Node) : obj = jsNative
+
+    [<Fable.Core.Emit("$0($1)")>]
+    let private invokeOwner (update: obj) (node: Node) : unit = jsNative
+
+    /// Record how to repoint whoever holds `node` when it is replaced.
+    let internal trackNode (node: Node) (update: Node -> unit) : unit = setOwner node (box update)
+
+    /// Repoint whoever holds `oldNode` at `newNode`. Nodes are tracked only in a
+    /// debug build, so this does nothing in a release one.
+    let internal replaceTrackedNode (oldNode: Node) (newNode: Node) : unit =
+        let update = ownerOf oldNode
+
+        if not (isNull update) then
+            invokeOwner update newNode
+            setOwner newNode update
 
     /// Realise a root/child item to its element (used by `mount`/`each`/`dynamic`).
     let toElement (item: DomItem) : HTMLElement =

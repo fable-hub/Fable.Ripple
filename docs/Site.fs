@@ -144,6 +144,7 @@ let theme =
                 ]
             // Menu.section "Patterns" [ Menu.page "ripple-dom/async-data.md" ]
             Menu.section "Navigation" [ Menu.page "ripple-dom/routing.md" ]
+            Menu.section "Development" [ Menu.page "ripple-dom/hot-reload.md" ]
             Menu.section "Testing" [ Menu.page "ripple-dom/testing.md" ]
             Menu.section "Under the hood" [ Menu.page "ripple-dom/performance.md" ]
         ]

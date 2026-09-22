@@ -14,6 +14,7 @@
     <Compile Include="Attributes.fs" />
     <Compile Include="Events.fs" />
     <Compile Include="Html.fs" />
+    <Compile Include="Hmr.fs" />
     <Compile Include="Svg.fs" />
     <Compile Include="Routing.fs" />
   </ItemGroup>

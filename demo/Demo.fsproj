@@ -83,4 +83,7 @@
     <ProjectReference Include="../src/Fable.Ripple.Form.Plain/Fable.Ripple.Form.Plain.fsproj" />
     <ProjectReference Include="../src/Fable.UrlParser/Fable.UrlParser.fsproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\Fable.Ripple.Plugin\Fable.Ripple.Plugin.fsproj" />
+  </ItemGroup>
 </Project>

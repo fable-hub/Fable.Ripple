@@ -137,6 +137,11 @@
           "Nacara.Core": "2.0.0-beta.6"
         }
       },
+      "Fable.AST": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "x6s0UlpG4SIR+c36YsuXL7RK6y3aKntbIEbEm+ZbwdEd8C6A0y8Dzfsrbp5xoKsNcpCrj4LVisLoN33eFixAng=="
+      },
       "Fable.Browser.Blob": {
         "type": "Transitive",
         "resolved": "1.4.0",
@@ -243,6 +248,7 @@
           "Fable.Promise": "[3.2.0, )",
           "Fable.Ripple.Dom": "[1.0.0, )",
           "Fable.Ripple.Form.Plain": "[1.0.0, )",
+          "Fable.Ripple.Plugin": "[1.0.0, )",
           "Fable.UrlParser": "[1.0.0, )"
         }
       },
@@ -283,6 +289,13 @@
           "Fable.Promise": "[3.2.0, )",
           "Fable.Ripple.Dom": "[1.0.0, )",
           "Fable.Ripple.Form": "[1.0.0, )"
+        }
+      },
+      "fable.ripple.plugin": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.0.110, )",
+          "Fable.AST": "[5.0.0, )"
         }
       },
       "fable.urlparser": {
