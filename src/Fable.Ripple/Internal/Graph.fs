@@ -177,11 +177,53 @@ module internal Graph =
     /// Sweep the disposed entries (counted in `DeadObservers`) out of `n`'s
     /// observer list once they make up at least half of it. Each sweep is one
     /// pass that removes at least as many entries as it keeps, so disposing N
-    /// scopes that share `n` costs O(N) in total, not O(N) per scope.
-    let sweepDeadObservers (n: ReactiveNode) =
-        if n.DeadObservers > 0 && 2 * n.DeadObservers >= observerSlots n then
-            compactObservers n (fun o -> not o.Disposed)
-            n.DeadObservers <- 0
+    /// scopes that share `n` costs O(N) in total, not O(N) per scope. When every
+    /// entry is dead (a whole list cleared) the list is dropped without a pass.
+    let private sweepDeadObservers (n: ReactiveNode) =
+        let dead = n.DeadObservers
+
+        if dead > 0 then
+            let slots = observerSlots n
+
+            if dead >= slots then
+                n.FirstObserver <- ValueNone
+                n.RestObservers <- ValueNone
+                n.DeadObservers <- 0
+            elif 2 * dead >= slots then
+                compactObservers n (fun o -> not o.Disposed)
+                n.DeadObservers <- 0
+
+    // Sources with dead observer entries waiting for a sweep check, each listed
+    // once (`Affected` marks membership), and how many holds defer that check.
+    let private sweepQueue = ResizeArray<ReactiveNode>()
+    let mutable private sweepHolds = 0
+
+    /// Count one dead entry in `source`'s observer list (an observer of it was
+    /// disposed) and queue `source` for a sweep check.
+    let noteDeadObserver (source: ReactiveNode) =
+        source.DeadObservers <- source.DeadObservers + 1
+
+        if not source.Affected then
+            source.Affected <- true
+            sweepQueue.Add source
+
+    /// Defer sweep checks until the matching `releaseSweeps`. Holds nest: a
+    /// flush, a batch and a scope disposal each hold, so disposing many scopes
+    /// in one of them (a list clearing its rows) checks each shared source once,
+    /// at the end, when all of its dead entries are known.
+    let holdSweeps () = sweepHolds <- sweepHolds + 1
+
+    /// Release a hold; the last one runs the queued sweep checks.
+    let releaseSweeps () =
+        sweepHolds <- sweepHolds - 1
+
+        if sweepHolds = 0 && sweepQueue.Count > 0 then
+            for i in 0 .. sweepQueue.Count - 1 do
+                let source = sweepQueue.[i]
+                source.Affected <- false
+                sweepDeadObservers source
+
+            sweepQueue.Clear()
 
     /// Unlink `node` from each of its sources at or after `fromIndex`.
     let unlinkSourcesTail (node: ReactiveNode) (fromIndex: int) =

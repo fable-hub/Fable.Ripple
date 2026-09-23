@@ -88,10 +88,11 @@ module internal Scope =
     /// That alone still costs a full pass per scope when many *sibling* scopes
     /// share a source (every row of a list reading one signal): clearing N rows
     /// would be N passes over an N-long list. So a source is not compacted on
-    /// every teardown; its disposed entries are counted and swept out once they
-    /// are half of the list (`Graph.sweepDeadObservers`), which keeps the total
-    /// linear. Until then they stay in the list, skipped by `Graph.iterObservers`
-    /// and not counted by `Graph.observerCount`.
+    /// every teardown; its disposed entries are counted (`Graph.noteDeadObserver`)
+    /// and swept out once they are half of the list, checked when the outermost
+    /// flush, batch or disposal ends - once per source for a whole cleared list.
+    /// Until then they stay in the list, skipped by `Graph.iterObservers` and not
+    /// counted by `Graph.observerCount`.
     ///
     /// Children are not detached one by one - the list is cleared wholesale.
     let rec private tearDown (scope: Scope) =
@@ -118,11 +119,9 @@ module internal Scope =
         for i in 0 .. nodes.Count - 1 do
             nodes.[i].Disposed <- true
 
-        // Detach each node from its sources; collect the external sources whose
-        // observer lists still reference (now-disposed) nodes, counting one dead
-        // entry per edge (a node that read a source twice is listed twice).
-        let affected = ResizeArray<ReactiveNode>()
-
+        // Detach each node from its sources. Its entry in each external source's
+        // observer list is now dead: count it, one per edge (a node that read a
+        // source twice is listed twice there).
         for i in 0 .. nodes.Count - 1 do
             let node = nodes.[i]
 
@@ -131,15 +130,13 @@ module internal Scope =
                 0
                 (fun source ->
                     if not source.Disposed then
-                        source.DeadObservers <- source.DeadObservers + 1
-
-                        if not source.Affected then
-                            source.Affected <- true
-                            affected.Add source
+                        Graph.noteDeadObserver source
                 )
 
             node.FirstSource <- ValueNone
-            node.RestSources |> ValueOption.iter (fun a -> a.Clear())
+            // Dropped, not cleared: a disposed node never re-tracks, so there is
+            // no regrow to reuse the array for.
+            node.RestSources <- ValueNone
             node.State <- NodeState.Clean
             node.Queued <- false
             // The entry may outlive this teardown in a source's list until the
@@ -147,19 +144,19 @@ module internal Scope =
             // DOM it captured) alive meanwhile. It can never run again.
             node.EffectFn <- ValueNone
 
-        // At most one pass per affected source, and only once half its list is dead.
-        for i in 0 .. affected.Count - 1 do
-            let source = affected.[i]
-            Graph.sweepDeadObservers source
-            source.Affected <- false
-
         nodes.Clear()
 
     /// Tear a scope down. Idempotent; a disposed child stays in its parent's list
     /// until the next sweep, where `Disposed` is what marks it dead.
     let dispose (scope: Scope) =
         if not scope.Disposed then
-            tearDown scope
+            // One sweep check per affected source for the whole subtree.
+            Graph.holdSweeps ()
+
+            try
+                tearDown scope
+            finally
+                Graph.releaseSweeps ()
 
     /// Run `fn` inside a fresh scope nested under the current one. Returns its
     /// result and a disposer that tears the scope down.

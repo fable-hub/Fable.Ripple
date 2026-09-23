@@ -30,10 +30,12 @@ module internal Scheduler =
     let flush () =
         if not flushing then
             flushing <- true
+            // Scopes disposed by these effects (list rows, dynamic branches) are
+            // swept from their sources once, when the flush ends.
+            Graph.holdSweeps ()
+            let mutable i = 0
 
             try
-                let mutable i = 0
-
                 // `pending` may grow if an effect writes during the flush.
                 while i < pending.Count do
                     let e = pending.[i]
@@ -46,12 +48,15 @@ module internal Scheduler =
                 // A throwing effect must not leave the flush wedged. Clear the
                 // queued flag on anything not yet reached so it can re-queue on a
                 // later change, then reset the queue and guard. (The remaining
-                // effects of this flush are dropped for this cycle.)
-                for j in 0 .. pending.Count - 1 do
+                // effects of this flush are dropped for this cycle.) Everything
+                // before `i` was cleared by the loop; a re-queued effect is
+                // appended, so it is at or after `i`.
+                for j in i .. pending.Count - 1 do
                     pending.[j].Queued <- false
 
                 pending.Clear()
                 flushing <- false
+                Graph.releaseSweeps ()
 
     /// A source's value changed: mark observers and flush unless batching.
     let notifyChange (source: ReactiveNode) =
@@ -62,11 +67,16 @@ module internal Scheduler =
 
     let batch (fn: unit -> unit) =
         batchDepth <- batchDepth + 1
+        // Scopes disposed inside the batch are swept once, when it ends.
+        Graph.holdSweeps ()
 
         try
             fn ()
         finally
             batchDepth <- batchDepth - 1
 
-            if batchDepth = 0 then
-                flush ()
+            try
+                if batchDepth = 0 then
+                    flush ()
+            finally
+                Graph.releaseSweeps ()
