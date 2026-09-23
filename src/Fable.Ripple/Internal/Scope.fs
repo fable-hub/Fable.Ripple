@@ -83,7 +83,15 @@ module internal Scope =
     /// Tear down a scope: dispose child scopes, run cleanups, then unlink every
     /// registered computed/effect from its sources. To avoid O(n^2) when many
     /// nodes share one external source, mark the whole scope disposed first and
-    /// compact each affected source's observer list in a single pass.
+    /// visit each affected source's observer list at most once.
+    ///
+    /// That alone still costs a full pass per scope when many *sibling* scopes
+    /// share a source (every row of a list reading one signal): clearing N rows
+    /// would be N passes over an N-long list. So a source is not compacted on
+    /// every teardown; its disposed entries are counted and swept out once they
+    /// are half of the list (`Graph.sweepDeadObservers`), which keeps the total
+    /// linear. Until then they stay in the list, skipped by `Graph.iterObservers`
+    /// and not counted by `Graph.observerCount`.
     ///
     /// Children are not detached one by one - the list is cleared wholesale.
     let rec private tearDown (scope: Scope) =
@@ -111,7 +119,8 @@ module internal Scope =
             nodes.[i].Disposed <- true
 
         // Detach each node from its sources; collect the external sources whose
-        // observer lists still reference (now-disposed) nodes.
+        // observer lists still reference (now-disposed) nodes, counting one dead
+        // entry per edge (a node that read a source twice is listed twice).
         let affected = ResizeArray<ReactiveNode>()
 
         for i in 0 .. nodes.Count - 1 do
@@ -121,20 +130,27 @@ module internal Scope =
                 node
                 0
                 (fun source ->
-                    if not source.Disposed && not source.Affected then
-                        source.Affected <- true
-                        affected.Add source
+                    if not source.Disposed then
+                        source.DeadObservers <- source.DeadObservers + 1
+
+                        if not source.Affected then
+                            source.Affected <- true
+                            affected.Add source
                 )
 
             node.FirstSource <- ValueNone
             node.RestSources |> ValueOption.iter (fun a -> a.Clear())
             node.State <- NodeState.Clean
             node.Queued <- false
+            // The entry may outlive this teardown in a source's list until the
+            // sweep; drop the body so it does not keep the closure (and whatever
+            // DOM it captured) alive meanwhile. It can never run again.
+            node.EffectFn <- ValueNone
 
-        // One compaction pass per affected source (O(observers), not O(nodes)).
+        // At most one pass per affected source, and only once half its list is dead.
         for i in 0 .. affected.Count - 1 do
             let source = affected.[i]
-            Graph.compactObservers source (fun o -> not o.Disposed)
+            Graph.sweepDeadObservers source
             source.Affected <- false
 
         nodes.Clear()

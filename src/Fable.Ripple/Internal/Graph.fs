@@ -71,13 +71,17 @@ module internal Graph =
                 action a.[i]
         )
 
-    let observerCount (n: ReactiveNode) : int =
+    /// Length of the observer list, including disposed entries not yet swept.
+    let private observerSlots (n: ReactiveNode) : int =
         match n.FirstObserver with
         | ValueNone -> 0
         | ValueSome _ ->
             match n.RestObservers with
             | ValueSome a -> 1 + a.Count
             | ValueNone -> 1
+
+    /// Live observers of `n` (disposed entries awaiting a sweep are not counted).
+    let observerCount (n: ReactiveNode) : int = observerSlots n - n.DeadObservers
 
     let private ensureRestObservers (n: ReactiveNode) =
         match n.RestObservers with
@@ -92,13 +96,23 @@ module internal Graph =
         | ValueNone -> n.FirstObserver <- ValueSome o
         | ValueSome _ -> (ensureRestObservers n).Add o
 
+    /// Apply `action` to each live observer. A disposed observer can sit in the
+    /// list until the next sweep (see `sweepDeadObservers`); it is skipped, so
+    /// propagation never marks or re-queues a torn-down node.
     let inline iterObservers (n: ReactiveNode) ([<InlineIfLambda>] action: ReactiveNode -> unit) =
-        n.FirstObserver |> ValueOption.iter action
+        n.FirstObserver
+        |> ValueOption.iter (fun o ->
+            if not o.Disposed then
+                action o
+        )
 
         n.RestObservers
         |> ValueOption.iter (fun a ->
             for i in 0 .. a.Count - 1 do
-                action a.[i]
+                let o = a.[i]
+
+                if not o.Disposed then
+                    action o
         )
 
     /// Swap-remove `o` from `n`'s observers (order is irrelevant).
@@ -159,6 +173,15 @@ module internal Graph =
             )
 
             n.FirstObserver <- newFirst
+
+    /// Sweep the disposed entries (counted in `DeadObservers`) out of `n`'s
+    /// observer list once they make up at least half of it. Each sweep is one
+    /// pass that removes at least as many entries as it keeps, so disposing N
+    /// scopes that share `n` costs O(N) in total, not O(N) per scope.
+    let sweepDeadObservers (n: ReactiveNode) =
+        if n.DeadObservers > 0 && 2 * n.DeadObservers >= observerSlots n then
+            compactObservers n (fun o -> not o.Disposed)
+            n.DeadObservers <- 0
 
     /// Unlink `node` from each of its sources at or after `fromIndex`.
     let unlinkSourcesTail (node: ReactiveNode) (fromIndex: int) =
