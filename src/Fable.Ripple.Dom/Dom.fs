@@ -175,6 +175,28 @@ module Dom =
 
             dj
 
+        // Remove every current row's node from the DOM. One DOM op when the
+        // parent holds nothing but the rows - plus the anchor, which is put back -
+        // otherwise one removal per row. A Range delete over the (always
+        // contiguous) row span was measured slower than both.
+        let removeAllRowNodes () =
+            let hasAnchor = not (obj.ReferenceEquals(anchor, null))
+
+            let owned =
+                if hasAnchor then
+                    order.Length + 1
+                else
+                    order.Length
+
+            if int parent.childNodes.length = owned then
+                parent.textContent <- ""
+
+                if hasAnchor then
+                    parent.appendChild anchor |> ignore
+            else
+                for i in 0 .. rows.Length - 1 do
+                    parent.removeChild rows.[i].Node |> ignore
+
         let reconcile (items: 'a[]) =
             let n = items.Length
             let newKeys = items |> Array.map keyOf
@@ -288,25 +310,14 @@ module Dom =
 
             // Fast path: clearing the whole list. Every row scope still has to be
             // disposed, but the nodes can go in a single DOM operation when the list
-            // owns the parent outright (no anchor, no sibling content) instead of
+            // owns the parent (no sibling content besides its anchor) instead of
             // N removeChild calls.
             if n = 0 then
                 if order.Length > 0 then
                     for i in 0 .. rows.Length - 1 do
                         rows.[i].Dispose.Dispose()
 
-                    // One DOM op when the list owns the parent outright; otherwise
-                    // drop the nodes individually. A Range delete over the (always
-                    // contiguous) row span was measured slower than both.
-                    if
-                        obj.ReferenceEquals(anchor, null)
-                        && int parent.childNodes.length = order.Length
-                    then
-                        parent.textContent <- ""
-                    else
-                        for i in 0 .. rows.Length - 1 do
-                            parent.removeChild rows.[i].Node |> ignore
-
+                    removeAllRowNodes ()
                     byKey.Clear()
                     indexed <- false
                     order <- [||]
@@ -364,14 +375,7 @@ module Dom =
                     for i in 0 .. rows.Length - 1 do
                         rows.[i].Dispose.Dispose()
 
-                    if
-                        obj.ReferenceEquals(anchor, null)
-                        && int parent.childNodes.length = order.Length
-                    then
-                        parent.textContent <- ""
-                    else
-                        for i in 0 .. rows.Length - 1 do
-                            parent.removeChild rows.[i].Node |> ignore
+                    removeAllRowNodes ()
 
                     let frag = document.createDocumentFragment ()
                     let newRows = Array.zeroCreate<Row> n

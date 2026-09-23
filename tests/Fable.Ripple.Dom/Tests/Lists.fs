@@ -79,9 +79,53 @@ let tests =
                 "EachPosition",
                 fun root ->
                     promise {
-                        do! assertLocator (root.locator "#host") (haveText "BEFOREAFTERfill")
+                        do! assertLocator (root.locator "#host") (haveText "BEFOREAFTERfillclear")
                         do! click (root.locator "#fill")
-                        do! assertLocator (root.locator "#host") (haveText "BEFOREabAFTERfill")
+                        do! assertLocator (root.locator "#host") (haveText "BEFOREabAFTERfillclear")
+                    }
+            )
+
+            testComponent (
+                "clearing a list that owns its parent runs every cleanup and keeps its place",
+                "KeyedList",
+                fun root ->
+                    promise {
+                        do! click (root.locator "#clear")
+                        do! assertLocator (root.locator "#list > li") (haveCount 0)
+                        do! assertLocator (root.locator "#cleanups") (haveText "3")
+
+                        // Rows added after the clear still land inside the list.
+                        do! click (root.locator "#append")
+                        do! assertLocator (root.locator "#list > li") (haveCount 1)
+
+                        do!
+                            assertLocator
+                                (root.locator "#list > li:nth-child(1)")
+                                (haveAttribute "data-id" "4")
+
+                        // Full replace (disjoint keys) takes the same path.
+                        do! click (root.locator "#replace")
+                        do! assertLocator (root.locator "#list > li") (haveCount 2)
+                        do! assertLocator (root.locator "#cleanups") (haveText "4")
+                        do! click (root.locator "#append")
+
+                        do!
+                            assertLocator
+                                (root.locator "#list > li:nth-child(3)")
+                                (haveAttribute "data-id" "7")
+                    }
+            )
+
+            testComponent (
+                "clearing a list between siblings leaves the siblings in place",
+                "EachPosition",
+                fun root ->
+                    promise {
+                        do! click (root.locator "#fill")
+                        do! click (root.locator "#clear")
+                        do! assertLocator (root.locator "#host") (haveText "BEFOREAFTERfillclear")
+                        do! click (root.locator "#fill")
+                        do! assertLocator (root.locator "#host") (haveText "BEFOREabAFTERfillclear")
                     }
             )
 
