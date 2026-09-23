@@ -127,9 +127,9 @@ let shown =
     useCelsius
     |> Signal.bind (fun c ->
         if c then
-            celsius.Signal
+            celsius
         else
-            fahrenheit.Signal
+            fahrenheit
     )
 
 // Runs immediately: shown = 21.0

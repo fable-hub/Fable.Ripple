@@ -102,8 +102,8 @@ let readerOf (probe: Probe) (read: unit -> unit) : DomItem =
     )
 
 /// The common case: hand over the `Var` or `Signal` itself.
-let inline reader (probe: Probe) (s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-    readerOf probe (fun () -> (^s: (member get_Value: unit -> ^a) s) |> ignore)
+let reader (probe: Probe) (s: Signal<'a>) : DomItem =
+    readerOf probe (fun () -> s.Value |> ignore)
 
 /// A single labelled number, for readouts that are not run counts.
 let readout (label: string) (value: unit -> string) : DomItem =
@@ -140,20 +140,10 @@ let peekedWith (repaint: Repaint) (label: string) (value: unit -> string) : DomI
 /// The common case: show what a source currently holds, without becoming one of
 /// its observers. Takes the `Var` or `Signal` itself - every call site was
 /// otherwise writing out the same `fun () -> string (x.Peek())`.
-let inline peeked
-    (repaint: Repaint)
-    (label: string)
-    (s: ^s when ^s: (member Peek: unit -> ^a))
-    : DomItem
-    =
-    peekedWith repaint label (fun () -> string (^s: (member Peek: unit -> ^a) s))
+let inline peeked (repaint: Repaint) (label: string) (s: Signal<'a>) : DomItem =
+    peekedWith repaint label (fun () -> string (s.Peek()))
 
 /// A live observer count, read without becoming one of the observers counted.
-///
-/// `Signal.observerCount` takes a read-only view, so call sites pass
-/// `source.Signal` - which is worth leaving visible rather than hiding behind
-/// this helper, since handing out `.Signal` is itself the thing Sharing state
-/// is about.
 let observers (repaint: Repaint) (label: string) (s: Signal<'T>) : DomItem =
     peekedWith repaint label (fun () -> string (Signal.observerCount s))
 

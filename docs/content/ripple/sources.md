@@ -62,7 +62,7 @@ name.Value <- "grace" // name = grace
 
 ## The read-only view
 
-`myVar.Signal`{fsharp} is a `Signal<'T>`{fsharp}: the same value, with a getter and no setter. Hand it to anything that should read but never write:
+`Signal<'T>`{fsharp} is the read-only interface of a `Var<'T>`{fsharp}: a getter and `Peek`{fsharp}, no setter. Every `Var<'T>`{fsharp} is a `Signal<'T>`{fsharp}, so a source is accepted wherever a `Signal<'T>`{fsharp} is expected. Take a `Signal<'T>`{fsharp} in anything that should read but never write:
 
 ```fsharp
 let theme = Var.create "light"
@@ -71,10 +71,12 @@ let watch (s: Signal<string>) =
     // s.Value <- "dark"    would not compile
     Signal.subscribe (printfn "theme = %s") s
 
-watch theme.Signal
+watch theme
 ```
 
-The wrapper costs nothing: Fable erases it, so at runtime the read-only view is the node itself. The one trace it leaves is reflection - `typeof<Signal<float>>`{fsharp} reports ``Var`1``.
+The view costs nothing: a `Signal<'T>`{fsharp} is the node itself, seen through its interface. `myVar.Signal`{fsharp} gives the same value with the `Signal<'T>`{fsharp} type, for a list or a record field that holds sources and derived signals together.
+
+A computed is only ever handed out as a `Signal<'T>`{fsharp}. Writing one through a downcast to `Var<'T>`{fsharp} throws `InvalidOperationException`{fsharp}.
 
 ## Sharing state
 
@@ -85,7 +87,7 @@ module Theme =
     let private state = Var.create "light"
 
     /// Read-only for consumers; the module owns the writes.
-    let current: Signal<string> = state.Signal
+    let current: Signal<string> = state
 
     let set (name: string) = state.Value <- name
 ```

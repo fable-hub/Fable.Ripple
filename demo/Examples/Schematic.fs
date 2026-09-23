@@ -101,16 +101,16 @@ module Node =
     /// second reason to re-run, which is fatal to anything counting those runs.
     /// Handing the signal over means the call site never spells the read, so it
     /// cannot spell it wrong.
-    let inline source label (s: ^s when ^s: (member Peek: unit -> ^a)) =
-        sourceWith label (fun () -> string (^s: (member Peek: unit -> ^a) s))
+    let inline source label (s: Signal<'a>) =
+        sourceWith label (fun () -> string (s.Peek()))
 
     /// A boolean source. `string true` is "True"; a schematic reads better
     /// lowercase, and F# has no way to special-case `bool` inside `source`.
-    let inline flag label (s: ^s when ^s: (member Peek: unit -> bool)) =
+    let flag label (s: Signal<bool>) =
         sourceWith
             label
             (fun () ->
-                if (^s: (member Peek: unit -> bool) s) then
+                if s.Peek() then
                     "true"
                 else
                     "false"
@@ -119,7 +119,7 @@ module Node =
     /// A cached derived node, from a thunk - for a value with its own formatting.
     ///
     /// Also the public seam `derived` needs: an `inline` member cannot reach the
-    /// private `make`, so the SRTP form forwards through here. Same reason
+    /// private `make`, so `derived` forwards through here. Same reason
     /// `sourceWith` exists.
     let derivedWith label value = make Derived label value
 
@@ -128,16 +128,16 @@ module Node =
     /// Peeked, for the reason `source` is: a tracked read here would make the
     /// drawing an OBSERVER of the value it draws, which is how a picture starts
     /// keeping alive - or inflating - the very thing it exists to explain.
-    let inline derived label (s: ^s when ^s: (member Peek: unit -> ^a)) =
-        derivedWith label (fun () -> string (^s: (member Peek: unit -> ^a) s))
+    let inline derived label (s: Signal<'a>) =
+        derivedWith label (fun () -> string (s.Peek()))
 
     /// A DOM binding whose text is not simply a signal's contents - a reader
     /// showing "running" or "disposed" rather than a value.
     let bindingWith label value = make Reader label value
 
     /// A DOM binding: it consumes a value and produces none.
-    let inline binding label (s: ^s when ^s: (member Peek: unit -> ^a)) =
-        bindingWith label (fun () -> string (^s: (member Peek: unit -> ^a) s))
+    let inline binding label (s: Signal<'a>) =
+        bindingWith label (fun () -> string (s.Peek()))
 
     /// A plain function. Drawn borderless, because there is no node behind it -
     /// so there is no signal to hand over, and this keeps its thunk.

@@ -44,6 +44,23 @@ let tests =
             )
 
             test (
+                "writing a computed through a downcast throws",
+                fun _ ->
+                    let a = Var.create 1
+                    let b = Signal.map (fun x -> x * 10) a
+
+                    let threw =
+                        try
+                            (b :?> Var<int>).Value <- 5
+                            false
+                        with _ ->
+                            true
+
+                    assertThat threw (isEqualTo true)
+                    assertThat b.Value (isEqualTo 10)
+            )
+
+            test (
                 "computed is lazy until first read",
                 fun _ ->
                     let a = Var.create 1

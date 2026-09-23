@@ -17,8 +17,8 @@ type attr =
     static member className(v: string) : DomItem = attribute "class" v
     static member className(f: unit -> string) : DomItem = bindAttribute "class" f
 
-    static member inline className(s: ^s when ^s: (member get_Value: unit -> string)) : DomItem =
-        bindAttribute "class" (fun () -> (^s: (member get_Value: unit -> string) s))
+    static member className(s: Signal<string>) : DomItem =
+        bindAttribute "class" (fun () -> s.Value)
 
     /// Join a list of class names with spaces.
     static member classes(names: string list) : DomItem =
@@ -48,11 +48,8 @@ type attr =
         ClassList.bindToggle name cond
 
     /// Single-token toggle driven directly by a `Var`/`Signal<bool>`.
-    static member inline toggleClass
-        (name: string, cond: ^s when ^s: (member get_Value: unit -> bool))
-        : DomItem
-        =
-        ClassList.bindToggle name (fun () -> (^s: (member get_Value: unit -> bool) cond))
+    static member toggleClass(name: string, cond: Signal<bool>) : DomItem =
+        ClassList.bindToggle name (fun () -> cond.Value)
 
     (*
         Style
@@ -60,8 +57,8 @@ type attr =
     static member style(v: string) : DomItem = attribute "style" v
     static member style(f: unit -> string) : DomItem = bindAttribute "style" f
 
-    static member inline style(s: ^s when ^s: (member get_Value: unit -> string)) : DomItem =
-        bindAttribute "style" (fun () -> (^s: (member get_Value: unit -> string) s))
+    static member style(s: Signal<string>) : DomItem =
+        bindAttribute "style" (fun () -> s.Value)
 
     /// Build the `style` string from `property, value` pairs.
     static member style(props: (string * string) list) : DomItem =
@@ -76,8 +73,8 @@ type attr =
     static member value(f: unit -> string) : DomItem = bindProperty "value" f
 
     /// Reactive value from any signal source (`Var` or `Signal`, any type, stringified).
-    static member inline value(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        bindProperty "value" (fun () -> string (^s: (member get_Value: unit -> ^a) s))
+    static member inline value(s: Signal<'a>) : DomItem =
+        bindProperty "value" (fun () -> string s.Value)
 
     (*
         Checked (interactive)
@@ -85,8 +82,8 @@ type attr =
     static member checked'(v: bool) : DomItem = property "checked" v
     static member checked'(f: unit -> bool) : DomItem = bindProperty "checked" f
 
-    static member inline checked'(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "checked" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member checked'(s: Signal<bool>) : DomItem =
+        bindProperty "checked" (fun () -> s.Value)
 
     (*
         Other stateful boolean properties
@@ -94,44 +91,43 @@ type attr =
     static member disabled(v: bool) : DomItem = property "disabled" v
     static member disabled(f: unit -> bool) : DomItem = bindProperty "disabled" f
 
-    static member inline disabled(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "disabled" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member disabled(s: Signal<bool>) : DomItem =
+        bindProperty "disabled" (fun () -> s.Value)
 
     static member hidden(v: bool) : DomItem = property "hidden" v
     static member hidden(f: unit -> bool) : DomItem = bindProperty "hidden" f
 
-    static member inline hidden(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "hidden" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member hidden(s: Signal<bool>) : DomItem =
+        bindProperty "hidden" (fun () -> s.Value)
 
     static member selected(v: bool) : DomItem = property "selected" v
     static member selected(f: unit -> bool) : DomItem = bindProperty "selected" f
 
-    static member inline selected(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "selected" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member selected(s: Signal<bool>) : DomItem =
+        bindProperty "selected" (fun () -> s.Value)
 
     static member readOnly(v: bool) : DomItem = property "readOnly" v
     static member readOnly(f: unit -> bool) : DomItem = bindProperty "readOnly" f
 
-    static member inline readOnly(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "readOnly" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member readOnly(s: Signal<bool>) : DomItem =
+        bindProperty "readOnly" (fun () -> s.Value)
 
     static member required(v: bool) : DomItem = property "required" v
     static member required(f: unit -> bool) : DomItem = bindProperty "required" f
 
-    static member inline required(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "required" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member required(s: Signal<bool>) : DomItem =
+        bindProperty "required" (fun () -> s.Value)
 
     static member multiple(v: bool) : DomItem = property "multiple" v
     static member multiple(f: unit -> bool) : DomItem = bindProperty "multiple" f
 
-    static member inline multiple(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "multiple" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member multiple(s: Signal<bool>) : DomItem =
+        bindProperty "multiple" (fun () -> s.Value)
 
     static member isOpen(v: bool) : DomItem = property "open" v
     static member isOpen(f: unit -> bool) : DomItem = bindProperty "open" f
 
-    static member inline isOpen(s: ^s when ^s: (member get_Value: unit -> bool)) : DomItem =
-        bindProperty "open" (fun () -> (^s: (member get_Value: unit -> bool) s))
+    static member isOpen(s: Signal<bool>) : DomItem = bindProperty "open" (fun () -> s.Value)
 
     (*
         Two-way bindings

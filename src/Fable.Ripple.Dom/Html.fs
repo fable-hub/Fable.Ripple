@@ -28,11 +28,9 @@ type Html =
         Child(t :> Node)
 
     /// Reactive text from any signal source - a `Var` or a derived `Signal`, of any
-    /// type (stringified). One SRTP overload covers them all, so a `Var` flows in
-    /// directly with no `.Signal`. Forwards to the thunk overload above, keeping the
+    /// type (stringified). Forwards to the thunk overload above, keeping the
     /// internal `DomItem` construction out of the inlined body (so it inlines anywhere).
-    static member inline text(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        Html.text (fun () -> string (^s: (member get_Value: unit -> ^a) s))
+    static member inline text(s: Signal<'a>) : DomItem = Html.text (fun () -> string s.Value)
 
     (*
         Sections
@@ -40,14 +38,12 @@ type Html =
     static member header(items: DomItem list) : DomItem = createElement "header" items
     static member header(s: string) : DomItem = createElement "header" [ Html.text s ]
 
-    static member inline header(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "header" [ Html.text s ]
+    static member inline header(s: Signal<'a>) : DomItem = createElement "header" [ Html.text s ]
 
     static member footer(items: DomItem list) : DomItem = createElement "footer" items
     static member footer(s: string) : DomItem = createElement "footer" [ Html.text s ]
 
-    static member inline footer(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "footer" [ Html.text s ]
+    static member inline footer(s: Signal<'a>) : DomItem = createElement "footer" [ Html.text s ]
 
     static member main(items: DomItem list) : DomItem = createElement "main" items
     static member section(items: DomItem list) : DomItem = createElement "section" items
@@ -57,38 +53,32 @@ type Html =
     static member h1(items: DomItem list) : DomItem = createElement "h1" items
     static member h1(s: string) : DomItem = createElement "h1" [ Html.text s ]
 
-    static member inline h1(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "h1" [ Html.text s ]
+    static member inline h1(s: Signal<'a>) : DomItem = createElement "h1" [ Html.text s ]
 
     static member h2(items: DomItem list) : DomItem = createElement "h2" items
     static member h2(s: string) : DomItem = createElement "h2" [ Html.text s ]
 
-    static member inline h2(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "h2" [ Html.text s ]
+    static member inline h2(s: Signal<'a>) : DomItem = createElement "h2" [ Html.text s ]
 
     static member h3(items: DomItem list) : DomItem = createElement "h3" items
     static member h3(s: string) : DomItem = createElement "h3" [ Html.text s ]
 
-    static member inline h3(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "h3" [ Html.text s ]
+    static member inline h3(s: Signal<'a>) : DomItem = createElement "h3" [ Html.text s ]
 
     static member h4(items: DomItem list) : DomItem = createElement "h4" items
     static member h4(s: string) : DomItem = createElement "h4" [ Html.text s ]
 
-    static member inline h4(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "h4" [ Html.text s ]
+    static member inline h4(s: Signal<'a>) : DomItem = createElement "h4" [ Html.text s ]
 
     static member h5(items: DomItem list) : DomItem = createElement "h5" items
     static member h5(s: string) : DomItem = createElement "h5" [ Html.text s ]
 
-    static member inline h5(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "h5" [ Html.text s ]
+    static member inline h5(s: Signal<'a>) : DomItem = createElement "h5" [ Html.text s ]
 
     static member h6(items: DomItem list) : DomItem = createElement "h6" items
     static member h6(s: string) : DomItem = createElement "h6" [ Html.text s ]
 
-    static member inline h6(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "h6" [ Html.text s ]
+    static member inline h6(s: Signal<'a>) : DomItem = createElement "h6" [ Html.text s ]
 
     static member hgroup(items: DomItem list) : DomItem = createElement "hgroup" items
     static member address(items: DomItem list) : DomItem = createElement "address" items
@@ -101,8 +91,7 @@ type Html =
     static member p(items: DomItem list) : DomItem = createElement "p" items
     static member p(s: string) : DomItem = createElement "p" [ Html.text s ]
 
-    static member inline p(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "p" [ Html.text s ]
+    static member inline p(s: Signal<'a>) : DomItem = createElement "p" [ Html.text s ]
 
     static member hr(items: DomItem list) : DomItem = createElement "hr" items
     static member pre(items: DomItem list) : DomItem = createElement "pre" items
@@ -111,7 +100,7 @@ type Html =
     static member blockquote(s: string) : DomItem =
         createElement "blockquote" [ Html.text s ]
 
-    static member inline blockquote(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
+    static member inline blockquote(s: Signal<'a>) : DomItem =
         createElement "blockquote" [ Html.text s ]
 
     static member ol(items: DomItem list) : DomItem = createElement "ol" items
@@ -119,22 +108,19 @@ type Html =
     static member li(items: DomItem list) : DomItem = createElement "li" items
     static member li(s: string) : DomItem = createElement "li" [ Html.text s ]
 
-    static member inline li(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "li" [ Html.text s ]
+    static member inline li(s: Signal<'a>) : DomItem = createElement "li" [ Html.text s ]
 
     static member menu(items: DomItem list) : DomItem = createElement "menu" items
     static member dl(items: DomItem list) : DomItem = createElement "dl" items
     static member dt(items: DomItem list) : DomItem = createElement "dt" items
     static member dt(s: string) : DomItem = createElement "dt" [ Html.text s ]
 
-    static member inline dt(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "dt" [ Html.text s ]
+    static member inline dt(s: Signal<'a>) : DomItem = createElement "dt" [ Html.text s ]
 
     static member dd(items: DomItem list) : DomItem = createElement "dd" items
     static member dd(s: string) : DomItem = createElement "dd" [ Html.text s ]
 
-    static member inline dd(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "dd" [ Html.text s ]
+    static member inline dd(s: Signal<'a>) : DomItem = createElement "dd" [ Html.text s ]
 
     static member figure(items: DomItem list) : DomItem = createElement "figure" items
     static member figcaption(items: DomItem list) : DomItem = createElement "figcaption" items
@@ -142,7 +128,7 @@ type Html =
     static member figcaption(s: string) : DomItem =
         createElement "figcaption" [ Html.text s ]
 
-    static member inline figcaption(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
+    static member inline figcaption(s: Signal<'a>) : DomItem =
         createElement "figcaption" [ Html.text s ]
 
     (*
@@ -152,40 +138,34 @@ type Html =
     static member em(items: DomItem list) : DomItem = createElement "em" items
     static member em(s: string) : DomItem = createElement "em" [ Html.text s ]
 
-    static member inline em(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "em" [ Html.text s ]
+    static member inline em(s: Signal<'a>) : DomItem = createElement "em" [ Html.text s ]
 
     static member strong(items: DomItem list) : DomItem = createElement "strong" items
     static member strong(s: string) : DomItem = createElement "strong" [ Html.text s ]
 
-    static member inline strong(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "strong" [ Html.text s ]
+    static member inline strong(s: Signal<'a>) : DomItem = createElement "strong" [ Html.text s ]
 
     static member small(items: DomItem list) : DomItem = createElement "small" items
     static member small(s: string) : DomItem = createElement "small" [ Html.text s ]
 
-    static member inline small(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "small" [ Html.text s ]
+    static member inline small(s: Signal<'a>) : DomItem = createElement "small" [ Html.text s ]
 
     static member s(items: DomItem list) : DomItem = createElement "s" items
     static member cite(items: DomItem list) : DomItem = createElement "cite" items
     static member cite(s: string) : DomItem = createElement "cite" [ Html.text s ]
 
-    static member inline cite(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "cite" [ Html.text s ]
+    static member inline cite(s: Signal<'a>) : DomItem = createElement "cite" [ Html.text s ]
 
     static member q(items: DomItem list) : DomItem = createElement "q" items
     static member q(s: string) : DomItem = createElement "q" [ Html.text s ]
 
-    static member inline q(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "q" [ Html.text s ]
+    static member inline q(s: Signal<'a>) : DomItem = createElement "q" [ Html.text s ]
 
     static member dfn(items: DomItem list) : DomItem = createElement "dfn" items
     static member abbr(items: DomItem list) : DomItem = createElement "abbr" items
     static member abbr(s: string) : DomItem = createElement "abbr" [ Html.text s ]
 
-    static member inline abbr(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "abbr" [ Html.text s ]
+    static member inline abbr(s: Signal<'a>) : DomItem = createElement "abbr" [ Html.text s ]
 
     static member ruby(items: DomItem list) : DomItem = createElement "ruby" items
     static member rt(items: DomItem list) : DomItem = createElement "rt" items
@@ -195,26 +175,22 @@ type Html =
     static member code(items: DomItem list) : DomItem = createElement "code" items
     static member code(s: string) : DomItem = createElement "code" [ Html.text s ]
 
-    static member inline code(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "code" [ Html.text s ]
+    static member inline code(s: Signal<'a>) : DomItem = createElement "code" [ Html.text s ]
 
     static member var(items: DomItem list) : DomItem = createElement "var" items
     static member var(s: string) : DomItem = createElement "var" [ Html.text s ]
 
-    static member inline var(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "var" [ Html.text s ]
+    static member inline var(s: Signal<'a>) : DomItem = createElement "var" [ Html.text s ]
 
     static member samp(items: DomItem list) : DomItem = createElement "samp" items
     static member samp(s: string) : DomItem = createElement "samp" [ Html.text s ]
 
-    static member inline samp(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "samp" [ Html.text s ]
+    static member inline samp(s: Signal<'a>) : DomItem = createElement "samp" [ Html.text s ]
 
     static member kbd(items: DomItem list) : DomItem = createElement "kbd" items
     static member kbd(s: string) : DomItem = createElement "kbd" [ Html.text s ]
 
-    static member inline kbd(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "kbd" [ Html.text s ]
+    static member inline kbd(s: Signal<'a>) : DomItem = createElement "kbd" [ Html.text s ]
 
     static member sub(items: DomItem list) : DomItem = createElement "sub" items
     static member sup(items: DomItem list) : DomItem = createElement "sup" items
@@ -224,16 +200,14 @@ type Html =
     static member mark(items: DomItem list) : DomItem = createElement "mark" items
     static member mark(s: string) : DomItem = createElement "mark" [ Html.text s ]
 
-    static member inline mark(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "mark" [ Html.text s ]
+    static member inline mark(s: Signal<'a>) : DomItem = createElement "mark" [ Html.text s ]
 
     static member bdi(items: DomItem list) : DomItem = createElement "bdi" items
     static member bdo(items: DomItem list) : DomItem = createElement "bdo" items
     static member span(items: DomItem list) : DomItem = createElement "span" items
     static member span(s: string) : DomItem = createElement "span" [ Html.text s ]
 
-    static member inline span(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "span" [ Html.text s ]
+    static member inline span(s: Signal<'a>) : DomItem = createElement "span" [ Html.text s ]
 
     static member br(items: DomItem list) : DomItem = createElement "br" items
     static member wbr(items: DomItem list) : DomItem = createElement "wbr" items
@@ -264,8 +238,7 @@ type Html =
     static member caption(items: DomItem list) : DomItem = createElement "caption" items
     static member caption(s: string) : DomItem = createElement "caption" [ Html.text s ]
 
-    static member inline caption(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "caption" [ Html.text s ]
+    static member inline caption(s: Signal<'a>) : DomItem = createElement "caption" [ Html.text s ]
 
     static member colgroup(items: DomItem list) : DomItem = createElement "colgroup" items
     static member col(items: DomItem list) : DomItem = createElement "col" items
@@ -276,14 +249,12 @@ type Html =
     static member td(items: DomItem list) : DomItem = createElement "td" items
     static member td(s: string) : DomItem = createElement "td" [ Html.text s ]
 
-    static member inline td(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "td" [ Html.text s ]
+    static member inline td(s: Signal<'a>) : DomItem = createElement "td" [ Html.text s ]
 
     static member th(items: DomItem list) : DomItem = createElement "th" items
     static member th(s: string) : DomItem = createElement "th" [ Html.text s ]
 
-    static member inline th(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "th" [ Html.text s ]
+    static member inline th(s: Signal<'a>) : DomItem = createElement "th" [ Html.text s ]
 
     (*
         Forms
@@ -298,15 +269,13 @@ type Html =
     static member option(items: DomItem list) : DomItem = createElement "option" items
     static member option(s: string) : DomItem = createElement "option" [ Html.text s ]
 
-    static member inline option(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "option" [ Html.text s ]
+    static member inline option(s: Signal<'a>) : DomItem = createElement "option" [ Html.text s ]
 
     static member textarea(items: DomItem list) : DomItem = createElement "textarea" items
     static member output(items: DomItem list) : DomItem = createElement "output" items
     static member output(s: string) : DomItem = createElement "output" [ Html.text s ]
 
-    static member inline output(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "output" [ Html.text s ]
+    static member inline output(s: Signal<'a>) : DomItem = createElement "output" [ Html.text s ]
 
     static member progress(items: DomItem list) : DomItem = createElement "progress" items
     static member meter(items: DomItem list) : DomItem = createElement "meter" items
@@ -314,8 +283,7 @@ type Html =
     static member legend(items: DomItem list) : DomItem = createElement "legend" items
     static member legend(s: string) : DomItem = createElement "legend" [ Html.text s ]
 
-    static member inline legend(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "legend" [ Html.text s ]
+    static member inline legend(s: Signal<'a>) : DomItem = createElement "legend" [ Html.text s ]
 
     (*
         Interactive
@@ -324,8 +292,7 @@ type Html =
     static member summary(items: DomItem list) : DomItem = createElement "summary" items
     static member summary(s: string) : DomItem = createElement "summary" [ Html.text s ]
 
-    static member inline summary(s: ^s when ^s: (member get_Value: unit -> ^a)) : DomItem =
-        createElement "summary" [ Html.text s ]
+    static member inline summary(s: Signal<'a>) : DomItem = createElement "summary" [ Html.text s ]
 
     static member dialog(items: DomItem list) : DomItem = createElement "dialog" items
     static member slot(items: DomItem list) : DomItem = createElement "slot" items
@@ -430,12 +397,8 @@ type Html =
     // The inlined body calls only into this file. Reaching across to another
     // assembly from here (`Signal.untracked`) makes the in-browser compiler fetch
     // that assembly's source by absolute path, which 404s.
-    static member inline switch
-        (s: ^s when ^s: (member get_Value: unit -> ^a))
-        (f: ^a -> DomItem)
-        : DomItem
-        =
-        Html.switchWith ((fun () -> (^s: (member get_Value: unit -> ^a) s)), f)
+    static member inline switch (s: Signal<'a>) (f: 'a -> DomItem) : DomItem =
+        Html.switchWith ((fun () -> s.Value), f)
 
     /// Reactive conditional: renders `whenTrue ()` while `cond` holds, otherwise
     /// nothing. The active branch is built fresh when it appears and disposed when
@@ -462,21 +425,14 @@ type Html =
         )
 
     /// `show` driven directly by a signal source (a `Var`/`Signal` of `bool`).
-    static member inline show
-        (cond: ^s when ^s: (member get_Value: unit -> bool), whenTrue: unit -> DomItem)
-        : DomItem
-        =
-        Html.show ((fun () -> (^s: (member get_Value: unit -> bool) cond)), whenTrue)
+    static member show(cond: Signal<bool>, whenTrue: unit -> DomItem) : DomItem =
+        Html.show ((fun () -> cond.Value), whenTrue)
 
-    static member inline show
-        (
-            cond: ^s when ^s: (member get_Value: unit -> bool),
-            whenTrue: unit -> DomItem,
-            whenFalse: unit -> DomItem
-        )
+    static member show
+        (cond: Signal<bool>, whenTrue: unit -> DomItem, whenFalse: unit -> DomItem)
         : DomItem
         =
-        Html.show ((fun () -> (^s: (member get_Value: unit -> bool) cond)), whenTrue, whenFalse)
+        Html.show ((fun () -> cond.Value), whenTrue, whenFalse)
 
     /// Realise a root item to its element.
     static member render(item: DomItem) : HTMLElement = toElement item
