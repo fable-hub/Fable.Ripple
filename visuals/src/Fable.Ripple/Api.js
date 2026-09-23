@@ -1,6 +1,6 @@
 
 import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { Signal$1__get_Node, Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
+import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
 import { untracked, updateIfNecessary } from "./Internal/Tracking.js";
 import { observerCount, dispose } from "./Internal/Graph.js";
 import { batch } from "./Internal/Scheduler.js";
@@ -58,6 +58,48 @@ export function Signal_computed(f) {
 }
 
 /**
+ * Map with a custom equality on the result. Accepts a source or derived signal.
+ */
+export function Signal_mapWith(equals, f, a) {
+    return Signal_computedWith(equals, () => f(a.Value));
+}
+
+/**
+ * Derive a signal by mapping one signal (structural equality).
+ */
+export function Signal_map(f, a) {
+    return Signal_computed(() => f(a.Value));
+}
+
+/**
+ * Combine two signals with a custom equality on the result.
+ */
+export function Signal_map2With(equals, f, a, b) {
+    return Signal_computedWith(equals, () => f(a.Value, b.Value));
+}
+
+/**
+ * Derive a signal by combining two signals (applicative, static deps).
+ */
+export function Signal_map2(f, a, b) {
+    return Signal_computed(() => f(a.Value, b.Value));
+}
+
+/**
+ * Derive a signal by combining three signals.
+ */
+export function Signal_map3(f, a, b, c) {
+    return Signal_computed(() => f(a.Value, b.Value, c.Value));
+}
+
+/**
+ * Derive a signal whose dependency is chosen dynamically (monadic).
+ */
+export function Signal_bind(f, a) {
+    return Signal_computed(() => f(a.Value).Value);
+}
+
+/**
  * Run `fn` now and re-run it whenever a signal it reads changes.
  */
 export function Signal_effect(fn) {
@@ -68,6 +110,15 @@ export function Signal_effect(fn) {
             dispose(eff);
         },
     };
+}
+
+/**
+ * Run `handler` now with the current value and again on every change.
+ */
+export function Signal_subscribe(handler, s) {
+    return Signal_effect(() => {
+        handler(s.Value);
+    });
 }
 
 /**
@@ -99,10 +150,9 @@ export function Signal_onCleanup(fn) {
 }
 
 /**
- * Number of live observers of a signal. Diagnostic. Takes a read-only view;
- * pass a source as `source.Signal`.
+ * Number of live observers of a signal. Diagnostic.
  */
 export function Signal_observerCount(s) {
-    return observerCount(Signal$1__get_Node(s)) | 0;
+    return observerCount(s) | 0;
 }
 

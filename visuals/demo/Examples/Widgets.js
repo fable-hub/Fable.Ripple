@@ -138,6 +138,15 @@ export function readerOf(probe, read) {
 }
 
 /**
+ * The common case: hand over the `Var` or `Signal` itself.
+ */
+export function reader(probe, s) {
+    return readerOf(probe, () => {
+        s.Value;
+    });
+}
+
+/**
  * A single labelled number, for readouts that are not run counts.
  */
 export function readout(label, value) {
@@ -160,11 +169,6 @@ export function peekedWith(repaint, label, value) {
 
 /**
  * A live observer count, read without becoming one of the observers counted.
- * 
- * `Signal.observerCount` takes a read-only view, so call sites pass
- * `source.Signal` - which is worth leaving visible rather than hiding behind
- * this helper, since handing out `.Signal` is itself the thing Sharing state
- * is about.
  */
 export function observers(repaint, label, s) {
     return peekedWith(repaint, label, () => int32ToString(Signal_observerCount(s)));

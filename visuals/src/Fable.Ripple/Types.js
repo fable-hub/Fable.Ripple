@@ -1,5 +1,5 @@
 
-import { defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { Exception, defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { FSharpRef } from "../../fable_modules/fable-library-js.5.13.0/Types.js";
 import { ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode_$reflection, ReactiveNode, ReactiveNode__set_Recompute_233A5940 } from "./ReactiveNode.js";
 import { ScopeModule_register } from "./Internal/Scope.js";
@@ -18,14 +18,16 @@ export class Var$1 extends ReactiveNode {
     constructor(initial, compute, equals) {
         super((compute == null) ? 0 : 2, false);
         const this$ = new FSharpRef(defaultOf());
+        this.compute = compute;
         this.equals = equals;
         this$.contents = this;
         this.value = initial;
-        this["init@11"] = 1;
-        if (compute == null) {
+        this["init@20"] = 1;
+        const matchValue = this.compute;
+        if (matchValue == null) {
         }
         else {
-            const fn = compute;
+            const fn = matchValue;
             ReactiveNode__set_Recompute_233A5940(this$.contents, () => {
                 const nv = fn();
                 if (this.equals(this.value, nv)) {
@@ -37,9 +39,17 @@ export class Var$1 extends ReactiveNode {
                 }
             });
         }
-        if (compute != null) {
+        if (this.compute != null) {
             ScopeModule_register(this$.contents);
         }
+    }
+    get Value() {
+        const this$ = this;
+        return Var$1__get_Value(this$);
+    }
+    Peek() {
+        const this$ = this;
+        return Var$1__Peek(this$);
     }
 }
 
@@ -53,8 +63,8 @@ export function Var$1_$ctor_Z4606F8CC(initial, compute, equals) {
 
 /**
  * The current value. Reading tracks a dependency and pulls the signal up to
- * date; setting notifies observers when the value differs. Computeds never
- * reach the setter - they are only ever handed out as read-only `Signal<'T>`.
+ * date; setting notifies observers when the value differs. A computed is only
+ * handed out as a read-only `Signal<'T>`; writing one through a downcast throws.
  */
 export function Var$1__get_Value(this$) {
     track(this$);
@@ -64,10 +74,13 @@ export function Var$1__get_Value(this$) {
 
 /**
  * The current value. Reading tracks a dependency and pulls the signal up to
- * date; setting notifies observers when the value differs. Computeds never
- * reach the setter - they are only ever handed out as read-only `Signal<'T>`.
+ * date; setting notifies observers when the value differs. A computed is only
+ * handed out as a read-only `Signal<'T>`; writing one through a downcast throws.
  */
 export function Var$1__set_Value_2B595(this$, v) {
+    if (this$.compute != null) {
+        throw new Exception("Cannot write to a computed signal.");
+    }
     if (!this$.equals(this$.value, v)) {
         this$.value = v;
         notifyChange(this$);
@@ -90,9 +103,11 @@ export function Var$1__Peek(this$) {
 }
 
 /**
- * The backing node (internal - lets in-assembly diagnostics reach the graph).
+ * This source as a read-only <c>Signal</c>. Rarely needed: every
+ * <c>Signal</c> parameter accepts a <c>Var</c> directly. Use it to store a
+ * source in the same collection as derived signals.
  */
-export function Signal$1__get_Node(this$) {
+export function Var$1__get_Signal(this$) {
     return this$;
 }
 
@@ -105,7 +120,7 @@ export class Effect extends ReactiveNode {
         super(2, true);
         const this$ = new FSharpRef(defaultOf());
         this$.contents = this;
-        this["init@106-1"] = 1;
+        this["init@94-1"] = 1;
         ReactiveNode__set_EffectFn_A3DF6A2(this$.contents, fn);
         ScopeModule_register(this$.contents);
     }

@@ -70,10 +70,18 @@ export function NodeModule_sourceWith(label, value) {
 }
 
 /**
+ * A boolean source. `string true` is "True"; a schematic reads better
+ * lowercase, and F# has no way to special-case `bool` inside `source`.
+ */
+export function NodeModule_flag(label, s) {
+    return NodeModule_sourceWith(label, () => (s.Peek() ? "true" : "false"));
+}
+
+/**
  * A cached derived node, from a thunk - for a value with its own formatting.
  * 
  * Also the public seam `derived` needs: an `inline` member cannot reach the
- * private `make`, so the SRTP form forwards through here. Same reason
+ * private `make`, so `derived` forwards through here. Same reason
  * `sourceWith` exists.
  */
 export function NodeModule_derivedWith(label, value) {

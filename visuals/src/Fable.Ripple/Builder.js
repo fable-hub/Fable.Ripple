@@ -4,7 +4,7 @@ import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflecti
 /**
  * Computation expression for building computed signals. `let! ... and! ...` is
  * applicative (compiles to `map2`/`map3`); a lone `let!` is monadic (`bind`).
- * Members are `inline` so a source (`Var`) or a derived `Signal` bind alike.
+ * Every `Var` is a `Signal`, so a source or a derived signal bind alike.
  */
 export class SignalBuilder {
     constructor() {

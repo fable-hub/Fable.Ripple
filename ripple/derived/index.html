@@ -134,9 +134,9 @@ let shown =
     useCelsius
     |&gt; Signal.bind (fun c -&gt;
         if c then
-            celsius.Signal
+            celsius
         else
-            fahrenheit.Signal
+            fahrenheit
     )
 
 // Runs immediately: shown = 21.0
@@ -154,9 +154,9 @@ fahrenheit.Value &lt;- 90.0 // now tracked: shown = 90.0'><div class="nacara-cod
 </span><span class="nacara-code__line">    useCelsius
 </span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Signal</span><span class="tok-punctuation">.</span><span class="tok-property">bind</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">c</span> <span class="tok-keyword">-></span>
 </span><span class="nacara-code__line">        <span class="tok-keyword">if</span> c <span class="tok-keyword">then</span>
-</span><span class="nacara-code__line">            celsius<span class="tok-punctuation">.</span><span class="tok-property">Signal</span>
+</span><span class="nacara-code__line">            celsius
 </span><span class="nacara-code__line">        <span class="tok-keyword">else</span>
-</span><span class="nacara-code__line">            fahrenheit<span class="tok-punctuation">.</span><span class="tok-property">Signal</span>
+</span><span class="nacara-code__line">            fahrenheit
 </span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
 </span><span class="nacara-code__line">
 </span><span class="nacara-code__line"><span class="tok-comment">// Runs immediately: shown = 21.0</span>

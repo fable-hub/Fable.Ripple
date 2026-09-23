@@ -30,6 +30,10 @@ export function attr_className_5106B011(f) {
     return Base_bindAttribute("class", f);
 }
 
+export function attr_className_Z108492D4(s) {
+    return Base_bindAttribute("class", () => s.Value);
+}
+
 /**
  * Join a list of class names with spaces.
  */
@@ -78,12 +82,23 @@ export function attr_toggleClass_69695ADB(name, cond) {
     return Base_ClassList_bindToggle(name, cond);
 }
 
+/**
+ * Single-token toggle driven directly by a `Var`/`Signal<bool>`.
+ */
+export function attr_toggleClass_Z7BA3283A(name, cond) {
+    return Base_ClassList_bindToggle(name, () => cond.Value);
+}
+
 export function attr_style_Z721C83C5(v) {
     return Base_attribute("style", v);
 }
 
 export function attr_style_5106B011(f) {
     return Base_bindAttribute("style", f);
+}
+
+export function attr_style_Z108492D4(s) {
+    return Base_bindAttribute("style", () => s.Value);
 }
 
 /**
@@ -117,12 +132,20 @@ export function attr_checked$0027_233A5940(f) {
     return Base_bindProperty("checked", f);
 }
 
+export function attr_checked$0027_Z31F02BA3(s) {
+    return Base_bindProperty("checked", () => s.Value);
+}
+
 export function attr_disabled_Z1FBCCD16(v) {
     return Base_property("disabled", v);
 }
 
 export function attr_disabled_233A5940(f) {
     return Base_bindProperty("disabled", f);
+}
+
+export function attr_disabled_Z31F02BA3(s) {
+    return Base_bindProperty("disabled", () => s.Value);
 }
 
 export function attr_hidden_Z1FBCCD16(v) {
@@ -133,12 +156,20 @@ export function attr_hidden_233A5940(f) {
     return Base_bindProperty("hidden", f);
 }
 
+export function attr_hidden_Z31F02BA3(s) {
+    return Base_bindProperty("hidden", () => s.Value);
+}
+
 export function attr_selected_Z1FBCCD16(v) {
     return Base_property("selected", v);
 }
 
 export function attr_selected_233A5940(f) {
     return Base_bindProperty("selected", f);
+}
+
+export function attr_selected_Z31F02BA3(s) {
+    return Base_bindProperty("selected", () => s.Value);
 }
 
 export function attr_readOnly_Z1FBCCD16(v) {
@@ -149,12 +180,20 @@ export function attr_readOnly_233A5940(f) {
     return Base_bindProperty("readOnly", f);
 }
 
+export function attr_readOnly_Z31F02BA3(s) {
+    return Base_bindProperty("readOnly", () => s.Value);
+}
+
 export function attr_required_Z1FBCCD16(v) {
     return Base_property("required", v);
 }
 
 export function attr_required_233A5940(f) {
     return Base_bindProperty("required", f);
+}
+
+export function attr_required_Z31F02BA3(s) {
+    return Base_bindProperty("required", () => s.Value);
 }
 
 export function attr_multiple_Z1FBCCD16(v) {
@@ -165,12 +204,20 @@ export function attr_multiple_233A5940(f) {
     return Base_bindProperty("multiple", f);
 }
 
+export function attr_multiple_Z31F02BA3(s) {
+    return Base_bindProperty("multiple", () => s.Value);
+}
+
 export function attr_isOpen_Z1FBCCD16(v) {
     return Base_property("open", v);
 }
 
 export function attr_isOpen_233A5940(f) {
     return Base_bindProperty("open", f);
+}
+
+export function attr_isOpen_Z31F02BA3(s) {
+    return Base_bindProperty("open", () => s.Value);
 }
 
 /**

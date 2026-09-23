@@ -5,7 +5,6 @@ import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signa
 import { singleton } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { keyedEach } from "./Dom.js";
 import { Exception, disposeSafe } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { Var$1__get_Value } from "../Fable.Ripple/Types.js";
 
 /**
  * HTML elements, text, keyed lists, conditionals, fragments and mounting. Each
@@ -672,7 +671,7 @@ export function Html_dynamic_70E9CA6A(f) {
 export function Html_switchWith_33B7F5DC(read, f) {
     const value = Signal_computed(read);
     return Html_dynamic_70E9CA6A(() => {
-        const current = Var$1__get_Value(value);
+        const current = value.Value;
         return Signal_untracked(() => f(current));
     });
 }
@@ -692,6 +691,17 @@ export function Html_show_Z593B4D6(cond, whenTrue) {
  */
 export function Html_show_371C7A00(cond, whenTrue, whenFalse) {
     return Html_dynamic_70E9CA6A(() => (cond() ? whenTrue() : whenFalse()));
+}
+
+/**
+ * `show` driven directly by a signal source (a `Var`/`Signal` of `bool`).
+ */
+export function Html_show_Z1F1C6A69(cond, whenTrue) {
+    return Html_show_Z593B4D6(() => cond.Value, whenTrue);
+}
+
+export function Html_show_Z72407DE3(cond, whenTrue, whenFalse) {
+    return Html_show_371C7A00(() => cond.Value, whenTrue, whenFalse);
 }
 
 /**

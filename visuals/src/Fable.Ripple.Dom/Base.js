@@ -4,7 +4,6 @@ import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.13.0
 import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Core.js";
 import { disposeSafe, getEnumerator, Exception } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { Signal_batch, Signal_effect } from "../Fable.Ripple/Api.js";
-import { Var$1__get_Value } from "../Fable.Ripple/Types.js";
 import { split } from "../../fable_modules/fable-library-js.5.13.0/String.js";
 import { item as item_1 } from "../../fable_modules/fable-library-js.5.13.0/Array.js";
 import { addToSet } from "../../fable_modules/fable-library-js.5.13.0/MapUtil.js";
@@ -125,7 +124,7 @@ export function Base_bindAttribute(name, callback) {
  * Reactive attribute driven by a signal.
  */
 export function Base_bindAttributeSignal(name, signal) {
-    return Base_bindAttribute(name, () => Var$1__get_Value(signal));
+    return Base_bindAttribute(name, () => signal.Value);
 }
 
 /**
@@ -166,7 +165,7 @@ export function Base_bindBooleanAttribute(name, callback) {
  * Reactive present/absent boolean attribute driven by a signal.
  */
 export function Base_bindBooleanAttributeSignal(name, signal) {
-    return Base_bindBooleanAttribute(name, () => Var$1__get_Value(signal));
+    return Base_bindBooleanAttribute(name, () => signal.Value);
 }
 
 /**
@@ -194,7 +193,7 @@ export function Base_bindProperty(name, callback) {
  * Reactive property driven by a signal.
  */
 export function Base_bindPropertySignal(name, signal) {
-    return Base_bindProperty(name, () => Var$1__get_Value(signal));
+    return Base_bindProperty(name, () => signal.Value);
 }
 
 /**

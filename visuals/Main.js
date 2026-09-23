@@ -3,15 +3,13 @@ import { Html_render_62D6BEC0, Html_text_Z721C83C5, Html_button_Z714D7FBE, Html_
 import { empty, singleton, append, delay, toList } from "./fable_modules/fable-library-js.5.13.0/Seq.js";
 import { attr_style_Z721C83C5 } from "./src/Fable.Ripple.Dom/Attributes.js";
 import { Probe__get_Hits, Repaint__Now, Probe__Hit, Probe_$ctor_Z721C83C5, Repaint_$ctor } from "./demo/Examples/Widgets.js";
-import { Signal_batch, Signal_effect, Signal_computed, Var_create } from "./src/Fable.Ripple/Api.js";
-import { Var$1__Peek, Var$1__set_Value_2B595, Var$1__get_Value } from "./src/Fable.Ripple/Types.js";
+import { Signal_batch, Signal_subscribe, Signal_map3, Signal_effect, Signal_map, Signal_bind, Signal_computed, Var_create } from "./src/Fable.Ripple/Api.js";
+import { Var$1__Peek, Var$1__get_Signal, Var$1__set_Value_2B595, Var$1__get_Value } from "./src/Fable.Ripple/Types.js";
 import { NodeModule_bindingWith, NodeModule_derivedWith, NodeModule_sourceWith } from "./demo/Examples/Schematic.js";
 import { comparePrimitives, int32ToString } from "./fable_modules/fable-library-js.5.13.0/Util.js";
-import { NodeModule_beating, NodeModule_bindingWith as NodeModule_bindingWith_1, schematic, legend, op_EqualsEqualsGreater, graph, NodeModule_counting } from "./demo/Examples/Schematic.js";
-import { Var$1__get_Value as Var$1__get_Value_1, Var$1__Peek as Var$1__Peek_1 } from "./src/Fable.Ripple/Types.js";
+import { NodeModule_beating, NodeModule_bindingWith as NodeModule_bindingWith_1, schematic, NodeModule_flag, legend, op_EqualsEqualsGreater, graph, NodeModule_counting } from "./demo/Examples/Schematic.js";
 import { on_click_58BC8925 } from "./src/Fable.Ripple.Dom/Events.js";
 import { singleton as singleton_1, ofArray } from "./fable_modules/fable-library-js.5.13.0/List.js";
-import { Signal_effect as Signal_effect_1, Signal_computed as Signal_computed_1 } from "./src/Fable.Ripple/Api.js";
 import { tryFind, ofList } from "./fable_modules/fable-library-js.5.13.0/Map.js";
 import { concat } from "./fable_modules/fable-library-js.5.13.0/String.js";
 
@@ -32,10 +30,10 @@ function introGraph() {
         Var$1__set_Value_2B595(v, Var$1__get_Value(v) + 1);
         Repaint__Now(repaint);
     };
-    const aNode = NodeModule_sourceWith("Var a", () => int32ToString(Var$1__Peek(a)));
-    const bNode = NodeModule_sourceWith("Var b", () => int32ToString(Var$1__Peek(b)));
-    const totalNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.computed", () => int32ToString(Var$1__Peek_1(total))));
-    const readNode = NodeModule_bindingWith("binding", () => int32ToString(Var$1__Peek_1(total)));
+    const aNode = NodeModule_sourceWith("Var a", () => int32ToString(a.Peek()));
+    const bNode = NodeModule_sourceWith("Var b", () => int32ToString(b.Peek()));
+    const totalNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.computed", () => int32ToString(total.Peek())));
+    const readNode = NodeModule_bindingWith("binding", () => int32ToString(total.Peek()));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
         bump(a);
     }), Html_text_Z721C83C5("Bump a")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
@@ -49,22 +47,24 @@ function bindRewiring() {
     const celsius = Var_create(20);
     const fahrenheit = Var_create(68);
     const useCelsius = Var_create(true);
-    const shown = Signal_computed_1(() => {
-        let copyOfStruct;
-        const c = Var$1__get_Value(useCelsius);
+    const shown = Signal_bind((c) => {
         Probe__Hit(runs);
-        copyOfStruct = (c ? celsius : fahrenheit);
-        return Var$1__get_Value_1(copyOfStruct) | 0;
-    });
+        if (c) {
+            return Var$1__get_Signal(celsius);
+        }
+        else {
+            return Var$1__get_Signal(fahrenheit);
+        }
+    }, useCelsius);
     const bump = (v) => {
         Var$1__set_Value_2B595(v, Var$1__get_Value(v) + 1);
         Repaint__Now(repaint);
     };
-    const selectorNode = NodeModule_sourceWith("useCelsius", () => (Var$1__Peek(useCelsius) ? "true" : "false"));
-    const celsiusNode = NodeModule_sourceWith("Var celsius", () => int32ToString(Var$1__Peek(celsius)));
-    const fahrenheitNode = NodeModule_sourceWith("Var fahrenheit", () => int32ToString(Var$1__Peek(fahrenheit)));
-    const bindNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.bind", () => int32ToString(Var$1__Peek_1(shown))));
-    const readNode = NodeModule_bindingWith("binding", () => int32ToString(Var$1__Peek_1(shown)));
+    const selectorNode = NodeModule_flag("useCelsius", useCelsius);
+    const celsiusNode = NodeModule_sourceWith("Var celsius", () => int32ToString(celsius.Peek()));
+    const fahrenheitNode = NodeModule_sourceWith("Var fahrenheit", () => int32ToString(fahrenheit.Peek()));
+    const bindNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.bind", () => int32ToString(shown.Peek())));
+    const readNode = NodeModule_bindingWith("binding", () => int32ToString(shown.Peek()));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
         Var$1__set_Value_2B595(useCelsius, !Var$1__get_Value(useCelsius));
         Repaint__Now(repaint);
@@ -80,24 +80,27 @@ function cutoffChain() {
     const parityRuns = Probe_$ctor_Z721C83C5("runs");
     const upperRuns = Probe_$ctor_Z721C83C5("runs");
     const n = Var_create(4);
-    const parity = Signal_computed_1(() => {
-        const v = Var$1__get_Value(n) | 0;
+    const parity = Signal_map((v) => {
         Probe__Hit(parityRuns);
-        return ((v % 2) === 0) ? "even" : "odd";
-    });
-    const upper = Signal_computed_1(() => {
-        const p = Var$1__get_Value_1(parity);
+        if ((v % 2) === 0) {
+            return "even";
+        }
+        else {
+            return "odd";
+        }
+    }, n);
+    const upper = Signal_map((p) => {
         Probe__Hit(upperRuns);
         return p.toLocaleUpperCase() + "!";
-    });
+    }, parity);
     const step = (by) => {
         Var$1__set_Value_2B595(n, Var$1__get_Value(n) + by);
         Repaint__Now(repaint);
     };
-    const nNode = NodeModule_sourceWith("n", () => int32ToString(Var$1__Peek(n)));
-    const parityNode = NodeModule_counting(parityRuns, NodeModule_derivedWith("parity", () => Var$1__Peek_1(parity)));
-    const upperNode = NodeModule_counting(upperRuns, NodeModule_derivedWith("upper", () => Var$1__Peek_1(upper)));
-    const readNode = NodeModule_bindingWith("binding", () => Var$1__Peek_1(upper));
+    const nNode = NodeModule_sourceWith("n", () => int32ToString(n.Peek()));
+    const parityNode = NodeModule_counting(parityRuns, NodeModule_derivedWith("parity", () => parity.Peek()));
+    const upperNode = NodeModule_counting(upperRuns, NodeModule_derivedWith("upper", () => upper.Peek()));
+    const readNode = NodeModule_bindingWith("binding", () => upper.Peek());
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
         step(2);
     }), Html_text_Z721C83C5("+2 (parity kept)")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
@@ -117,7 +120,7 @@ function equalWrite() {
         Var$1__set_Value_2B595(name, value_2);
         Repaint__Now(repaint);
     };
-    const nameNode = NodeModule_sourceWith("Var name", () => Var$1__Peek(name));
+    const nameNode = NodeModule_sourceWith("Var name", () => name.Peek());
     const effectNode = NodeModule_counting(runs, NodeModule_bindingWith_1("effect", () => Var$1__Peek(name)));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
         write(Var$1__Peek(name));
@@ -140,11 +143,11 @@ function autoTracking() {
         Var$1__set_Value_2B595(v, Var$1__get_Value(v) + 1);
         Repaint__Now(repaint);
     };
-    const switchNode = NodeModule_sourceWith("read b", () => (Var$1__Peek(includeB) ? "true" : "false"));
-    const aNode = NodeModule_sourceWith("Var a", () => int32ToString(Var$1__Peek(a)));
-    const bNode = NodeModule_sourceWith("Var b", () => int32ToString(Var$1__Peek(b)));
-    const totalNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.computed", () => int32ToString(Var$1__Peek_1(total))));
-    const readNode = NodeModule_bindingWith("binding", () => int32ToString(Var$1__Peek_1(total)));
+    const switchNode = NodeModule_flag("read b", includeB);
+    const aNode = NodeModule_sourceWith("Var a", () => int32ToString(a.Peek()));
+    const bNode = NodeModule_sourceWith("Var b", () => int32ToString(b.Peek()));
+    const totalNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.computed", () => int32ToString(total.Peek())));
+    const readNode = NodeModule_bindingWith("binding", () => int32ToString(total.Peek()));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
         Var$1__set_Value_2B595(includeB, !Var$1__get_Value(includeB));
         Repaint__Now(repaint);
@@ -162,17 +165,13 @@ function batching() {
     const a = Var_create(0);
     const b = Var_create(0);
     const c = Var_create(0);
-    const total = Signal_computed_1(() => {
-        const x = Var$1__get_Value(a) | 0;
-        const y = Var$1__get_Value(b) | 0;
-        const z = Var$1__get_Value(c) | 0;
+    const total = Signal_map3((x, y, z) => {
         Probe__Hit(recomputed);
         return ((x + y) + z) | 0;
-    });
-    Signal_effect_1(() => {
-        Var$1__get_Value_1(total);
+    }, a, b, c);
+    Signal_subscribe((_arg) => {
         Probe__Hit(fired);
-    });
+    }, total);
     const writeAll = (batchIt) => {
         window.setTimeout(() => {
             const writes = () => {
@@ -189,11 +188,11 @@ function batching() {
             Repaint__Now(repaint);
         }, 0);
     };
-    const aNode = NodeModule_sourceWith("Var a", () => int32ToString(Var$1__Peek(a)));
-    const bNode = NodeModule_sourceWith("Var b", () => int32ToString(Var$1__Peek(b)));
-    const cNode = NodeModule_sourceWith("Var c", () => int32ToString(Var$1__Peek(c)));
-    const totalNode = NodeModule_beating(() => (Probe__get_Hits(recomputed) | 0), NodeModule_derivedWith("Signal.map3", () => int32ToString(Var$1__Peek_1(total))));
-    const subNode = NodeModule_counting(fired, NodeModule_bindingWith_1("subscriber", () => int32ToString(Var$1__Peek_1(total))));
+    const aNode = NodeModule_sourceWith("Var a", () => int32ToString(a.Peek()));
+    const bNode = NodeModule_sourceWith("Var b", () => int32ToString(b.Peek()));
+    const cNode = NodeModule_sourceWith("Var c", () => int32ToString(c.Peek()));
+    const totalNode = NodeModule_beating(() => (Probe__get_Hits(recomputed) | 0), NodeModule_derivedWith("Signal.map3", () => int32ToString(total.Peek())));
+    const subNode = NodeModule_counting(fired, NodeModule_bindingWith_1("subscriber", () => int32ToString(total.Peek())));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
         writeAll(false);
     }), Html_text_Z721C83C5("Three writes, no batch")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_2) => {

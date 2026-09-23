@@ -1,9 +1,7 @@
 
 import { disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { Var_create } from "../Fable.Ripple/Api.js";
-import { Var$1__set_Value_2B595 } from "../Fable.Ripple/Types.js";
-import { Signal_computed } from "../Fable.Ripple/Api.js";
-import { Var$1__get_Value } from "../Fable.Ripple/Types.js";
+import { Signal_map, Var_create } from "../Fable.Ripple/Api.js";
+import { Var$1__get_Signal, Var$1__set_Value_2B595 } from "../Fable.Ripple/Types.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 
 /**
@@ -46,13 +44,14 @@ export function Advanced_useHash() {
     window.addEventListener("popstate", onLocationChange);
     window.addEventListener("hashchange", onLocationChange);
     window.addEventListener("signals:navigated", onLocationChange);
-    return [current, {
+    const disposable = {
         Dispose() {
             window.removeEventListener("popstate", onLocationChange);
             window.removeEventListener("hashchange", onLocationChange);
             window.removeEventListener("signals:navigated", onLocationChange);
         },
-    }];
+    };
+    return [Var$1__get_Signal(current), disposable];
 }
 
 /**
@@ -72,12 +71,13 @@ export function Advanced_usePath() {
     };
     window.addEventListener("popstate", onLocationChange);
     window.addEventListener("signals:navigated", onLocationChange);
-    return [current, {
+    const disposable = {
         Dispose() {
             window.removeEventListener("popstate", onLocationChange);
             window.removeEventListener("signals:navigated", onLocationChange);
         },
-    }];
+    };
+    return [Var$1__get_Signal(current), disposable];
 }
 
 /**
@@ -88,7 +88,7 @@ export class HashRouter$1 {
         this.toUrl = toUrl;
         const patternInput = Advanced_useHash();
         this.disposable = patternInput[1];
-        this.currentRoute = Signal_computed(() => parse(Var$1__get_Value(patternInput[0])));
+        this.currentRoute = Signal_map(parse, patternInput[0]);
     }
     Dispose() {
         const _ = this;
@@ -148,7 +148,7 @@ export class PathRouter$1 {
         this.toUrl = toUrl;
         const patternInput = Advanced_usePath();
         this.disposable = patternInput[1];
-        this.currentRoute = Signal_computed(() => parse(Var$1__get_Value(patternInput[0])));
+        this.currentRoute = Signal_map(parse, patternInput[0]);
     }
     Dispose() {
         const _ = this;
@@ -207,7 +207,7 @@ export class Simple_HashRouter$1 {
     constructor(parse) {
         const patternInput = Advanced_useHash();
         this.disposable = patternInput[1];
-        this.currentRoute = Signal_computed(() => parse(Var$1__get_Value(patternInput[0])));
+        this.currentRoute = Signal_map(parse, patternInput[0]);
     }
     Dispose() {
         const _ = this;
@@ -259,7 +259,7 @@ export class Simple_PathRouter$1 {
     constructor(parse) {
         const patternInput = Advanced_usePath();
         this.disposable = patternInput[1];
-        this.currentRoute = Signal_computed(() => parse(Var$1__get_Value(patternInput[0])));
+        this.currentRoute = Signal_map(parse, patternInput[0]);
     }
     Dispose() {
         const _ = this;
