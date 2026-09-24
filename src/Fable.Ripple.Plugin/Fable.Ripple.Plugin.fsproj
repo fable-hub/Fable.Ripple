@@ -17,6 +17,10 @@
 
   <ItemGroup>
     <PackageReference Remove="FSharp.Core" />
+    <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks" Version="2.1.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Fable.AST" Version="5.0.0" />
     <!-- No newer than the FSharp.Core the Fable CLI loads, or Transform throws
          Could-not-load-file-or-assembly inside the user's build. PrivateAssets keeps
