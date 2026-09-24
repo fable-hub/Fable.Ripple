@@ -3,7 +3,6 @@ module EasyBuild.Main
 open Spectre.Console.Cli
 open EasyBuild.Commands.Demo
 open EasyBuild.Commands.Test
-open EasyBuild.Commands.Bench
 open EasyBuild.Commands.Docs
 open EasyBuild.Commands.Release
 open SimpleExec
@@ -31,12 +30,6 @@ let main args =
             .WithDescription("Run the tests")
             .WithExample("test")
             .WithExample("test --watch")
-        |> ignore
-
-        config
-            .AddCommand<BenchCommand>("bench")
-            .WithDescription("Measure bundle size + large-list performance")
-            .WithExample("bench")
         |> ignore
 
         config

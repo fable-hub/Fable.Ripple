@@ -61,7 +61,6 @@ Html.mount "root" view
 | `./build.sh test` | Run every test suite. `./build.sh test ripple-dom` or `./build.sh test ripple-form` runs one. |
 | `./build.sh docs watch` | Serve the documentation site. The demo under `/demo/` is built once, when it starts. |
 | `./build.sh docs check` | Build every page and fail on any error. |
-| `./build.sh bench` | Measure bundle size and large-list performance. |
 
 ## License
 

@@ -10,7 +10,6 @@
         <Compile Include="Utils.fs" />
         <Compile Include="Commands/Demo.fs" />
         <Compile Include="Commands/Test.fs" />
-        <Compile Include="Commands/Bench.fs" />
         <Compile Include="Commands/Docs.fs" />
         <Compile Include="Commands/Release.fs" />
         <Compile Include="Main.fs" />
