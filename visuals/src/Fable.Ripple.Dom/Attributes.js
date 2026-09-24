@@ -1,6 +1,6 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
-import { Base_bindAttributeSignal, Base_booleanAttribute, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
+import { Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
 import { join } from "../../fable_modules/fable-library-js.5.13.0/String.js";
 import { map } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { Signal_batch, Signal_effect } from "../Fable.Ripple/Api.js";
@@ -684,6 +684,18 @@ export function attr_data_Z384F8060(name, v) {
 
 export function attr_aria_Z384F8060(name, v) {
     return Base_attribute("aria-" + name, v);
+}
+
+export function attr_innerHTML_Z721C83C5(html) {
+    return Base_property("innerHTML", html);
+}
+
+export function attr_innerHTML_5106B011(f) {
+    return Base_bindProperty("innerHTML", f);
+}
+
+export function attr_innerHTML_Z108492D4(s) {
+    return Base_bindPropertySignal("innerHTML", s);
 }
 
 /**
