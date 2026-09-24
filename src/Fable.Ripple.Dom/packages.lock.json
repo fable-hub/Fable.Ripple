@@ -65,6 +65,11 @@
         "resolved": "10.1.301",
         "contentHash": "excLf2zM/qUB3WhRUfI0xvOOaPwcRAEdYT/BXe9eiTKySnWVuIKMQTf5+6ETy5nsb1dpLp1s2j2yAM/XcRgFMg=="
       },
+      "Fable.AST": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "x6s0UlpG4SIR+c36YsuXL7RK6y3aKntbIEbEm+ZbwdEd8C6A0y8Dzfsrbp5xoKsNcpCrj4LVisLoN33eFixAng=="
+      },
       "Fable.Browser.Blob": {
         "type": "Transitive",
         "resolved": "1.4.0",
@@ -108,6 +113,12 @@
         "dependencies": {
           "FSharp.Core": "[10.1.301, )",
           "Fable.Core": "[5.2.0, )"
+        }
+      },
+      "fable.ripple.plugin": {
+        "type": "Project",
+        "dependencies": {
+          "Fable.AST": "[5.0.0, )"
         }
       }
     }

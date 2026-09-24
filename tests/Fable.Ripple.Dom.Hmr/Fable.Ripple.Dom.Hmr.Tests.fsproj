@@ -22,7 +22,6 @@
          management, which this project opts out of. -->
     <PackageReference Remove="FSharp.Core" />
     <ProjectReference Include="../../src/Fable.Ripple.Dom/Fable.Ripple.Dom.fsproj" />
-    <ProjectReference Include="../../src/Fable.Ripple.Plugin/Fable.Ripple.Plugin.fsproj" />
     <PackageReference Include="Fable.Core" Version="5.2.0" />
     <PackageReference Include="Fable.Browser.Dom" Version="2.20.0" />
     <PackageReference Include="FSharp.Core" Version="10.1.301" />

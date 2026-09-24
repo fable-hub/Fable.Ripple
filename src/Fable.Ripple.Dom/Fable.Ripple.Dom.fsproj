@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fable.Ripple/Fable.Ripple.fsproj" />
+    <ProjectReference Include="../Fable.Ripple.Plugin/Fable.Ripple.Plugin.fsproj" />
   </ItemGroup>
 
 </Project>

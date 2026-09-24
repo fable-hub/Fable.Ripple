@@ -52,6 +52,11 @@
         "resolved": "10.1.301",
         "contentHash": "excLf2zM/qUB3WhRUfI0xvOOaPwcRAEdYT/BXe9eiTKySnWVuIKMQTf5+6ETy5nsb1dpLp1s2j2yAM/XcRgFMg=="
       },
+      "Fable.AST": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "x6s0UlpG4SIR+c36YsuXL7RK6y3aKntbIEbEm+ZbwdEd8C6A0y8Dzfsrbp5xoKsNcpCrj4LVisLoN33eFixAng=="
+      },
       "Fable.Browser.Blob": {
         "type": "Transitive",
         "resolved": "1.4.0",
@@ -105,7 +110,14 @@
           "Fable.Browser.Dom": "[2.20.0, )",
           "Fable.Browser.Event": "[1.7.0, )",
           "Fable.Core": "[5.2.0, )",
-          "Fable.Ripple": "[1.0.0, )"
+          "Fable.Ripple": "[1.0.0, )",
+          "Fable.Ripple.Plugin": "[1.0.0, )"
+        }
+      },
+      "fable.ripple.plugin": {
+        "type": "Project",
+        "dependencies": {
+          "Fable.AST": "[5.0.0, )"
         }
       },
       "Fable.Browser.Css": {
