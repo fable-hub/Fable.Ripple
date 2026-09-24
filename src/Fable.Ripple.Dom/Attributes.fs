@@ -322,6 +322,13 @@ type attr =
     static member aria(name: string, v: string) : DomItem = attribute ("aria-" + name) v
 
     (*
+        Inner HTML
+    *)
+    static member innerHTML(html: string) : DomItem = property "innerHTML" html
+    static member innerHTML(f: unit -> string) : DomItem = bindProperty "innerHTML" f
+    static member innerHTML(s: Signal<string>) : DomItem = bindPropertySignal "innerHTML" s
+
+    (*
         Generic escape hatches
     *)
     /// Arbitrary attribute (static or reactive), for anything without a named

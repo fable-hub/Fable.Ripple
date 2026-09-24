@@ -74,6 +74,34 @@ let private reactiveAttributes () : DomItem =
                 ]
         ]
 
+let private innerHtml () : DomItem =
+    let markup = Var.create "<b>bold</b>"
+
+    Html.div
+        [
+            Html.div
+                [
+                    attr.id "static"
+                    attr.innerHTML "<i>static</i>"
+                ]
+            Html.div
+                [
+                    attr.id "thunk"
+                    attr.innerHTML (fun () -> "<span>" + markup.Value + "</span>")
+                ]
+            Html.div
+                [
+                    attr.id "signal"
+                    attr.innerHTML markup
+                ]
+            Html.button
+                [
+                    attr.id "change"
+                    on.click (fun _ -> markup.Value <- "<em>emphasis</em>")
+                    Html.text "Change"
+                ]
+        ]
+
 let private classList () : DomItem =
     let active = Var.create false
     let danger = Var.create false
@@ -250,6 +278,7 @@ let all: (string * (unit -> DomItem)) list =
     [
         "ReactiveText", reactiveText
         "ReactiveAttributes", reactiveAttributes
+        "InnerHtml", innerHtml
         "ClassList", classList
         "EventBatching", eventBatching
         "Fragment", fragment

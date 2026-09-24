@@ -52,6 +52,21 @@ let tests =
             )
 
             testComponent (
+                "innerHTML renders markup and follows a thunk and a signal",
+                "InnerHtml",
+                fun root ->
+                    promise {
+                        do! assertLocator (root.locator "#static i") (haveText "static")
+                        do! assertLocator (root.locator "#thunk span b") (haveText "bold")
+                        do! assertLocator (root.locator "#signal b") (haveText "bold")
+                        do! click (root.locator "#change")
+                        do! assertLocator (root.locator "#thunk span em") (haveText "emphasis")
+                        do! assertLocator (root.locator "#signal em") (haveText "emphasis")
+                        do! assertLocator (root.locator "#signal b") (haveCount 0)
+                    }
+            )
+
+            testComponent (
                 "classList toggles one token and keeps the base class",
                 "ClassList",
                 fun root ->
