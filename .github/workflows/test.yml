@@ -34,5 +34,9 @@ jobs:
       # The component tests drive a real browser.
       - run: npx playwright install --with-deps chromium
 
+      # Fable's own restore does not enforce the lock files; the release restore does.
+      - name: Check lock files
+        run: dotnet restore Fable.Ripple.slnx --locked-mode
+
       - name: Test
         run: ./build.sh test
