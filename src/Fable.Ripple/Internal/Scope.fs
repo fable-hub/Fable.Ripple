@@ -81,18 +81,9 @@ module internal Scope =
         parent.CompactAt <- max 8 (children.Count * 2)
 
     /// Tear down a scope: dispose child scopes, run cleanups, then unlink every
-    /// registered computed/effect from its sources. To avoid O(n^2) when many
-    /// nodes share one external source, mark the whole scope disposed first and
-    /// visit each affected source's observer list at most once.
-    ///
-    /// That alone still costs a full pass per scope when many *sibling* scopes
-    /// share a source (every row of a list reading one signal): clearing N rows
-    /// would be N passes over an N-long list. So a source is not compacted on
-    /// every teardown; its disposed entries are counted (`Graph.noteDeadObserver`)
-    /// and swept out once they are half of the list, checked when the outermost
-    /// flush, batch or disposal ends - once per source for a whole cleared list.
-    /// Until then they stay in the list, skipped by `Graph.iterObservers` and not
-    /// counted by `Graph.observerCount`.
+    /// registered computed/effect from its sources. Disposed nodes stay in their
+    /// sources' observer lists until `Graph.releaseSweeps`; `Graph.iterObservers`
+    /// skips them.
     ///
     /// Children are not detached one by one - the list is cleared wholesale.
     let rec private tearDown (scope: Scope) =
@@ -119,9 +110,8 @@ module internal Scope =
         for i in 0 .. nodes.Count - 1 do
             nodes.[i].Disposed <- true
 
-        // Detach each node from its sources. Its entry in each external source's
-        // observer list is now dead: count it, one per edge (a node that read a
-        // source twice is listed twice there).
+        // One count per edge: a node that read a source twice is listed twice in
+        // its observers.
         for i in 0 .. nodes.Count - 1 do
             let node = nodes.[i]
 
@@ -134,14 +124,10 @@ module internal Scope =
                 )
 
             node.FirstSource <- ValueNone
-            // Dropped, not cleared: a disposed node never re-tracks, so there is
-            // no regrow to reuse the array for.
             node.RestSources <- ValueNone
             node.State <- NodeState.Clean
             node.Queued <- false
-            // The entry may outlive this teardown in a source's list until the
-            // sweep; drop the body so it does not keep the closure (and whatever
-            // DOM it captured) alive meanwhile. It can never run again.
+            // The node stays referenced from its sources until the sweep.
             node.EffectFn <- ValueNone
 
         nodes.Clear()
@@ -150,7 +136,6 @@ module internal Scope =
     /// until the next sweep, where `Disposed` is what marks it dead.
     let dispose (scope: Scope) =
         if not scope.Disposed then
-            // One sweep check per affected source for the whole subtree.
             Graph.holdSweeps ()
 
             try

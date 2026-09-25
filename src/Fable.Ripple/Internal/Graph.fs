@@ -96,9 +96,7 @@ module internal Graph =
         | ValueNone -> n.FirstObserver <- ValueSome o
         | ValueSome _ -> (ensureRestObservers n).Add o
 
-    /// Apply `action` to each live observer. A disposed observer can sit in the
-    /// list until the next sweep (see `sweepDeadObservers`); it is skipped, so
-    /// propagation never marks or re-queues a torn-down node.
+    /// Skips disposed observers; they stay listed until `sweepDeadObservers`.
     let inline iterObservers (n: ReactiveNode) ([<InlineIfLambda>] action: ReactiveNode -> unit) =
         n.FirstObserver
         |> ValueOption.iter (fun o ->
@@ -174,11 +172,8 @@ module internal Graph =
 
             n.FirstObserver <- newFirst
 
-    /// Sweep the disposed entries (counted in `DeadObservers`) out of `n`'s
-    /// observer list once they make up at least half of it. Each sweep is one
-    /// pass that removes at least as many entries as it keeps, so disposing N
-    /// scopes that share `n` costs O(N) in total, not O(N) per scope. When every
-    /// entry is dead (a whole list cleared) the list is dropped without a pass.
+    /// Threshold of half: a sweep removes at least as many entries as it keeps,
+    /// so sweeping stays linear in disposals.
     let private sweepDeadObservers (n: ReactiveNode) =
         let dead = n.DeadObservers
 
@@ -193,13 +188,10 @@ module internal Graph =
                 compactObservers n (fun o -> not o.Disposed)
                 n.DeadObservers <- 0
 
-    // Sources with dead observer entries waiting for a sweep check, each listed
-    // once (`Affected` marks membership), and how many holds defer that check.
+    // `Affected` marks membership in `sweepQueue`.
     let private sweepQueue = ResizeArray<ReactiveNode>()
     let mutable private sweepHolds = 0
 
-    /// Count one dead entry in `source`'s observer list (an observer of it was
-    /// disposed) and queue `source` for a sweep check.
     let noteDeadObserver (source: ReactiveNode) =
         source.DeadObservers <- source.DeadObservers + 1
 
@@ -207,10 +199,7 @@ module internal Graph =
             source.Affected <- true
             sweepQueue.Add source
 
-    /// Defer sweep checks until the matching `releaseSweeps`. Holds nest: a
-    /// flush, a batch and a scope disposal each hold, so disposing many scopes
-    /// in one of them (a list clearing its rows) checks each shared source once,
-    /// at the end, when all of its dead entries are known.
+    /// Nests; the outermost `releaseSweeps` runs the queued checks.
     let holdSweeps () = sweepHolds <- sweepHolds + 1
 
     /// Release a hold; the last one runs the queued sweep checks.

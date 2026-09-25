@@ -30,8 +30,6 @@ module internal Scheduler =
     let flush () =
         if not flushing then
             flushing <- true
-            // Scopes disposed by these effects (list rows, dynamic branches) are
-            // swept from their sources once, when the flush ends.
             Graph.holdSweeps ()
             let mutable i = 0
 
@@ -48,9 +46,8 @@ module internal Scheduler =
                 // A throwing effect must not leave the flush wedged. Clear the
                 // queued flag on anything not yet reached so it can re-queue on a
                 // later change, then reset the queue and guard. (The remaining
-                // effects of this flush are dropped for this cycle.) Everything
-                // before `i` was cleared by the loop; a re-queued effect is
-                // appended, so it is at or after `i`.
+                // effects of this flush are dropped for this cycle.) Entries before
+                // `i` are already reset; a re-queued effect lands at or after `i`.
                 for j in i .. pending.Count - 1 do
                     pending.[j].Queued <- false
 
@@ -67,7 +64,6 @@ module internal Scheduler =
 
     let batch (fn: unit -> unit) =
         batchDepth <- batchDepth + 1
-        // Scopes disposed inside the batch are swept once, when it ends.
         Graph.holdSweeps ()
 
         try

@@ -38,14 +38,11 @@ type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
     /// list until that list is swept; `Graph.iterObservers` skips it.
     member val internal Disposed = false with get, set
 
-    /// Marks a source already collected by the current teardown, so its sweep
-    /// is considered once however many of its observers the scope owned.
+    /// Set while this node is in `Graph.sweepQueue`.
     member val internal Affected = false with get, set
 
     /// Entries in this node's observer list that belong to disposed nodes and
-    /// have not been swept out yet. Teardown sweeps the list only once they make
-    /// up half of it, so disposing N sibling scopes that all observe this node
-    /// costs O(N) in total rather than a full pass over the list per scope.
+    /// have not been swept out yet.
     member val internal DeadObservers = 0 with get, set
 
     // Edge lists use an inline-first-edge layout: the first source/observer is

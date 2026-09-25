@@ -666,8 +666,7 @@ let tests =
                                 |> snd
                             )
 
-                    // Two of ten: too few for their entries in `src` to be swept yet,
-                    // so this checks that propagation skips them.
+                    // Two of ten: too few for their entries in `src` to be swept yet.
                     owners.[2].Dispose()
                     owners.[5].Dispose()
                     src.Value <- 1
@@ -693,8 +692,6 @@ let tests =
                 "disposing many sibling scopes that share a source takes linear time",
                 fun _ ->
                     // The shape of every keyed-list row reading one shared signal.
-                    // A full pass over the observer list per scope is n^2 / 2 steps
-                    // (1.25 billion here, seconds); swept lazily it stays linear.
                     let src = Var.create 0
                     let n = 50000
 
@@ -752,8 +749,7 @@ let tests =
                     assertThat (runs - before) (isEqualTo 500) // only the live half re-ran
                     assertThat (Signal.observerCount src.Signal) (isEqualTo 500)
 
-                    // A whole list's worth in one batch: every entry is dead at the
-                    // end, so the source drops its list without a pass over it.
+                    // A whole list's worth in one batch: every entry is dead at the end.
                     let many = Var.create 0
 
                     let rows =

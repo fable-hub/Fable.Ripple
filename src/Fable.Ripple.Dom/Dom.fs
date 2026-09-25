@@ -175,10 +175,8 @@ module Dom =
 
             dj
 
-        // Remove every current row's node from the DOM. One DOM op when the
-        // parent holds nothing but the rows - plus the anchor, which is put back -
-        // otherwise one removal per row. A Range delete over the (always
-        // contiguous) row span was measured slower than both.
+        // A Range delete over the (always contiguous) row span was measured
+        // slower than both branches.
         let removeAllRowNodes () =
             let hasAnchor = not (obj.ReferenceEquals(anchor, null))
 
