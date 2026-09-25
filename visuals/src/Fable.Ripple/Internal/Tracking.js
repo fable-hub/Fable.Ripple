@@ -1,6 +1,6 @@
 
 import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceAt, sourceCount } from "./Graph.js";
-import { ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
+import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 import { item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
 
 let current = undefined;
@@ -106,18 +106,24 @@ function recompute(node) {
         const n = node;
         const option = ReactiveNode__get_FirstObserver(n);
         if (option != null) {
-            const o = option;
-            if (ReactiveNode__get_State(o) < 2) {
-                ReactiveNode__set_State_Z12CE0414(o, 2);
+            const o_1 = option;
+            if (!ReactiveNode__get_Disposed(o_1)) {
+                const o = o_1;
+                if (ReactiveNode__get_State(o) < 2) {
+                    ReactiveNode__set_State_Z12CE0414(o, 2);
+                }
             }
         }
         const option_1 = ReactiveNode__get_RestObservers(n);
         if (option_1 != null) {
             const a = option_1;
             for (let i_1 = 0; i_1 <= (a.length - 1); i_1++) {
-                const o = item(i_1, a);
-                if (ReactiveNode__get_State(o) < 2) {
-                    ReactiveNode__set_State_Z12CE0414(o, 2);
+                const o_1_1 = item(i_1, a);
+                if (!ReactiveNode__get_Disposed(o_1_1)) {
+                    const o = o_1_1;
+                    if (ReactiveNode__get_State(o) < 2) {
+                        ReactiveNode__set_State_Z12CE0414(o, 2);
+                    }
                 }
             }
         }

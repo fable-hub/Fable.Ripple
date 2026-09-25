@@ -16,6 +16,7 @@ export class ReactiveNode {
         this["Queued@"] = false;
         this["Disposed@"] = false;
         this["Affected@"] = false;
+        this["DeadObservers@"] = 0;
         this["FirstSource@"] = undefined;
         this["RestSources@"] = undefined;
         this["FirstObserver@"] = undefined;
@@ -76,7 +77,8 @@ export function ReactiveNode__set_Queued_Z1FBCCD16(__, v) {
 /**
  * Set on every node of a scope at the start of teardown, so a shared
  * source's observer list can be compacted in one pass instead of one
- * removal per node.
+ * removal per node. A disposed node may linger in a live source's observer
+ * list until that list is swept; `Graph.iterObservers` skips it.
  */
 export function ReactiveNode__get_Disposed(__) {
     return __["Disposed@"];
@@ -85,26 +87,41 @@ export function ReactiveNode__get_Disposed(__) {
 /**
  * Set on every node of a scope at the start of teardown, so a shared
  * source's observer list can be compacted in one pass instead of one
- * removal per node.
+ * removal per node. A disposed node may linger in a live source's observer
+ * list until that list is swept; `Graph.iterObservers` skips it.
  */
 export function ReactiveNode__set_Disposed_Z1FBCCD16(__, v) {
     __["Disposed@"] = v;
 }
 
 /**
- * Marks a source already collected for that single compaction pass, so it
- * is visited once however many of its observers the scope owned.
+ * Set while this node is in `Graph.sweepQueue`.
  */
 export function ReactiveNode__get_Affected(__) {
     return __["Affected@"];
 }
 
 /**
- * Marks a source already collected for that single compaction pass, so it
- * is visited once however many of its observers the scope owned.
+ * Set while this node is in `Graph.sweepQueue`.
  */
 export function ReactiveNode__set_Affected_Z1FBCCD16(__, v) {
     __["Affected@"] = v;
+}
+
+/**
+ * Entries in this node's observer list that belong to disposed nodes and
+ * have not been swept out yet.
+ */
+export function ReactiveNode__get_DeadObservers(__) {
+    return __["DeadObservers@"] | 0;
+}
+
+/**
+ * Entries in this node's observer list that belong to disposed nodes and
+ * have not been swept out yet.
+ */
+export function ReactiveNode__set_DeadObservers_Z524259A4(__, v) {
+    __["DeadObservers@"] = (v | 0);
 }
 
 /**

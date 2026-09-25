@@ -3,8 +3,8 @@ import { class_type } from "../../../fable_modules/fable-library-js.5.13.0/Refle
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
 import { max } from "../../../fable_modules/fable-library-js.5.13.0/Double.js";
 import { clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__set_Affected_Z1FBCCD16, ReactiveNode__get_Affected, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
-import { compactObservers } from "./Graph.js";
+import { ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
+import { releaseSweeps, holdSweeps, noteDeadObserver } from "./Graph.js";
 
 /**
  * Everything created inside one dynamic region - a component, a list row - so
@@ -186,7 +186,6 @@ function ScopeModule_tearDown(scope) {
     for (let i_2 = 0; i_2 <= (nodes.length - 1); i_2++) {
         ReactiveNode__set_Disposed_Z1FBCCD16(item(i_2, nodes), true);
     }
-    const affected = [];
     for (let i_3 = 0; i_3 <= (nodes.length - 1); i_3++) {
         const node = item(i_3, nodes);
         const n = node;
@@ -194,9 +193,8 @@ function ScopeModule_tearDown(scope) {
             const option_2 = ReactiveNode__get_FirstSource(n);
             if (option_2 != null) {
                 const source = option_2;
-                if (!ReactiveNode__get_Disposed(source) && !ReactiveNode__get_Affected(source)) {
-                    ReactiveNode__set_Affected_Z1FBCCD16(source, true);
-                    void (affected.push(source));
+                if (!ReactiveNode__get_Disposed(source)) {
+                    noteDeadObserver(source);
                 }
             }
         }
@@ -206,24 +204,16 @@ function ScopeModule_tearDown(scope) {
             const start = ((0 <= 1) ? 0 : (0 - 1)) | 0;
             for (let i_4 = start; i_4 <= (a.length - 1); i_4++) {
                 const source = item(i_4, a);
-                if (!ReactiveNode__get_Disposed(source) && !ReactiveNode__get_Affected(source)) {
-                    ReactiveNode__set_Affected_Z1FBCCD16(source, true);
-                    void (affected.push(source));
+                if (!ReactiveNode__get_Disposed(source)) {
+                    noteDeadObserver(source);
                 }
             }
         }
         ReactiveNode__set_FirstSource_Z46457FEC(node, undefined);
-        const option_4 = ReactiveNode__get_RestSources(node);
-        if (option_4 != null) {
-            clear(option_4);
-        }
+        ReactiveNode__set_RestSources_6EF2C44D(node, undefined);
         ReactiveNode__set_State_Z12CE0414(node, 0);
         ReactiveNode__set_Queued_Z1FBCCD16(node, false);
-    }
-    for (let i_5 = 0; i_5 <= (affected.length - 1); i_5++) {
-        const source_1 = item(i_5, affected);
-        compactObservers(source_1, (o) => !ReactiveNode__get_Disposed(o));
-        ReactiveNode__set_Affected_Z1FBCCD16(source_1, false);
+        ReactiveNode__set_EffectFn_A3DF6A2(node, undefined);
     }
     clear(nodes);
 }
@@ -234,7 +224,13 @@ function ScopeModule_tearDown(scope) {
  */
 export function ScopeModule_dispose(scope) {
     if (!Scope__get_Disposed(scope)) {
-        ScopeModule_tearDown(scope);
+        holdSweeps();
+        try {
+            ScopeModule_tearDown(scope);
+        }
+        finally {
+            releaseSweeps();
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 
-import { ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_FirstObserver_Z46457FEC, ReactiveNode__set_RestObservers_6EF2C44D, ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__get_RestSources, ReactiveNode__get_FirstSource } from "../ReactiveNode.js";
+import { ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_Affected_Z1FBCCD16, ReactiveNode__get_Affected, ReactiveNode__get_Disposed, ReactiveNode__set_DeadObservers_Z524259A4, ReactiveNode__set_FirstObserver_Z46457FEC, ReactiveNode__set_RestObservers_6EF2C44D, ReactiveNode__get_DeadObservers, ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__get_RestSources, ReactiveNode__get_FirstSource } from "../ReactiveNode.js";
 import { value } from "../../../fable_modules/fable-library-js.5.13.0/Option.js";
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
 import { clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
@@ -80,7 +80,7 @@ export function truncateSources(n, len) {
     }
 }
 
-export function observerCount(n) {
+function observerSlots(n) {
     const matchValue = ReactiveNode__get_FirstObserver(n);
     if (matchValue != null) {
         const matchValue_1 = ReactiveNode__get_RestObservers(n);
@@ -95,6 +95,13 @@ export function observerCount(n) {
     else {
         return 0;
     }
+}
+
+/**
+ * Live observers of `n` (disposed entries awaiting a sweep are not counted).
+ */
+export function observerCount(n) {
+    return (observerSlots(n) - ReactiveNode__get_DeadObservers(n)) | 0;
 }
 
 function ensureRestObservers(n) {
@@ -206,6 +213,56 @@ export function compactObservers(n, keep) {
             }
         }
         ReactiveNode__set_FirstObserver_Z46457FEC(n, newFirst);
+    }
+}
+
+function sweepDeadObservers(n) {
+    const dead = ReactiveNode__get_DeadObservers(n) | 0;
+    if (dead > 0) {
+        const slots = observerSlots(n) | 0;
+        if (dead >= slots) {
+            ReactiveNode__set_FirstObserver_Z46457FEC(n, undefined);
+            ReactiveNode__set_RestObservers_6EF2C44D(n, undefined);
+            ReactiveNode__set_DeadObservers_Z524259A4(n, 0);
+        }
+        else if ((2 * dead) >= slots) {
+            compactObservers(n, (o) => !ReactiveNode__get_Disposed(o));
+            ReactiveNode__set_DeadObservers_Z524259A4(n, 0);
+        }
+    }
+}
+
+const sweepQueue = [];
+
+let sweepHolds = 0;
+
+export function noteDeadObserver(source) {
+    ReactiveNode__set_DeadObservers_Z524259A4(source, ReactiveNode__get_DeadObservers(source) + 1);
+    if (!ReactiveNode__get_Affected(source)) {
+        ReactiveNode__set_Affected_Z1FBCCD16(source, true);
+        void (sweepQueue.push(source));
+    }
+}
+
+/**
+ * Nests; the outermost `releaseSweeps` runs the queued checks.
+ */
+export function holdSweeps() {
+    sweepHolds = ((sweepHolds + 1) | 0);
+}
+
+/**
+ * Release a hold; the last one runs the queued sweep checks.
+ */
+export function releaseSweeps() {
+    sweepHolds = ((sweepHolds - 1) | 0);
+    if ((sweepHolds === 0) && (sweepQueue.length > 0)) {
+        for (let i = 0; i <= (sweepQueue.length - 1); i++) {
+            const source = item(i, sweepQueue);
+            ReactiveNode__set_Affected_Z1FBCCD16(source, false);
+            sweepDeadObservers(source);
+        }
+        clear(sweepQueue);
     }
 }
 
