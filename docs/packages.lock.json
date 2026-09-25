@@ -248,7 +248,6 @@
           "Fable.Promise": "[3.2.0, )",
           "Fable.Ripple.Dom": "[1.0.0, )",
           "Fable.Ripple.Form.Plain": "[1.0.0, )",
-          "Fable.Ripple.Plugin": "[1.0.0, )",
           "Fable.UrlParser": "[1.0.0, )"
         }
       },
@@ -267,7 +266,8 @@
           "Fable.Browser.Dom": "[2.20.0, )",
           "Fable.Browser.Event": "[1.7.0, )",
           "Fable.Core": "[5.2.0, )",
-          "Fable.Ripple": "[1.0.0, )"
+          "Fable.Ripple": "[1.0.0, )",
+          "Fable.Ripple.Plugin": "[1.0.0, )"
         }
       },
       "fable.ripple.form": {
@@ -294,7 +294,6 @@
       "fable.ripple.plugin": {
         "type": "Project",
         "dependencies": {
-          "FSharp.Core": "[10.0.110, )",
           "Fable.AST": "[5.0.0, )"
         }
       },
