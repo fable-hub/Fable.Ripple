@@ -181,10 +181,10 @@
         "type": "CentralTransitive",
         "requested": "[0.1.0, )",
         "resolved": "0.1.0",
-        "contentHash": "THiuEGuLUznct+3+b+EV5Kac4N+8jcyiNcdCoJ4Hs9ZjO8/P0BpLhq8lL2cReyV07i2gacYykgZt5rZ8AXHnFw==",
+        "contentHash": "2VvjbyCXsSk3a0d4Uy/mEeMcpZ8dCCmo++TyPpx4V/y+Z9JY7ZYNYhwbaJmemtP/6PBa0Cg3eu00/Zs0xq9CcA==",
         "dependencies": {
-          "FSharp.Core": "10.1.301",
-          "Fable.Core": "5.2.0"
+          "FSharp.Core": "5.0.2",
+          "Fable.Core": "4.3.0"
         }
       },
       "Scriptorium.Nib": {
