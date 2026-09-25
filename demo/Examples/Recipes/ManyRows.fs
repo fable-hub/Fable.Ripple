@@ -6,8 +6,7 @@ open Fable.Ripple.Dom
 open Demo.Examples.Components // demo-hide-line
 open Demo.Examples.Widgets // demo-hide-line
 
-// Adapted from `bench/apps/fable-ripple/src/App.fs`, which is the real
-// benchmark entry. The shape that matters: each row's LABEL is its own `Var`,
+// The js-framework-benchmark row shape: each row's LABEL is its own `Var`,
 // and there is one shared `selected`. So "update every 10th row" writes 100
 // signals and touches 100 text nodes - it does not re-render 1,000 rows and
 // diff them, because there is no render pass to re-run.
@@ -16,8 +15,9 @@ open Demo.Examples.Widgets // demo-hide-line
 // list, and the keyed reconciler moves exactly two elements. Control Flow /
 // Minimal DOM moves counts them with a MutationObserver if you want the proof.
 //
-// Timings are wall-clock around a synchronous write, which is only meaningful
-// because writes flush before the assignment returns.
+// Timings are wall-clock around a synchronous write. A click handler runs
+// inside `Signal.batch`, where a write only marks and the flush happens after
+// the handler returns, so `timed` defers to a macrotask to be outside it.
 
 type private Row =
     {
@@ -83,10 +83,16 @@ let render () =
     let timings = Log()
 
     let timed name f =
-        let before = now ()
-        f ()
-        let elapsed = now () - before
-        timings.Add(sprintf "%s: %.1f ms" name elapsed)
+        Browser.Dom.window.setTimeout (
+            (fun () ->
+                let before = now ()
+                f ()
+                let elapsed = now () - before
+                timings.Add(sprintf "%s: %.1f ms" name elapsed)
+            ),
+            0
+        )
+        |> ignore
 
     let build n =
         Array.init
