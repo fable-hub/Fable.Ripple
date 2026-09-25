@@ -41,7 +41,7 @@ let private compileVisuals () =
     // The Pages deploy commits `docs/output`, where a generated `.gitignore` would exclude these.
     Command.Run(
         "dotnet",
-        "fable docs/visuals/Visuals.fsproj --outDir docs/static/visuals --noGitignore",
+        "fable docs/visuals/Visuals.fsproj --outDir docs/static/visuals --noGitignore --exclude Fable.Ripple.Plugin",
         workingDirectory = Workspace.``.``
     )
 
