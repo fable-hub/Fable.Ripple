@@ -1,7 +1,7 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 
-function Defaults_noRecompute() {
+export function Defaults_noRecompute() {
     return false;
 }
 

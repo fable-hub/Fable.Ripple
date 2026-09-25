@@ -3,7 +3,7 @@ import { class_type } from "../../../fable_modules/fable-library-js.5.13.0/Refle
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
 import { max } from "../../../fable_modules/fable-library-js.5.13.0/Double.js";
 import { clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
+import { Defaults_noRecompute, ReactiveNode__set_Recompute_233A5940, ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
 import { releaseSweeps, holdSweeps, noteDeadObserver } from "./Graph.js";
 
 /**
@@ -214,6 +214,7 @@ function ScopeModule_tearDown(scope) {
         ReactiveNode__set_State_Z12CE0414(node, 0);
         ReactiveNode__set_Queued_Z1FBCCD16(node, false);
         ReactiveNode__set_EffectFn_A3DF6A2(node, undefined);
+        ReactiveNode__set_Recompute_233A5940(node, Defaults_noRecompute);
     }
     clear(nodes);
 }
