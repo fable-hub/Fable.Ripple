@@ -129,6 +129,7 @@ module internal Scope =
             node.Queued <- false
             // The node stays referenced from its sources until the sweep.
             node.EffectFn <- ValueNone
+            node.Recompute <- Defaults.noRecompute
 
         nodes.Clear()
 

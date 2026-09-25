@@ -13,7 +13,7 @@ type internal NodeState =
 
 /// Shared defaults, so a field with a function default costs a reference copy per
 /// node rather than a fresh closure.
-module private Defaults =
+module internal Defaults =
 
     let noRecompute: unit -> bool = fun () -> false
 
