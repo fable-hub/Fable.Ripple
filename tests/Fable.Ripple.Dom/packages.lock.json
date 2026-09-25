@@ -54,6 +54,11 @@
           "Scriptorium.Quill": "0.2.1"
         }
       },
+      "Fable.AST": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "x6s0UlpG4SIR+c36YsuXL7RK6y3aKntbIEbEm+ZbwdEd8C6A0y8Dzfsrbp5xoKsNcpCrj4LVisLoN33eFixAng=="
+      },
       "Fable.Browser.Blob": {
         "type": "Transitive",
         "resolved": "1.4.0",
@@ -126,7 +131,8 @@
           "Fable.Browser.Dom": "[2.20.0, )",
           "Fable.Browser.Event": "[1.7.0, )",
           "Fable.Core": "[5.2.0, )",
-          "Fable.Ripple": "[1.0.0, )"
+          "Fable.Ripple": "[1.0.0, )",
+          "Fable.Ripple.Plugin": "[1.0.0, )"
         }
       },
       "fable.ripple.dom.test": {
@@ -140,6 +146,12 @@
           "Glutinum.Types": "[0.1.0, )",
           "Scriptorium.Nib.Browser": "[0.2.1, )",
           "Scriptorium.Quill": "[0.7.1, )"
+        }
+      },
+      "fable.ripple.plugin": {
+        "type": "Project",
+        "dependencies": {
+          "Fable.AST": "[5.0.0, )"
         }
       },
       "Fable.Browser.Css": {
@@ -169,10 +181,10 @@
         "type": "CentralTransitive",
         "requested": "[0.1.0, )",
         "resolved": "0.1.0",
-        "contentHash": "2VvjbyCXsSk3a0d4Uy/mEeMcpZ8dCCmo++TyPpx4V/y+Z9JY7ZYNYhwbaJmemtP/6PBa0Cg3eu00/Zs0xq9CcA==",
+        "contentHash": "THiuEGuLUznct+3+b+EV5Kac4N+8jcyiNcdCoJ4Hs9ZjO8/P0BpLhq8lL2cReyV07i2gacYykgZt5rZ8AXHnFw==",
         "dependencies": {
-          "FSharp.Core": "5.0.2",
-          "Fable.Core": "4.3.0"
+          "FSharp.Core": "10.1.301",
+          "Fable.Core": "5.2.0"
         }
       },
       "Scriptorium.Nib": {
