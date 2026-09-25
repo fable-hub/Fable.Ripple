@@ -61,6 +61,27 @@ let private keyedList () : DomItem =
 
             button "remove-first" (fun () -> rows.Value <- Array.tail rows.Value)
 
+            button "clear" (fun () -> rows.Value <- [||])
+
+            // Keys disjoint from every current row: the full-replace path.
+            button
+                "replace"
+                (fun () ->
+                    rows.Value <-
+                        [|
+                            {
+                                Id = nextId
+                                Name = "fresh"
+                            }
+                            {
+                                Id = nextId + 1
+                                Name = "fresher"
+                            }
+                        |]
+
+                    nextId <- nextId + 2
+                )
+
             Html.ul
                 [
                     attr.id "list"
@@ -132,6 +153,12 @@ let private eachPosition () : DomItem =
                             |]
                     )
                     Html.text "fill"
+                ]
+            Html.button
+                [
+                    attr.id "clear"
+                    on.click (fun _ -> items.Value <- [||])
+                    Html.text "clear"
                 ]
         ]
 

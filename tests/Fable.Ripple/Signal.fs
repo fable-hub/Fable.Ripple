@@ -3,6 +3,7 @@ module Fable.Ripple.Tests.Signal
 open Scriptorium.Nib.Assertion
 
 open type Scriptorium.Quill.Test
+open Scriptorium.Quill.Prelude
 
 open Fable.Ripple
 
@@ -613,6 +614,169 @@ let tests =
                     assertThat (Signal.observerCount ext.Signal) (isEqualTo 1)
                     parent.Dispose()
                     assertThat (Signal.observerCount ext.Signal) (isEqualTo 0)
+            )
+
+            test (
+                "disposing sibling scopes one by one keeps observerCount exact",
+                fun _ ->
+                    let ext = Var.create 0
+
+                    let owners =
+                        Array.init
+                            10
+                            (fun i ->
+                                Signal.root (fun () ->
+                                    (Signal.map (fun v -> v + i) ext).Value |> ignore
+                                )
+                                |> snd
+                            )
+
+                    assertThat (Signal.observerCount ext.Signal) (isEqualTo 10)
+                    owners.[0].Dispose()
+                    assertThat (Signal.observerCount ext.Signal) (isEqualTo 9)
+                    owners.[3].Dispose()
+                    owners.[7].Dispose()
+                    assertThat (Signal.observerCount ext.Signal) (isEqualTo 7)
+                    owners.[3].Dispose() // a second dispose is a no-op
+                    assertThat (Signal.observerCount ext.Signal) (isEqualTo 7)
+
+                    for owner in owners do
+                        owner.Dispose()
+
+                    assertThat (Signal.observerCount ext.Signal) (isEqualTo 0)
+            )
+
+            test (
+                "effects of disposed sibling scopes never run again, while live ones still do",
+                fun _ ->
+                    let src = Var.create 0
+                    let runs = Array.zeroCreate<int> 10
+
+                    let owners =
+                        Array.init
+                            10
+                            (fun i ->
+                                Signal.root (fun () ->
+                                    Signal.effect (fun () ->
+                                        src.Value |> ignore
+                                        runs.[i] <- runs.[i] + 1
+                                    )
+                                    |> ignore
+                                )
+                                |> snd
+                            )
+
+                    // Two of ten: too few for their entries in `src` to be swept yet.
+                    owners.[2].Dispose()
+                    owners.[5].Dispose()
+                    src.Value <- 1
+
+                    assertThat
+                        (List.ofArray runs)
+                        (isEqualTo
+                            [
+                                2
+                                2
+                                1
+                                2
+                                2
+                                1
+                                2
+                                2
+                                2
+                                2
+                            ])
+            )
+
+            test (
+                "disposing many sibling scopes that share a source takes linear time",
+                fun _ ->
+                    // The shape of every keyed-list row reading one shared signal.
+                    let src = Var.create 0
+                    let n = 50000
+
+                    let owners =
+                        Array.init
+                            n
+                            (fun _ ->
+                                Signal.root (fun () ->
+                                    Signal.effect (fun () -> src.Value |> ignore) |> ignore
+                                )
+                                |> snd
+                            )
+
+                    let stopwatch = UniversalStopwatch()
+
+                    for owner in owners do
+                        owner.Dispose()
+
+                    let elapsed = stopwatch.ElapsedMs()
+                    assertThat (Signal.observerCount src.Signal) (isEqualTo 0)
+                    assertThat elapsed (isLessThan 1000)
+            )
+
+            test (
+                "disposing sibling scopes inside a batch sweeps their shared source once, at the end",
+                fun _ ->
+                    let src = Var.create 0
+                    let mutable runs = 0
+
+                    let owners =
+                        Array.init
+                            1000
+                            (fun _ ->
+                                Signal.root (fun () ->
+                                    Signal.effect (fun () ->
+                                        src.Value |> ignore
+                                        runs <- runs + 1
+                                    )
+                                    |> ignore
+                                )
+                                |> snd
+                            )
+
+                    let before = runs
+
+                    Signal.batch (fun () ->
+                        for i in 0..499 do
+                            owners.[i].Dispose()
+
+                        // Not swept yet, but the count is already exact.
+                        assertThat (Signal.observerCount src.Signal) (isEqualTo 500)
+                        src.Value <- 1
+                    )
+
+                    assertThat (runs - before) (isEqualTo 500) // only the live half re-ran
+                    assertThat (Signal.observerCount src.Signal) (isEqualTo 500)
+
+                    // A whole list's worth in one batch: every entry is dead at the end.
+                    let many = Var.create 0
+
+                    let rows =
+                        Array.init
+                            50000
+                            (fun _ ->
+                                Signal.root (fun () ->
+                                    Signal.effect (fun () -> many.Value |> ignore) |> ignore
+                                )
+                                |> snd
+                            )
+
+                    let stopwatch = UniversalStopwatch()
+
+                    Signal.batch (fun () ->
+                        for row in rows do
+                            row.Dispose()
+                    )
+
+                    let elapsed = stopwatch.ElapsedMs()
+                    assertThat (Signal.observerCount many.Signal) (isEqualTo 0)
+                    assertThat elapsed (isLessThan 1000)
+
+                    for owner in owners do
+                        owner.Dispose()
+
+                    assertThat (Signal.observerCount src.Signal) (isEqualTo 0)
             )
 
             (*

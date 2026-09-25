@@ -34,12 +34,16 @@ type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
 
     /// Set on every node of a scope at the start of teardown, so a shared
     /// source's observer list can be compacted in one pass instead of one
-    /// removal per node.
+    /// removal per node. A disposed node may linger in a live source's observer
+    /// list until that list is swept; `Graph.iterObservers` skips it.
     member val internal Disposed = false with get, set
 
-    /// Marks a source already collected for that single compaction pass, so it
-    /// is visited once however many of its observers the scope owned.
+    /// Set while this node is in `Graph.sweepQueue`.
     member val internal Affected = false with get, set
+
+    /// Entries in this node's observer list that belong to disposed nodes and
+    /// have not been swept out yet.
+    member val internal DeadObservers = 0 with get, set
 
     // Edge lists use an inline-first-edge layout: the first source/observer is
     // stored directly in `First*`, and only a *second* edge allocates the `Rest*`

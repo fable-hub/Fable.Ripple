@@ -81,9 +81,9 @@ module internal Scope =
         parent.CompactAt <- max 8 (children.Count * 2)
 
     /// Tear down a scope: dispose child scopes, run cleanups, then unlink every
-    /// registered computed/effect from its sources. To avoid O(n^2) when many
-    /// nodes share one external source, mark the whole scope disposed first and
-    /// compact each affected source's observer list in a single pass.
+    /// registered computed/effect from its sources. Disposed nodes stay in their
+    /// sources' observer lists until `Graph.releaseSweeps`; `Graph.iterObservers`
+    /// skips them.
     ///
     /// Children are not detached one by one - the list is cleared wholesale.
     let rec private tearDown (scope: Scope) =
@@ -110,10 +110,8 @@ module internal Scope =
         for i in 0 .. nodes.Count - 1 do
             nodes.[i].Disposed <- true
 
-        // Detach each node from its sources; collect the external sources whose
-        // observer lists still reference (now-disposed) nodes.
-        let affected = ResizeArray<ReactiveNode>()
-
+        // One count per edge: a node that read a source twice is listed twice in
+        // its observers.
         for i in 0 .. nodes.Count - 1 do
             let node = nodes.[i]
 
@@ -121,21 +119,16 @@ module internal Scope =
                 node
                 0
                 (fun source ->
-                    if not source.Disposed && not source.Affected then
-                        source.Affected <- true
-                        affected.Add source
+                    if not source.Disposed then
+                        Graph.noteDeadObserver source
                 )
 
             node.FirstSource <- ValueNone
-            node.RestSources |> ValueOption.iter (fun a -> a.Clear())
+            node.RestSources <- ValueNone
             node.State <- NodeState.Clean
             node.Queued <- false
-
-        // One compaction pass per affected source (O(observers), not O(nodes)).
-        for i in 0 .. affected.Count - 1 do
-            let source = affected.[i]
-            Graph.compactObservers source (fun o -> not o.Disposed)
-            source.Affected <- false
+            // The node stays referenced from its sources until the sweep.
+            node.EffectFn <- ValueNone
 
         nodes.Clear()
 
@@ -143,7 +136,12 @@ module internal Scope =
     /// until the next sweep, where `Disposed` is what marks it dead.
     let dispose (scope: Scope) =
         if not scope.Disposed then
-            tearDown scope
+            Graph.holdSweeps ()
+
+            try
+                tearDown scope
+            finally
+                Graph.releaseSweeps ()
 
     /// Run `fn` inside a fresh scope nested under the current one. Returns its
     /// result and a disposer that tears the scope down.

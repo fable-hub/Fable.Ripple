@@ -71,13 +71,17 @@ module internal Graph =
                 action a.[i]
         )
 
-    let observerCount (n: ReactiveNode) : int =
+    /// Length of the observer list, including disposed entries not yet swept.
+    let private observerSlots (n: ReactiveNode) : int =
         match n.FirstObserver with
         | ValueNone -> 0
         | ValueSome _ ->
             match n.RestObservers with
             | ValueSome a -> 1 + a.Count
             | ValueNone -> 1
+
+    /// Live observers of `n` (disposed entries awaiting a sweep are not counted).
+    let observerCount (n: ReactiveNode) : int = observerSlots n - n.DeadObservers
 
     let private ensureRestObservers (n: ReactiveNode) =
         match n.RestObservers with
@@ -92,13 +96,21 @@ module internal Graph =
         | ValueNone -> n.FirstObserver <- ValueSome o
         | ValueSome _ -> (ensureRestObservers n).Add o
 
+    /// Skips disposed observers; they stay listed until `sweepDeadObservers`.
     let inline iterObservers (n: ReactiveNode) ([<InlineIfLambda>] action: ReactiveNode -> unit) =
-        n.FirstObserver |> ValueOption.iter action
+        n.FirstObserver
+        |> ValueOption.iter (fun o ->
+            if not o.Disposed then
+                action o
+        )
 
         n.RestObservers
         |> ValueOption.iter (fun a ->
             for i in 0 .. a.Count - 1 do
-                action a.[i]
+                let o = a.[i]
+
+                if not o.Disposed then
+                    action o
         )
 
     /// Swap-remove `o` from `n`'s observers (order is irrelevant).
@@ -159,6 +171,48 @@ module internal Graph =
             )
 
             n.FirstObserver <- newFirst
+
+    /// Threshold of half: a sweep removes at least as many entries as it keeps,
+    /// so sweeping stays linear in disposals.
+    let private sweepDeadObservers (n: ReactiveNode) =
+        let dead = n.DeadObservers
+
+        if dead > 0 then
+            let slots = observerSlots n
+
+            if dead >= slots then
+                n.FirstObserver <- ValueNone
+                n.RestObservers <- ValueNone
+                n.DeadObservers <- 0
+            elif 2 * dead >= slots then
+                compactObservers n (fun o -> not o.Disposed)
+                n.DeadObservers <- 0
+
+    // `Affected` marks membership in `sweepQueue`.
+    let private sweepQueue = ResizeArray<ReactiveNode>()
+    let mutable private sweepHolds = 0
+
+    let noteDeadObserver (source: ReactiveNode) =
+        source.DeadObservers <- source.DeadObservers + 1
+
+        if not source.Affected then
+            source.Affected <- true
+            sweepQueue.Add source
+
+    /// Nests; the outermost `releaseSweeps` runs the queued checks.
+    let holdSweeps () = sweepHolds <- sweepHolds + 1
+
+    /// Release a hold; the last one runs the queued sweep checks.
+    let releaseSweeps () =
+        sweepHolds <- sweepHolds - 1
+
+        if sweepHolds = 0 && sweepQueue.Count > 0 then
+            for i in 0 .. sweepQueue.Count - 1 do
+                let source = sweepQueue.[i]
+                source.Affected <- false
+                sweepDeadObservers source
+
+            sweepQueue.Clear()
 
     /// Unlink `node` from each of its sources at or after `fromIndex`.
     let unlinkSourcesTail (node: ReactiveNode) (fromIndex: int) =
