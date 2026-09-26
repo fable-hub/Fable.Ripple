@@ -2,7 +2,7 @@
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Core.js";
-import { disposeSafe, getEnumerator, Exception } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { disposeSafe, getEnumerator, defaultOf, Exception } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { Signal_batch, Signal_effect } from "../Fable.Ripple/Api.js";
 import { split } from "../../fable_modules/fable-library-js.5.13.0/String.js";
 import { item as item_1 } from "../../fable_modules/fable-library-js.5.13.0/Array.js";
@@ -110,12 +110,18 @@ export function Base_attribute(name, value) {
 }
 
 /**
- * Reactive attribute driven by an auto-tracked callback.
+ * Reactive attribute driven by an auto-tracked callback. The DOM is written
+ * only when the callback's result differs from the last value written.
  */
 export function Base_bindAttribute(name, callback) {
     return (element) => {
+        let prev = defaultOf();
         Signal_effect(() => {
-            element.setAttribute(name, callback());
+            const v = callback();
+            if (!(v === prev)) {
+                prev = v;
+                element.setAttribute(name, v);
+            }
         });
     };
 }
@@ -148,14 +154,21 @@ export function Base_booleanAttribute(name, value) {
  */
 export function Base_bindBooleanAttribute(name, callback) {
     return (element) => {
+        let prev = false;
+        let first = true;
         Signal_effect(() => {
-            const element_1 = element;
-            const name_1 = name;
-            if (callback()) {
-                element_1.setAttribute(name_1, "");
-            }
-            else {
-                element_1.removeAttribute(name_1);
+            const v = callback();
+            if (first ? true : (v !== prev)) {
+                first = false;
+                prev = v;
+                const element_1 = element;
+                const name_1 = name;
+                if (v) {
+                    element_1.setAttribute(name_1, "");
+                }
+                else {
+                    element_1.removeAttribute(name_1);
+                }
             }
         });
     };
@@ -183,8 +196,15 @@ export function Base_property(name, value) {
  */
 export function Base_bindProperty(name, callback) {
     return (element) => {
+        let prev = defaultOf();
+        let first = true;
         Signal_effect(() => {
-            element[name] = callback();
+            const v = callback();
+            if (first ? true : !(v === prev)) {
+                first = false;
+                prev = v;
+                element[name] = v;
+            }
         });
     };
 }
@@ -345,8 +365,15 @@ export function Base_ClassList_toggle(name, enabled) {
  */
 export function Base_ClassList_bindToggle(name, callback) {
     return (element) => {
+        let prev = false;
+        let first = true;
         Signal_effect(() => {
-            Base_ClassList_setToken(element, callback(), name);
+            const v = callback();
+            if (first ? true : (v !== prev)) {
+                first = false;
+                prev = v;
+                Base_ClassList_setToken(element, v, name);
+            }
         });
     };
 }
