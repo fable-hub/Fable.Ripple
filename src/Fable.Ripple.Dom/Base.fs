@@ -104,10 +104,20 @@ module Base =
     let attribute (name: string) (value: string) : DomItem =
         Apply(fun element -> element.setAttribute (name, value))
 
-    /// Reactive attribute driven by an auto-tracked callback.
+    /// Reactive attribute driven by an auto-tracked callback. The DOM is written
+    /// only when the callback's result differs from the last value written.
     let bindAttribute (name: string) (callback: unit -> string) : DomItem =
         Apply(fun element ->
-            Signal.effect (fun () -> element.setAttribute (name, callback ())) |> ignore
+            let mutable prev: string = null
+
+            Signal.effect (fun () ->
+                let v = callback ()
+
+                if not (obj.ReferenceEquals(v, prev)) then
+                    prev <- v
+                    element.setAttribute (name, v)
+            )
+            |> ignore
         )
 
     /// Reactive attribute driven by a signal.
@@ -130,7 +140,20 @@ module Base =
 
     /// Reactive present/absent boolean attribute driven by a callback.
     let bindBooleanAttribute (name: string) (callback: unit -> bool) : DomItem =
-        Apply(fun element -> Signal.effect (fun () -> setFlag element name (callback ())) |> ignore)
+        Apply(fun element ->
+            let mutable prev = false
+            let mutable first = true
+
+            Signal.effect (fun () ->
+                let v = callback ()
+
+                if first || v <> prev then
+                    first <- false
+                    prev <- v
+                    setFlag element name v
+            )
+            |> ignore
+        )
 
     /// Reactive present/absent boolean attribute driven by a signal.
     let bindBooleanAttributeSignal (name: string) (signal: Signal<bool>) : DomItem =
@@ -148,7 +171,18 @@ module Base =
     /// Reactive property driven by an auto-tracked callback.
     let bindProperty (name: string) (callback: unit -> 'a) : DomItem =
         Apply(fun element ->
-            Signal.effect (fun () -> element?(name) <- box (callback ())) |> ignore
+            let mutable prev: obj = null
+            let mutable first = true
+
+            Signal.effect (fun () ->
+                let v = box (callback ())
+
+                if first || not (obj.ReferenceEquals(v, prev)) then
+                    first <- false
+                    prev <- v
+                    element?(name) <- v
+            )
+            |> ignore
         )
 
     /// Reactive property driven by a signal.
@@ -244,5 +278,16 @@ module Base =
         /// Toggle a single class token by a reactive flag.
         let bindToggle (name: string) (callback: unit -> bool) : DomItem =
             Apply(fun element ->
-                Signal.effect (fun () -> setToken element (callback ()) name) |> ignore
+                let mutable prev = false
+                let mutable first = true
+
+                Signal.effect (fun () ->
+                    let v = callback ()
+
+                    if first || v <> prev then
+                        first <- false
+                        prev <- v
+                        setToken element v name
+                )
+                |> ignore
             )

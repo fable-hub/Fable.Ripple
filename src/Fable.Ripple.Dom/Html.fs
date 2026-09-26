@@ -24,7 +24,17 @@ type Html =
 
     static member text(f: unit -> string) : DomItem =
         let t = document.createTextNode ""
-        Signal.effect (fun () -> t.nodeValue <- f ()) |> ignore
+        let mutable prev: string = null
+
+        Signal.effect (fun () ->
+            let v = f ()
+
+            if not (obj.ReferenceEquals(v, prev)) then
+                prev <- v
+                t.nodeValue <- v
+        )
+        |> ignore
+
         Child(t :> Node)
 
     /// Reactive text from any signal source - a `Var` or a derived `Signal`, of any
