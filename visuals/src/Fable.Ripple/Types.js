@@ -6,6 +6,7 @@ import { ScopeModule_register } from "./Internal/Scope.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 import { updateIfNecessary, track } from "./Internal/Tracking.js";
 import { notifyChange } from "./Internal/Scheduler.js";
+import { dispose } from "./Internal/Graph.js";
 
 /**
  * The reactive node and the writable handle. A **source** (`Var.create`) is a
@@ -123,6 +124,10 @@ export class Effect extends ReactiveNode {
         this["init@94-1"] = 1;
         ReactiveNode__set_EffectFn_A3DF6A2(this$.contents, fn);
         ScopeModule_register(this$.contents);
+    }
+    Dispose() {
+        const this$ = this;
+        dispose(this$);
     }
 }
 

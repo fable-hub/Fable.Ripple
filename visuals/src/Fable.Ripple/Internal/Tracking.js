@@ -1,7 +1,7 @@
 
-import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceAt, sourceCount } from "./Graph.js";
-import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 import { item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
+import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceCount, sourceAt } from "./Graph.js";
+import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 
 let current = undefined;
 
@@ -12,41 +12,46 @@ let currentGetsIndex = 0;
 /**
  * Record that `current` reads `node`. While reads arrive in the same order
  * as the previous run, just advance the index (no edge mutation); on the
- * first mismatch, collect the new tail into `currentGets`.
+ * first mismatch, collect the new tail into `currentGets`. A read of the
+ * source just recorded adds no edge.
  */
 export function track(node) {
     if (current != null) {
         const cur = current;
-        let matchResult;
-        if (currentGets == null) {
-            if ((currentGetsIndex < sourceCount(cur)) && (sourceAt(cur, currentGetsIndex) === node)) {
-                matchResult = 0;
+        if (currentGets != null) {
+            const gets = currentGets;
+            const last = (gets.length > 0) ? item(gets.length - 1, gets) : ((currentGetsIndex > 0) ? sourceAt(cur, currentGetsIndex - 1) : undefined);
+            let matchResult;
+            if (last != null) {
+                if (last === node) {
+                    matchResult = 0;
+                }
+                else {
+                    matchResult = 1;
+                }
             }
             else {
                 matchResult = 1;
             }
+            switch (matchResult) {
+                case 0: {
+                    break;
+                }
+                case 1: {
+                    void (gets.push(node));
+                    break;
+                }
+            }
+        }
+        else if ((currentGetsIndex > 0) && (sourceAt(cur, currentGetsIndex - 1) === node)) {
+        }
+        else if ((currentGetsIndex < sourceCount(cur)) && (sourceAt(cur, currentGetsIndex) === node)) {
+            currentGetsIndex = ((currentGetsIndex + 1) | 0);
         }
         else {
-            matchResult = 1;
-        }
-        switch (matchResult) {
-            case 0: {
-                currentGetsIndex = ((currentGetsIndex + 1) | 0);
-                break;
-            }
-            case 1: {
-                let gets;
-                if (currentGets == null) {
-                    const g_1 = [];
-                    currentGets = g_1;
-                    gets = g_1;
-                }
-                else {
-                    gets = currentGets;
-                }
-                void (gets.push(node));
-                break;
-            }
+            const g = [];
+            currentGets = g;
+            void (g.push(node));
         }
     }
 }

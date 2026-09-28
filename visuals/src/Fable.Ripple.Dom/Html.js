@@ -44,6 +44,13 @@ export function Html_text_5106B011(f) {
     return t;
 }
 
+/**
+ * Reactive text from a string signal.
+ */
+export function Html_text_Z108492D4(s) {
+    return Html_text_5106B011(() => s.Value);
+}
+
 export function Html_header_Z714D7FBE(items) {
     return Base_createElement("header", items);
 }

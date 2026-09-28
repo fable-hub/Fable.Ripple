@@ -1,10 +1,10 @@
 
+import { noteDeadObserver, releaseSweeps, holdSweeps } from "./Graph.js";
 import { class_type } from "../../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
-import { max } from "../../../fable_modules/fable-library-js.5.13.0/Double.js";
-import { clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { disposeSafe, clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { Defaults_noRecompute, ReactiveNode__set_Recompute_233A5940, ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
-import { releaseSweeps, holdSweeps, noteDeadObserver } from "./Graph.js";
+import { max } from "../../../fable_modules/fable-library-js.5.13.0/Double.js";
 
 /**
  * Everything created inside one dynamic region - a component, a list row - so
@@ -17,6 +17,18 @@ export class Scope {
         this["Children@"] = undefined;
         this["Disposed@"] = false;
         this["CompactAt@"] = 8;
+    }
+    Dispose() {
+        const this$ = this;
+        if (!Scope__get_Disposed(this$)) {
+            holdSweeps();
+            try {
+                Scope__TearDown(this$);
+            }
+            finally {
+                releaseSweeps();
+            }
+        }
     }
 }
 
@@ -124,6 +136,61 @@ export function Scope__EnsureChildren(this$) {
     }
 }
 
+function Scope__TearDown(this$) {
+    Scope__set_Disposed_Z1FBCCD16(this$, true);
+    const option = Scope__get_Children(this$);
+    if (option != null) {
+        const children = option;
+        for (let i = 0; i <= (children.length - 1); i++) {
+            Scope__TearDown(item(i, children));
+        }
+        clear(children);
+    }
+    const option_1 = Scope__get_Cleanups(this$);
+    if (option_1 != null) {
+        const cleanups = option_1;
+        for (let i_1 = 0; i_1 <= (cleanups.length - 1); i_1++) {
+            item(i_1, cleanups)();
+        }
+        clear(cleanups);
+    }
+    const nodes = Scope__get_Nodes(this$);
+    for (let i_2 = 0; i_2 <= (nodes.length - 1); i_2++) {
+        ReactiveNode__set_Disposed_Z1FBCCD16(item(i_2, nodes), true);
+    }
+    for (let i_3 = 0; i_3 <= (nodes.length - 1); i_3++) {
+        const node = item(i_3, nodes);
+        const n = node;
+        if (0 <= 0) {
+            const option_2 = ReactiveNode__get_FirstSource(n);
+            if (option_2 != null) {
+                const source = option_2;
+                if (!ReactiveNode__get_Disposed(source)) {
+                    noteDeadObserver(source);
+                }
+            }
+        }
+        const option_3 = ReactiveNode__get_RestSources(n);
+        if (option_3 != null) {
+            const a = option_3;
+            const start = ((0 <= 1) ? 0 : (0 - 1)) | 0;
+            for (let i_4 = start; i_4 <= (a.length - 1); i_4++) {
+                const source = item(i_4, a);
+                if (!ReactiveNode__get_Disposed(source)) {
+                    noteDeadObserver(source);
+                }
+            }
+        }
+        ReactiveNode__set_FirstSource_Z46457FEC(node, undefined);
+        ReactiveNode__set_RestSources_6EF2C44D(node, undefined);
+        ReactiveNode__set_State_Z12CE0414(node, 0);
+        ReactiveNode__set_Queued_Z1FBCCD16(node, false);
+        ReactiveNode__set_EffectFn_A3DF6A2(node, undefined);
+        ReactiveNode__set_Recompute_233A5940(node, Defaults_noRecompute);
+    }
+    clear(nodes);
+}
+
 let ScopeModule_currentScope = undefined;
 
 /**
@@ -164,75 +231,11 @@ function ScopeModule_compact(parent, children) {
     Scope__set_CompactAt_Z524259A4(parent, max(8, children.length * 2));
 }
 
-function ScopeModule_tearDown(scope) {
-    Scope__set_Disposed_Z1FBCCD16(scope, true);
-    const option = Scope__get_Children(scope);
-    if (option != null) {
-        const children = option;
-        for (let i = 0; i <= (children.length - 1); i++) {
-            ScopeModule_tearDown(item(i, children));
-        }
-        clear(children);
-    }
-    const option_1 = Scope__get_Cleanups(scope);
-    if (option_1 != null) {
-        const cleanups = option_1;
-        for (let i_1 = 0; i_1 <= (cleanups.length - 1); i_1++) {
-            item(i_1, cleanups)();
-        }
-        clear(cleanups);
-    }
-    const nodes = Scope__get_Nodes(scope);
-    for (let i_2 = 0; i_2 <= (nodes.length - 1); i_2++) {
-        ReactiveNode__set_Disposed_Z1FBCCD16(item(i_2, nodes), true);
-    }
-    for (let i_3 = 0; i_3 <= (nodes.length - 1); i_3++) {
-        const node = item(i_3, nodes);
-        const n = node;
-        if (0 <= 0) {
-            const option_2 = ReactiveNode__get_FirstSource(n);
-            if (option_2 != null) {
-                const source = option_2;
-                if (!ReactiveNode__get_Disposed(source)) {
-                    noteDeadObserver(source);
-                }
-            }
-        }
-        const option_3 = ReactiveNode__get_RestSources(n);
-        if (option_3 != null) {
-            const a = option_3;
-            const start = ((0 <= 1) ? 0 : (0 - 1)) | 0;
-            for (let i_4 = start; i_4 <= (a.length - 1); i_4++) {
-                const source = item(i_4, a);
-                if (!ReactiveNode__get_Disposed(source)) {
-                    noteDeadObserver(source);
-                }
-            }
-        }
-        ReactiveNode__set_FirstSource_Z46457FEC(node, undefined);
-        ReactiveNode__set_RestSources_6EF2C44D(node, undefined);
-        ReactiveNode__set_State_Z12CE0414(node, 0);
-        ReactiveNode__set_Queued_Z1FBCCD16(node, false);
-        ReactiveNode__set_EffectFn_A3DF6A2(node, undefined);
-        ReactiveNode__set_Recompute_233A5940(node, Defaults_noRecompute);
-    }
-    clear(nodes);
-}
-
 /**
- * Tear a scope down. Idempotent; a disposed child stays in its parent's list
- * until the next sweep, where `Disposed` is what marks it dead.
+ * Tear a scope down. Idempotent.
  */
 export function ScopeModule_dispose(scope) {
-    if (!Scope__get_Disposed(scope)) {
-        holdSweeps();
-        try {
-            ScopeModule_tearDown(scope);
-        }
-        finally {
-            releaseSweeps();
-        }
-    }
+    disposeSafe(scope);
 }
 
 /**
@@ -253,11 +256,7 @@ export function ScopeModule_root(fn) {
     }
     ScopeModule_currentScope = s;
     try {
-        return [fn(), {
-            Dispose() {
-                ScopeModule_dispose(s);
-            },
-        }];
+        return [fn(), s];
     }
     finally {
         ScopeModule_currentScope = prev;

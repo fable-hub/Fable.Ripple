@@ -2,9 +2,9 @@
 import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
 import { untracked, updateIfNecessary } from "./Internal/Tracking.js";
-import { observerCount, dispose } from "./Internal/Graph.js";
 import { batch } from "./Internal/Scheduler.js";
 import { ScopeModule_onCleanup, ScopeModule_root } from "./Internal/Scope.js";
+import { observerCount } from "./Internal/Graph.js";
 
 function Var_defaultEquals(a, b) {
     return equals_1(a, b);
@@ -113,11 +113,7 @@ export function Signal_autorun(fn) {
 export function Signal_effect(fn) {
     const eff = Effect_$ctor_3A5B6456(fn);
     updateIfNecessary(eff);
-    return {
-        Dispose() {
-            dispose(eff);
-        },
-    };
+    return eff;
 }
 
 /**
