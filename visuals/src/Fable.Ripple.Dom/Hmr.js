@@ -1,15 +1,15 @@
 
-import { substring } from "../../fable_modules/fable-library-js.5.13.0/String.js";
-import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.13.0/Types.js";
-import { record_type, class_type, int32_type, string_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
-import { addToSet, tryGetValue } from "../../fable_modules/fable-library-js.5.13.0/MapUtil.js";
-import { disposeSafe, getEnumerator, equals, defaultOf, int32ToString } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { filter, toArray } from "../../fable_modules/fable-library-js.5.13.0/Seq.js";
-import { item as item_2 } from "../../fable_modules/fable-library-js.5.13.0/Array.js";
+import { substring } from "../../fable_modules/fable-library-js.5.18.0/String.js";
+import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
+import { record_type, class_type, int32_type, string_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { addToSet, tryGetValue } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
+import { disposeSafe, getEnumerator, equals, defaultOf, int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { filter, toArray } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
+import { item as item_2 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { Var$1__set_Value_2B595, Var$1__get_Value, Var$1 } from "../Fable.Ripple/Types.js";
-import { empty, cons, tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.13.0/List.js";
+import { empty, cons, tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { Base_replaceTrackedNode, EmptyMarker } from "./Base.js";
-import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Core.js";
+import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Core.js";
 import { Var_create, Signal_onCleanup, Signal_autorun, Signal_untracked, Signal_root } from "../Fable.Ripple/Api.js";
 
 function key(url, name) {

@@ -1,10 +1,10 @@
 
 import { noteDeadObserver, releaseSweeps, holdSweeps } from "./Graph.js";
-import { class_type } from "../../../fable_modules/fable-library-js.5.13.0/Reflection.js";
-import { setItem, item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
-import { disposeSafe, clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { class_type } from "../../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { setItem, item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { disposeSafe, clear } from "../../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { Defaults_noRecompute, ReactiveNode__set_Recompute_233A5940, ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
-import { max } from "../../../fable_modules/fable-library-js.5.13.0/Double.js";
+import { max } from "../../../fable_modules/fable-library-js.5.18.0/Double.js";
 
 /**
  * Everything created inside one dynamic region - a component, a list row - so

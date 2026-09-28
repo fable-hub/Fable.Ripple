@@ -1,5 +1,5 @@
 
-import { item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
+import { item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceCount, sourceAt } from "./Graph.js";
 import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 

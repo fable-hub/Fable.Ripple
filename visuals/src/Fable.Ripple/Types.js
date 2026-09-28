@@ -1,9 +1,9 @@
 
-import { Exception, defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { FSharpRef } from "../../fable_modules/fable-library-js.5.13.0/Types.js";
+import { Exception, defaultOf } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { FSharpRef } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
 import { ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode_$reflection, ReactiveNode, ReactiveNode__set_Recompute_233A5940 } from "./ReactiveNode.js";
 import { ScopeModule_register } from "./Internal/Scope.js";
-import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 import { updateIfNecessary, track } from "./Internal/Tracking.js";
 import { notifyChange } from "./Internal/Scheduler.js";
 import { dispose } from "./Internal/Graph.js";

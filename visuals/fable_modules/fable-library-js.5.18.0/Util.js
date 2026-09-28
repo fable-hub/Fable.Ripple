@@ -559,11 +559,23 @@ export function count(col) {
     }
 }
 export function clear(col) {
-    if (isArrayLike(col)) {
-        col.splice(0);
+    if (Array.isArray(col)) {
+        col.length = 0;
+    }
+    else if (ArrayBuffer.isView(col)) {
+        // TODO: throw for typed arrays?
+    }
+    else if (typeof col.clear === "function") {
+        col.clear(); // map, set
+    }
+    else if (typeof col["System.Collections.Generic.ICollection`1.Clear"] === "function") {
+        col["System.Collections.Generic.ICollection`1.Clear"](); // collection
+    }
+    else if (typeof col["System.Collections.IList.Clear"] === "function") {
+        col["System.Collections.IList.Clear"](); // collection
     }
     else {
-        col.clear();
+        // TODO: throw for other collections?
     }
 }
 const curried = new WeakMap();

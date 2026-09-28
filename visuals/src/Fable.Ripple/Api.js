@@ -1,5 +1,5 @@
 
-import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
 import { untracked, updateIfNecessary } from "./Internal/Tracking.js";
 import { batch } from "./Internal/Scheduler.js";

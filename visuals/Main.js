@@ -1,17 +1,17 @@
 
 import { Html_render_62D6BEC0, Html_text_Z721C83C5, Html_button_Z714D7FBE, Html_div_Z714D7FBE } from "./src/Fable.Ripple.Dom/Html.js";
-import { empty, singleton, append, delay, toList } from "./fable_modules/fable-library-js.5.13.0/Seq.js";
+import { empty, singleton, append, delay, toList } from "./fable_modules/fable-library-js.5.18.0/Seq.js";
 import { attr_style_Z721C83C5 } from "./src/Fable.Ripple.Dom/Attributes.js";
 import { Probe__get_Hits, Repaint__Now, Probe__Hit, Probe_$ctor_Z721C83C5, Repaint_$ctor } from "./demo/Examples/Widgets.js";
 import { Signal_batch, Signal_subscribe, Signal_map3, Signal_effect, Signal_map, Signal_bind, Signal_computed, Var_create } from "./src/Fable.Ripple/Api.js";
 import { Var$1__Peek, Var$1__get_Signal, Var$1__set_Value_2B595, Var$1__get_Value } from "./src/Fable.Ripple/Types.js";
 import { NodeModule_bindingWith, NodeModule_derivedWith, NodeModule_sourceWith } from "./demo/Examples/Schematic.js";
-import { comparePrimitives, int32ToString } from "./fable_modules/fable-library-js.5.13.0/Util.js";
+import { comparePrimitives, int32ToString } from "./fable_modules/fable-library-js.5.18.0/Util.js";
 import { NodeModule_beating, NodeModule_bindingWith as NodeModule_bindingWith_1, schematic, NodeModule_flag, legend, op_EqualsEqualsGreater, graph, NodeModule_counting } from "./demo/Examples/Schematic.js";
 import { on_click_58BC8925 } from "./src/Fable.Ripple.Dom/Events.js";
-import { singleton as singleton_1, ofArray } from "./fable_modules/fable-library-js.5.13.0/List.js";
-import { tryFind, ofList } from "./fable_modules/fable-library-js.5.13.0/Map.js";
-import { concat } from "./fable_modules/fable-library-js.5.13.0/String.js";
+import { singleton as singleton_1, ofArray } from "./fable_modules/fable-library-js.5.18.0/List.js";
+import { tryFind, ofList } from "./fable_modules/fable-library-js.5.18.0/Map.js";
+import { concat } from "./fable_modules/fable-library-js.5.18.0/String.js";
 
 function controls(buttons) {
     return Html_div_Z714D7FBE(toList(delay(() => append(singleton(attr_style_Z721C83C5("display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0 0 0.75rem 0")), delay(() => buttons)))));

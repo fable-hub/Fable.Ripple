@@ -1,20 +1,20 @@
 
-import { Record, Union } from "../../fable_modules/fable-library-js.5.13.0/Types.js";
-import { float64_type, record_type, bool_type, option_type, lambda_type, unit_type, string_type, int32_type, union_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
+import { Record, Union } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
+import { float64_type, record_type, bool_type, option_type, lambda_type, unit_type, string_type, int32_type, union_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 import { Repaint__Track, Probe__get_Hits } from "./Widgets.js";
-import { printf, toText, substring } from "../../fable_modules/fable-library-js.5.13.0/String.js";
-import { arrayHash, compareArrays, equalArrays, int32ToString, equals, numberHash, comparePrimitives, disposeSafe, getEnumerator } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { tryPick, tryFindIndex, toArray as toArray_1, filter, average, sortBy, empty, singleton as singleton_1, ofArray, indexed, map, max, min, isEmpty, choose, length } from "../../fable_modules/fable-library-js.5.13.0/List.js";
-import { addToSet, getItemFromDict } from "../../fable_modules/fable-library-js.5.13.0/MapUtil.js";
-import { List_distinct, List_countBy, List_groupBy } from "../../fable_modules/fable-library-js.5.13.0/Seq2.js";
-import { empty as empty_1, exists, append, singleton, collect, delay as delay_1, toList } from "../../fable_modules/fable-library-js.5.13.0/Seq.js";
+import { printf, toText, substring } from "../../fable_modules/fable-library-js.5.18.0/String.js";
+import { arrayHash, compareArrays, equalArrays, int32ToString, equals, numberHash, comparePrimitives, disposeSafe, getEnumerator } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { tryPick, tryFindIndex, toArray as toArray_1, filter, average, sortBy, empty, singleton as singleton_1, ofArray, indexed, map, max, min, isEmpty, choose, length } from "../../fable_modules/fable-library-js.5.18.0/List.js";
+import { addToSet, getItemFromDict } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
+import { List_distinct, List_countBy, List_groupBy } from "../../fable_modules/fable-library-js.5.18.0/Seq2.js";
+import { empty as empty_1, exists, append, singleton, collect, delay as delay_1, toList } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
 import { Signal_effect, Signal_untracked } from "../../src/Fable.Ripple/Api.js";
 import { Svg_defs_Z714D7FBE, svgAttr_viewBox_Z721C83C5, Svg_svg_Z714D7FBE, Svg_circle_Z714D7FBE, Svg_path_Z714D7FBE, Svg_elem, Svg_text_Z714D7FBE, svgAttr_custom_Z384F8060, Svg_rect_Z714D7FBE, Svg_g_Z714D7FBE } from "../../src/Fable.Ripple.Dom/Svg.js";
 import { attr_style_Z721C83C5, attr_ref_1F9A456B, attr_className_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Attributes.js";
 import { Html_span_Z714D7FBE, Html_each, Html_div_Z714D7FBE, Html_figure_Z714D7FBE, Html_get_none, Html_text_5106B011, Html_fragment_Z714D7FBE, Html_text_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Html.js";
-import { ofList, tryFind } from "../../fable_modules/fable-library-js.5.13.0/Map.js";
-import { min as min_1, max as max_1 } from "../../fable_modules/fable-library-js.5.13.0/Double.js";
-import { defaultArg, toArray } from "../../fable_modules/fable-library-js.5.13.0/Option.js";
+import { ofList, tryFind } from "../../fable_modules/fable-library-js.5.18.0/Map.js";
+import { min as min_1, max as max_1 } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
+import { defaultArg, toArray } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
 
 export class NodeKind extends Union {
     constructor(tag, fields) {

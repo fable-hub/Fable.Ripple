@@ -1,11 +1,11 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 import { Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
-import { join } from "../../fable_modules/fable-library-js.5.13.0/String.js";
-import { map } from "../../fable_modules/fable-library-js.5.13.0/List.js";
+import { join } from "../../fable_modules/fable-library-js.5.18.0/String.js";
+import { map } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { Signal_batch, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { Var$1__set_Value_2B595, Var$1__get_Value } from "../Fable.Ripple/Types.js";
-import { int32ToString } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 
 /**
  * HTML attributes and properties. Value-bearing attributes take a plain literal;

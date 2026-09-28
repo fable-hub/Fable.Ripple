@@ -1,5 +1,5 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 
 /**
  * Computation expression for building computed signals. `let! ... and! ...` is

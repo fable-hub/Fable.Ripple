@@ -1,5 +1,5 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 import { Base_onEvent } from "./Base.js";
 import { Signal_batch } from "../Fable.Ripple/Api.js";
 

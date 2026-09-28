@@ -1,8 +1,8 @@
 
 import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__get_Queued, ReactiveNode__get_IsEffect, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
-import { item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
+import { item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { releaseSweeps, holdSweeps } from "./Graph.js";
-import { clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { clear } from "../../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { updateIfNecessary } from "./Tracking.js";
 
 const pending = [];

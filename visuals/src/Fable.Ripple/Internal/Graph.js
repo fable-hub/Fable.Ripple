@@ -1,8 +1,8 @@
 
 import { ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_Affected_Z1FBCCD16, ReactiveNode__get_Affected, ReactiveNode__get_Disposed, ReactiveNode__set_DeadObservers_Z524259A4, ReactiveNode__set_FirstObserver_Z46457FEC, ReactiveNode__set_RestObservers_6EF2C44D, ReactiveNode__get_DeadObservers, ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__get_RestSources, ReactiveNode__get_FirstSource } from "../ReactiveNode.js";
-import { value } from "../../../fable_modules/fable-library-js.5.13.0/Option.js";
-import { setItem, item } from "../../../fable_modules/fable-library-js.5.13.0/Array.js";
-import { clear } from "../../../fable_modules/fable-library-js.5.13.0/Util.js";
+import { value } from "../../../fable_modules/fable-library-js.5.18.0/Option.js";
+import { setItem, item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { clear } from "../../../fable_modules/fable-library-js.5.18.0/Util.js";
 
 export function sourceCount(n) {
     const matchValue = ReactiveNode__get_FirstSource(n);

@@ -1,13 +1,13 @@
 
 import { Signal_onCleanup, Signal_effect, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
-import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.13.0/Types.js";
-import { record_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
-import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.13.0/Array.js";
-import { Dictionary } from "../../fable_modules/fable-library-js.5.13.0/MutableMap.js";
-import { HashIdentity_Structural } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Collections.js";
-import { equals, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { min } from "../../fable_modules/fable-library-js.5.13.0/Double.js";
-import { tryGetValue } from "../../fable_modules/fable-library-js.5.13.0/MapUtil.js";
+import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
+import { record_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { Dictionary } from "../../fable_modules/fable-library-js.5.18.0/MutableMap.js";
+import { HashIdentity_Structural } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Collections.js";
+import { equals, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { min } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
+import { tryGetValue } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
 
 export function el(tag) {
     return document.createElement(tag);
