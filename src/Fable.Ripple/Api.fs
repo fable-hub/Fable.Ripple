@@ -90,16 +90,14 @@ module Signal =
 
     /// Run `fn` now and re-run it whenever a signal it reads changes. The effect
     /// lives as long as the enclosing scope; there is no handle to dispose it earlier.
-    let autorun (fn: unit -> unit) : unit = Tracking.updateIfNecessary (Effect(fn))
+    let autorun (fn: unit -> unit) : unit =
+        Tracking.updateIfNecessary (new Effect(fn))
 
     /// Run `fn` now and re-run it whenever a signal it reads changes.
     let effect (fn: unit -> unit) : IDisposable =
-        let eff = Effect(fn)
+        let eff = new Effect(fn)
         Tracking.updateIfNecessary eff
-
-        { new IDisposable with
-            member _.Dispose() = Graph.dispose eff
-        }
+        eff
 
     /// Run `handler` now with the current value and again on every change.
     let subscribe (handler: 'a -> unit) (s: Signal<'a>) : IDisposable =

@@ -47,6 +47,71 @@ type internal Scope() =
             this.Children <- ValueSome a
             a
 
+    /// Tear down: dispose child scopes, run cleanups, then unlink every
+    /// registered computed/effect from its sources. Disposed nodes stay in their
+    /// sources' observer lists until `Graph.releaseSweeps`; `Graph.iterObservers`
+    /// skips them.
+    ///
+    /// Children are not detached one by one - the list is cleared wholesale.
+    member private this.TearDown() =
+        this.Disposed <- true
+
+        this.Children
+        |> ValueOption.iter (fun children ->
+            for i in 0 .. children.Count - 1 do
+                children.[i].TearDown()
+
+            children.Clear()
+        )
+
+        this.Cleanups
+        |> ValueOption.iter (fun cleanups ->
+            for i in 0 .. cleanups.Count - 1 do
+                cleanups.[i] ()
+
+            cleanups.Clear()
+        )
+
+        let nodes = this.Nodes
+
+        for i in 0 .. nodes.Count - 1 do
+            nodes.[i].Disposed <- true
+
+        // One count per edge: a node that read a source twice is listed twice in
+        // its observers.
+        for i in 0 .. nodes.Count - 1 do
+            let node = nodes.[i]
+
+            Graph.iterSourcesFrom
+                node
+                0
+                (fun source ->
+                    if not source.Disposed then
+                        Graph.noteDeadObserver source
+                )
+
+            node.FirstSource <- ValueNone
+            node.RestSources <- ValueNone
+            node.State <- NodeState.Clean
+            node.Queued <- false
+            // The node stays referenced from its sources until the sweep.
+            node.EffectFn <- ValueNone
+            node.Recompute <- Defaults.noRecompute
+
+        nodes.Clear()
+
+    /// Tear the scope down. Idempotent; a disposed child stays in its parent's
+    /// list until the next sweep, where `Disposed` is what marks it dead.
+    interface System.IDisposable with
+        member this.Dispose() =
+            if not this.Disposed then
+                Graph.holdSweeps ()
+
+                try
+                    this.TearDown()
+                finally
+                    Graph.releaseSweeps ()
+
 /// Ownership: which scope new computeds/effects belong to, and how a scope is torn down.
 module internal Scope =
 
@@ -80,75 +145,14 @@ module internal Scope =
 
         parent.CompactAt <- max 8 (children.Count * 2)
 
-    /// Tear down a scope: dispose child scopes, run cleanups, then unlink every
-    /// registered computed/effect from its sources. Disposed nodes stay in their
-    /// sources' observer lists until `Graph.releaseSweeps`; `Graph.iterObservers`
-    /// skips them.
-    ///
-    /// Children are not detached one by one - the list is cleared wholesale.
-    let rec private tearDown (scope: Scope) =
-        scope.Disposed <- true
-
-        scope.Children
-        |> ValueOption.iter (fun children ->
-            for i in 0 .. children.Count - 1 do
-                tearDown children.[i]
-
-            children.Clear()
-        )
-
-        scope.Cleanups
-        |> ValueOption.iter (fun cleanups ->
-            for i in 0 .. cleanups.Count - 1 do
-                cleanups.[i] ()
-
-            cleanups.Clear()
-        )
-
-        let nodes = scope.Nodes
-
-        for i in 0 .. nodes.Count - 1 do
-            nodes.[i].Disposed <- true
-
-        // One count per edge: a node that read a source twice is listed twice in
-        // its observers.
-        for i in 0 .. nodes.Count - 1 do
-            let node = nodes.[i]
-
-            Graph.iterSourcesFrom
-                node
-                0
-                (fun source ->
-                    if not source.Disposed then
-                        Graph.noteDeadObserver source
-                )
-
-            node.FirstSource <- ValueNone
-            node.RestSources <- ValueNone
-            node.State <- NodeState.Clean
-            node.Queued <- false
-            // The node stays referenced from its sources until the sweep.
-            node.EffectFn <- ValueNone
-            node.Recompute <- Defaults.noRecompute
-
-        nodes.Clear()
-
-    /// Tear a scope down. Idempotent; a disposed child stays in its parent's list
-    /// until the next sweep, where `Disposed` is what marks it dead.
-    let dispose (scope: Scope) =
-        if not scope.Disposed then
-            Graph.holdSweeps ()
-
-            try
-                tearDown scope
-            finally
-                Graph.releaseSweeps ()
+    /// Tear a scope down. Idempotent.
+    let dispose (scope: Scope) = (scope :> System.IDisposable).Dispose()
 
     /// Run `fn` inside a fresh scope nested under the current one. Returns its
     /// result and a disposer that tears the scope down.
     let root (fn: unit -> 'a) : 'a * System.IDisposable =
         let prev = currentScope
-        let s = Scope()
+        let s = new Scope()
 
         prev
         |> ValueOption.iter (fun p ->
@@ -163,11 +167,6 @@ module internal Scope =
         currentScope <- ValueSome s
 
         try
-            let result = fn ()
-
-            result,
-            { new System.IDisposable with
-                member _.Dispose() = dispose s
-            }
+            fn (), (s :> System.IDisposable)
         finally
             currentScope <- prev

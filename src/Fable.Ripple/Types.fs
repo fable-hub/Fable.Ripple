@@ -96,3 +96,6 @@ type internal Effect(fn: unit -> unit) as this =
 
     do this.EffectFn <- ValueSome fn
     do Scope.register (this :> ReactiveNode)
+
+    interface System.IDisposable with
+        member this.Dispose() = Graph.dispose this
