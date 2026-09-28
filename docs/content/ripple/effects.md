@@ -23,6 +23,21 @@ The write to `2` prints nothing - the effect is gone.
 
 Effects run synchronously: the write returns after every affected effect has run. To coalesce several writes into one run, see [Batching](batching.md).
 
+## Autorun
+
+`Signal.autorun`{fsharp} is the same, without a handle. The effect stops when the enclosing [scope](#scopes) is disposed:
+
+```fsharp live
+open Fable.Ripple
+
+let count = Var.create 0
+
+// Runs immediately: count = 0
+Signal.autorun (fun () -> printfn "count = %d" count.Value)
+
+count.Value <- 1 // count = 1
+```
+
 ## Subscribe
 
 `Signal.subscribe`{fsharp} is the same, with the current value passed to the handler:
@@ -49,7 +64,7 @@ let count = Var.create 0
 
 let _, dispose =
     Signal.root (fun () ->
-        Signal.effect (fun () -> printfn "count = %d" count.Value) |> ignore
+        Signal.autorun (fun () -> printfn "count = %d" count.Value)
         Signal.onCleanup (fun () -> printfn "torn down")
     ) // the effect ran on creation: count = 0
 

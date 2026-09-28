@@ -216,7 +216,7 @@ module Hmr =
             let mutable dispose = firstDispose
             let mutable built = true
 
-            Signal.effect (fun () ->
+            Signal.autorun (fun () ->
                 let f = impl.Value
 
                 if built then
@@ -243,7 +243,6 @@ module Hmr =
 
                     recordRebuild (now () - t0)
             )
-            |> ignore
 
             Signal.onCleanup (fun () -> dispose.Dispose())
             Child current
@@ -271,7 +270,7 @@ module Hmr =
                         parent.removeChild n |> ignore
                         n <- next
 
-                Signal.effect (fun () ->
+                Signal.autorun (fun () ->
                     let f = impl.Value
                     countRebuild ()
                     let captured = capture parent
@@ -294,7 +293,6 @@ module Hmr =
                     restore parent captured
                     recordRebuild (now () - t0)
                 )
-                |> ignore
 
                 Signal.onCleanup clear
             )

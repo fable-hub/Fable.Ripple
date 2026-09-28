@@ -26,14 +26,13 @@ type Html =
         let t = document.createTextNode ""
         let mutable prev: string = null
 
-        Signal.effect (fun () ->
+        Signal.autorun (fun () ->
             let v = f ()
 
             if not (obj.ReferenceEquals(v, prev)) then
                 prev <- v
                 t.nodeValue <- v
         )
-        |> ignore
 
         Child(t :> Node)
 
@@ -357,7 +356,7 @@ type Html =
 
                 current <- None
 
-            Signal.effect (fun () ->
+            Signal.autorun (fun () ->
                 clear ()
 
                 let node, dispose =
@@ -382,7 +381,6 @@ type Html =
                 )
 #endif
             )
-            |> ignore
 
             Signal.onCleanup clear
         )

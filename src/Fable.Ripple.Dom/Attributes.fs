@@ -136,7 +136,7 @@ type attr =
     static member bindValue(c: Var<string>) : DomItem =
         Apply(fun e ->
             let inp = e :?> HTMLInputElement
-            Signal.effect (fun () -> inp.value <- c.Value) |> ignore
+            Signal.autorun (fun () -> inp.value <- c.Value)
             e.addEventListener ("input", fun _ -> Signal.batch (fun () -> c.Value <- inp.value))
         )
 
@@ -144,7 +144,7 @@ type attr =
     static member bindChecked(c: Var<bool>) : DomItem =
         Apply(fun e ->
             let inp = e :?> HTMLInputElement
-            Signal.effect (fun () -> inp.``checked`` <- c.Value) |> ignore
+            Signal.autorun (fun () -> inp.``checked`` <- c.Value)
 
             e.addEventListener (
                 "change",

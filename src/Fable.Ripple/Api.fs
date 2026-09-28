@@ -88,6 +88,10 @@ module Signal =
     /// Read the current value without registering a dependency.
     let inline peek (s: Signal<'a>) : 'a = s.Peek()
 
+    /// Run `fn` now and re-run it whenever a signal it reads changes. The effect
+    /// lives as long as the enclosing scope; there is no handle to dispose it earlier.
+    let autorun (fn: unit -> unit) : unit = Tracking.updateIfNecessary (Effect(fn))
+
     /// Run `fn` now and re-run it whenever a signal it reads changes.
     let effect (fn: unit -> unit) : IDisposable =
         let eff = Effect(fn)

@@ -22,11 +22,11 @@ module Dom =
     let bindText (parent: Node) (f: unit -> string) =
         let t = document.createTextNode ""
         parent.appendChild t |> ignore
-        Signal.effect (fun () -> t.nodeValue <- f ()) |> ignore
+        Signal.autorun (fun () -> t.nodeValue <- f ())
 
     /// Reactive attribute.
     let bindAttr (e: HTMLElement) (name: string) (f: unit -> string) =
-        Signal.effect (fun () -> e.setAttribute (name, f ())) |> ignore
+        Signal.autorun (fun () -> e.setAttribute (name, f ()))
 
     (*
         Keyed list reconciliation (Solid `<For>` model): the list is driven by a

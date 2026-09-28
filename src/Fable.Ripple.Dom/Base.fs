@@ -110,14 +110,13 @@ module Base =
         Apply(fun element ->
             let mutable prev: string = null
 
-            Signal.effect (fun () ->
+            Signal.autorun (fun () ->
                 let v = callback ()
 
                 if not (obj.ReferenceEquals(v, prev)) then
                     prev <- v
                     element.setAttribute (name, v)
             )
-            |> ignore
         )
 
     /// Reactive attribute driven by a signal.
@@ -144,7 +143,7 @@ module Base =
             let mutable prev = false
             let mutable first = true
 
-            Signal.effect (fun () ->
+            Signal.autorun (fun () ->
                 let v = callback ()
 
                 if first || v <> prev then
@@ -152,7 +151,6 @@ module Base =
                     prev <- v
                     setFlag element name v
             )
-            |> ignore
         )
 
     /// Reactive present/absent boolean attribute driven by a signal.
@@ -174,7 +172,7 @@ module Base =
             let mutable prev: obj = null
             let mutable first = true
 
-            Signal.effect (fun () ->
+            Signal.autorun (fun () ->
                 let v = box (callback ())
 
                 if first || not (obj.ReferenceEquals(v, prev)) then
@@ -182,7 +180,6 @@ module Base =
                     prev <- v
                     element?(name) <- v
             )
-            |> ignore
         )
 
     /// Reactive property driven by a signal.
@@ -253,7 +250,7 @@ module Base =
             Apply(fun element ->
                 let applied = HashSet<string>()
 
-                Signal.effect (fun () ->
+                Signal.autorun (fun () ->
                     let next = HashSet<string>()
                     iterEnabled (callback ()) (fun token -> next.Add token |> ignore)
 
@@ -268,7 +265,6 @@ module Base =
                     applied.Clear()
                     applied.UnionWith next
                 )
-                |> ignore
             )
 
         /// Toggle a single class token by a static flag.
@@ -281,7 +277,7 @@ module Base =
                 let mutable prev = false
                 let mutable first = true
 
-                Signal.effect (fun () ->
+                Signal.autorun (fun () ->
                     let v = callback ()
 
                     if first || v <> prev then
@@ -289,5 +285,4 @@ module Base =
                         prev <- v
                         setToken element v name
                 )
-                |> ignore
             )
