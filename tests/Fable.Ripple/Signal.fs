@@ -617,6 +617,41 @@ let tests =
             )
 
             test (
+                "reading a source twice in a row registers one observer",
+                fun _ ->
+                    let a = Var.create 1
+                    let mutable runs = 0
+
+                    let stop =
+                        Signal.effect (fun () ->
+                            runs <- runs + 1
+                            a.Value + a.Value |> ignore
+                        )
+
+                    assertThat (Signal.observerCount a.Signal) (isEqualTo 1)
+                    a.Value <- 2
+                    assertThat runs (isEqualTo 2)
+                    stop.Dispose()
+                    assertThat (Signal.observerCount a.Signal) (isEqualTo 0)
+            )
+
+            test (
+                "a source read twice with another read in between keeps both edges live",
+                fun _ ->
+                    let a = Var.create 1
+                    let b = Var.create 10
+                    let mutable seen = 0
+
+                    Signal.autorun (fun () -> seen <- a.Value + b.Value + a.Value)
+
+                    assertThat seen (isEqualTo 12)
+                    b.Value <- 20
+                    assertThat seen (isEqualTo 22)
+                    a.Value <- 3
+                    assertThat seen (isEqualTo 26)
+            )
+
+            test (
                 "disposing sibling scopes one by one keeps observerCount exact",
                 fun _ ->
                     let ext = Var.create 0

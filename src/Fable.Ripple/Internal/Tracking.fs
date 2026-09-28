@@ -23,27 +23,40 @@ module internal Tracking =
 
     /// Record that `current` reads `node`. While reads arrive in the same order
     /// as the previous run, just advance the index (no edge mutation); on the
-    /// first mismatch, collect the new tail into `currentGets`.
+    /// first mismatch, collect the new tail into `currentGets`. A read of the
+    /// source just recorded adds no edge.
     let track (node: ReactiveNode) =
         match current with
         | ValueNone -> ()
         | ValueSome cur ->
             match currentGets with
-            | ValueNone when
-                currentGetsIndex < Graph.sourceCount cur
-                && obj.ReferenceEquals(Graph.sourceAt cur currentGetsIndex, node)
-                ->
-                currentGetsIndex <- currentGetsIndex + 1
-            | _ ->
-                let gets =
-                    match currentGets with
-                    | ValueSome g -> g
-                    | ValueNone ->
-                        let g = ResizeArray<ReactiveNode>()
-                        currentGets <- ValueSome g
-                        g
+            | ValueNone ->
+                if
+                    currentGetsIndex > 0
+                    && obj.ReferenceEquals(Graph.sourceAt cur (currentGetsIndex - 1), node)
+                then
+                    ()
+                elif
+                    currentGetsIndex < Graph.sourceCount cur
+                    && obj.ReferenceEquals(Graph.sourceAt cur currentGetsIndex, node)
+                then
+                    currentGetsIndex <- currentGetsIndex + 1
+                else
+                    let g = ResizeArray<ReactiveNode>()
+                    currentGets <- ValueSome g
+                    g.Add node
+            | ValueSome gets ->
+                let last =
+                    if gets.Count > 0 then
+                        ValueSome gets.[gets.Count - 1]
+                    elif currentGetsIndex > 0 then
+                        ValueSome(Graph.sourceAt cur (currentGetsIndex - 1))
+                    else
+                        ValueNone
 
-                gets.Add node
+                match last with
+                | ValueSome l when obj.ReferenceEquals(l, node) -> ()
+                | _ -> gets.Add node
 
     /// Bring `node` up to date, recomputing only if a dependency truly changed.
     let rec updateIfNecessary (node: ReactiveNode) =
