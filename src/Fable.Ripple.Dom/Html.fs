@@ -36,6 +36,9 @@ type Html =
 
         Child(t :> Node)
 
+    /// Reactive text from a string signal.
+    static member text(s: Signal<string>) : DomItem = Html.text (fun () -> s.Value)
+
     /// Reactive text from any signal source - a `Var` or a derived `Signal`, of any
     /// type (stringified). Forwards to the thunk overload above, keeping the
     /// internal `DomItem` construction out of the inlined body (so it inlines anywhere).
