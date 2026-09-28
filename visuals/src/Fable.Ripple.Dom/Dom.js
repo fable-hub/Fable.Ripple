@@ -1,5 +1,5 @@
 
-import { Signal_onCleanup, Signal_root, Signal_effect } from "../Fable.Ripple/Api.js";
+import { Signal_onCleanup, Signal_effect, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.13.0/Types.js";
 import { record_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.13.0/Array.js";
@@ -26,7 +26,7 @@ export function text(parent, s) {
 export function bindText(parent, f) {
     const t = document.createTextNode("");
     parent.appendChild(t);
-    Signal_effect(() => {
+    Signal_autorun(() => {
         t.nodeValue = f();
     });
 }
@@ -35,7 +35,7 @@ export function bindText(parent, f) {
  * Reactive attribute.
  */
 export function bindAttr(e, name, f) {
-    Signal_effect(() => {
+    Signal_autorun(() => {
         e.setAttribute(name, f());
     });
 }

@@ -3,7 +3,7 @@ import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflecti
 import { Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
 import { join } from "../../fable_modules/fable-library-js.5.13.0/String.js";
 import { map } from "../../fable_modules/fable-library-js.5.13.0/List.js";
-import { Signal_batch, Signal_effect } from "../Fable.Ripple/Api.js";
+import { Signal_batch, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { Var$1__set_Value_2B595, Var$1__get_Value } from "../Fable.Ripple/Types.js";
 import { int32ToString } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
 
@@ -226,7 +226,7 @@ export function attr_isOpen_Z31F02BA3(s) {
 export function attr_bindValue_Z5BF31D29(c) {
     return (e) => {
         const inp = e;
-        Signal_effect(() => {
+        Signal_autorun(() => {
             inp.value = Var$1__get_Value(c);
         });
         e.addEventListener("input", (_arg) => {
@@ -243,7 +243,7 @@ export function attr_bindValue_Z5BF31D29(c) {
 export function attr_bindChecked_5AB39E06(c) {
     return (e) => {
         const inp = e;
-        Signal_effect(() => {
+        Signal_autorun(() => {
             inp.checked = Var$1__get_Value(c);
         });
         e.addEventListener("change", (_arg) => {

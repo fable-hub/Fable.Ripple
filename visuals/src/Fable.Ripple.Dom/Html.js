@@ -2,7 +2,7 @@
 import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflection.js";
 import { EmptyMarker, Base_toElement, Base_applyItems, Base_emptyMarker, Base_createElement } from "./Base.js";
 import { Exception, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signal_effect } from "../Fable.Ripple/Api.js";
+import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { singleton } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { keyedEach } from "./Dom.js";
 
@@ -34,7 +34,7 @@ export function Html_text_Z721C83C5(s) {
 export function Html_text_5106B011(f) {
     const t = document.createTextNode("");
     let prev = defaultOf();
-    Signal_effect(() => {
+    Signal_autorun(() => {
         const v = f();
         if (!(v === prev)) {
             prev = v;
@@ -643,7 +643,7 @@ export function Html_dynamic_70E9CA6A(f) {
             }
             current = undefined;
         };
-        Signal_effect(() => {
+        Signal_autorun(() => {
             clear();
             const patternInput = Signal_root(() => {
                 const matchValue = f();

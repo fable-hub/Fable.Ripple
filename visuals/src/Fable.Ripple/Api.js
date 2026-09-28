@@ -100,6 +100,14 @@ export function Signal_bind(f, a) {
 }
 
 /**
+ * Run `fn` now and re-run it whenever a signal it reads changes. The effect
+ * lives as long as the enclosing scope; there is no handle to dispose it earlier.
+ */
+export function Signal_autorun(fn) {
+    updateIfNecessary(Effect_$ctor_3A5B6456(fn));
+}
+
+/**
  * Run `fn` now and re-run it whenever a signal it reads changes.
  */
 export function Signal_effect(fn) {

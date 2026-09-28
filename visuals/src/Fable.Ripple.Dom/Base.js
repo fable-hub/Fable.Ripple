@@ -3,7 +3,7 @@ import { class_type } from "../../fable_modules/fable-library-js.5.13.0/Reflecti
 import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Core.js";
 import { disposeSafe, getEnumerator, defaultOf, Exception } from "../../fable_modules/fable-library-js.5.13.0/Util.js";
-import { Signal_batch, Signal_effect } from "../Fable.Ripple/Api.js";
+import { Signal_batch, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { split } from "../../fable_modules/fable-library-js.5.13.0/String.js";
 import { item as item_1 } from "../../fable_modules/fable-library-js.5.13.0/Array.js";
 import { addToSet } from "../../fable_modules/fable-library-js.5.13.0/MapUtil.js";
@@ -116,7 +116,7 @@ export function Base_attribute(name, value) {
 export function Base_bindAttribute(name, callback) {
     return (element) => {
         let prev = defaultOf();
-        Signal_effect(() => {
+        Signal_autorun(() => {
             const v = callback();
             if (!(v === prev)) {
                 prev = v;
@@ -156,7 +156,7 @@ export function Base_bindBooleanAttribute(name, callback) {
     return (element) => {
         let prev = false;
         let first = true;
-        Signal_effect(() => {
+        Signal_autorun(() => {
             const v = callback();
             if (first ? true : (v !== prev)) {
                 first = false;
@@ -198,7 +198,7 @@ export function Base_bindProperty(name, callback) {
     return (element) => {
         let prev = defaultOf();
         let first = true;
-        Signal_effect(() => {
+        Signal_autorun(() => {
             const v = callback();
             if (first ? true : !(v === prev)) {
                 first = false;
@@ -297,7 +297,7 @@ export function Base_ClassList_add(pairs) {
 export function Base_ClassList_bind(callback) {
     return (element) => {
         const applied = new Set([]);
-        Signal_effect(() => {
+        Signal_autorun(() => {
             const next = new Set([]);
             let rest = callback();
             while (!isEmpty(rest)) {
@@ -367,7 +367,7 @@ export function Base_ClassList_bindToggle(name, callback) {
     return (element) => {
         let prev = false;
         let first = true;
-        Signal_effect(() => {
+        Signal_autorun(() => {
             const v = callback();
             if (first ? true : (v !== prev)) {
                 first = false;

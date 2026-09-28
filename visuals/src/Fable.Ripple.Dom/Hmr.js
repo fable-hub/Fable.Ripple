@@ -10,7 +10,7 @@ import { Var$1__set_Value_2B595, Var$1__get_Value, Var$1 } from "../Fable.Ripple
 import { empty, cons, tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.13.0/List.js";
 import { Base_replaceTrackedNode, EmptyMarker } from "./Base.js";
 import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.13.0/FSharp.Core.js";
-import { Var_create, Signal_onCleanup, Signal_effect, Signal_untracked, Signal_root } from "../Fable.Ripple/Api.js";
+import { Var_create, Signal_onCleanup, Signal_autorun, Signal_untracked, Signal_root } from "../Fable.Ripple/Api.js";
 
 function key(url, name) {
     let matchValue;
@@ -249,7 +249,7 @@ function boundaryOf(k, impl, args) {
         let current = firstItem;
         let dispose = firstDispose;
         let built = true;
-        Signal_effect(() => {
+        Signal_autorun(() => {
             const f_1 = Var$1__get_Value(impl);
             if (built) {
                 built = false;
@@ -301,7 +301,7 @@ function boundaryOf(k, impl, args) {
                     n = next_1;
                 }
             };
-            Signal_effect(() => {
+            Signal_autorun(() => {
                 const f_2 = Var$1__get_Value(impl);
                 globalThis.__rebuilds = (globalThis.__rebuilds || 0) + 1;
                 const captured_1 = capture(parent_1);
