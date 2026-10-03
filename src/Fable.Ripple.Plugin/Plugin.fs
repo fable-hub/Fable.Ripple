@@ -38,7 +38,10 @@ type ComponentAttribute() =
 
             let runtime =
                 helper.SourceFiles
-                |> Seq.tryFind (fun file -> file.EndsWith "Fable.Ripple.Dom/Hmr.fs")
+                |> Seq.tryFind (fun file ->
+                    Path.GetFileName file = "Hmr.fs"
+                    && helper.GetRootModule file = "Fable.Ripple.Dom.Hmr"
+                )
 
             match runtime with
             | None ->
@@ -48,8 +51,24 @@ type ComponentAttribute() =
                 decl
             | Some runtimeSource ->
 
-                let importPath =
-                    Paths.relative (helper.GetOutputPath()) (helper.GetOutputPath runtimeSource)
+                let runtimeOutput =
+                    let path = helper.GetOutputPath runtimeSource
+
+                    // Fable always emits `.fs.js` inside fable_modules, but GetOutputPath ignores that.
+                    if
+                        runtimeSource.Split(
+                            [|
+                                '/'
+                                '\\'
+                            |]
+                        )
+                        |> Array.contains "fable_modules"
+                    then
+                        Path.Combine(Path.GetDirectoryName path, "Hmr.fs.js")
+                    else
+                        path
+
+                let importPath = Paths.relative (helper.GetOutputPath()) runtimeOutput
 
                 /// An identifier can contain a quote or a `$N` the macro would expand, so
                 /// names are passed as arguments rather than spliced into one.
