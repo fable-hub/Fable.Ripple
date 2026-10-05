@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Fable.Ripple.Dom" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="ReactiveNode.fs" />
     <Compile Include="Internal/Graph.fs" />
     <Compile Include="Internal/Tracking.fs" />

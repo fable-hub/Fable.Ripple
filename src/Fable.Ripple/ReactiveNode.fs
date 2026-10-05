@@ -17,6 +17,13 @@ module internal Defaults =
 
     let noRecompute: unit -> bool = fun () -> false
 
+/// An ambient value captured by every node at creation and restored around its
+/// re-evaluation, so a computation built for one list row keeps seeing that
+/// row. `null` outside any context.
+module internal Context =
+
+    let mutable current: obj = null
+
 /// Non-generic graph node: dependency edges, marking state, and the type-erased
 /// re-evaluation hook.
 type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
@@ -40,6 +47,9 @@ type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
 
     /// Set while this node is in `Graph.sweepQueue`.
     member val internal Affected = false with get, set
+
+    /// The `Context.current` this node was created under.
+    member val internal Context: obj = Context.current with get, set
 
     /// Entries in this node's observer list that belong to disposed nodes and
     /// have not been swept out yet.

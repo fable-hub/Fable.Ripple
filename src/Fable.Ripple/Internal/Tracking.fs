@@ -78,9 +78,11 @@ module internal Tracking =
         let prevCurrent = current
         let prevGets = currentGets
         let prevIndex = currentGetsIndex
+        let prevContext = Context.current
         current <- ValueSome node
         currentGets <- ValueNone
         currentGetsIndex <- 0
+        Context.current <- node.Context
         let mutable changed = false
 
         try
@@ -116,6 +118,7 @@ module internal Tracking =
             current <- prevCurrent
             currentGets <- prevGets
             currentGetsIndex <- prevIndex
+            Context.current <- prevContext
 
         if changed then
             Graph.iterObservers
@@ -124,6 +127,28 @@ module internal Tracking =
                     if int o.State < int NodeState.Dirty then
                         o.State <- NodeState.Dirty
                 )
+
+    // Never linked: a probe only collects `currentGets`.
+    let private probeNode = ReactiveNode(NodeState.Clean, true)
+
+    /// Run `fn` once as if it were an effect, and return the sources it read
+    /// (deduplicated, in read order) without linking them. `ValueNone` when it
+    /// read nothing.
+    let probe (fn: unit -> unit) : ResizeArray<ReactiveNode> voption =
+        let prevCurrent = current
+        let prevGets = currentGets
+        let prevIndex = currentGetsIndex
+        current <- ValueSome probeNode
+        currentGets <- ValueNone
+        currentGetsIndex <- 0
+
+        try
+            fn ()
+            currentGets
+        finally
+            current <- prevCurrent
+            currentGets <- prevGets
+            currentGetsIndex <- prevIndex
 
     let untracked (fn: unit -> 'a) =
         let prev = current

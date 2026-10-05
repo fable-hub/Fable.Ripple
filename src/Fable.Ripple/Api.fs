@@ -90,8 +90,18 @@ module Signal =
 
     /// Run `fn` now and re-run it whenever a signal it reads changes. The effect
     /// lives as long as the enclosing scope; there is no handle to dispose it earlier.
+    /// A body that reads no signal on its first run is not kept.
     let autorun (fn: unit -> unit) : unit =
-        Tracking.updateIfNecessary (new Effect(fn))
+        match Tracking.probe fn with
+        | ValueNone -> ()
+        | ValueSome sources ->
+            let eff = new Effect(fn)
+            eff.State <- NodeState.Clean
+
+            for i in 0 .. sources.Count - 1 do
+                let s = sources.[i]
+                Graph.addSource eff s
+                Graph.addObserver s eff
 
     /// Run `fn` now and re-run it whenever a signal it reads changes.
     let effect (fn: unit -> unit) : IDisposable =
@@ -114,6 +124,24 @@ module Signal =
 
     /// Register a cleanup callback with the current scope.
     let onCleanup (fn: unit -> unit) : unit = Scope.onCleanup fn
+
+    /// The ambient context, see `withContext`. `null` outside one.
+    let internal context () : obj = Context.current
+
+    /// Set the ambient context. Pair with a read of `context ()` to restore it;
+    /// `withContext` does that for a function.
+    let internal setContext (value: obj) : unit = Context.current <- value
+
+    /// Run `fn` with `value` as the ambient context. Every effect and computed
+    /// created inside captures it and runs under it again when it re-evaluates.
+    let internal withContext (value: obj) (fn: unit -> 'a) : 'a =
+        let prev = Context.current
+        Context.current <- value
+
+        try
+            fn ()
+        finally
+            Context.current <- prev
 
     /// Number of live observers of a signal. Diagnostic.
     let observerCount (s: Signal<'T>) : int =
