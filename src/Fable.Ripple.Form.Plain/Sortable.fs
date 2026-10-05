@@ -213,7 +213,7 @@ module Sortable =
                     )
 
                     on.drop handleDrop
-                    Html.each renderConfig.Elements (fun element -> element.Key) row
+                    Html.each (renderConfig.Elements, (fun element -> element.Key), row)
 
                     Html.show (
                         (fun () -> Array.isEmpty (renderConfig.Elements())),

@@ -159,6 +159,6 @@ let render () =
             Html.ul
                 [
                     attr.ref (watchMoves moved) // demo-hide-line
-                    Html.each (fun () -> fruits.Value) (fun fruit -> fruit.Id) row
+                    Html.each (fruits, (fun fruit -> fruit.Id), row)
                 ]
         ]

@@ -852,14 +852,15 @@ let schematic (repaint: Repaint) (nodes: Node list) (edges: unit -> (Node * Node
                             // Edges first, so the boxes sit on top of the arrowheads.
                             Svg.g
                                 [
-                                    Html.each
+                                    Html.each (
                                         (fun () ->
                                             edges ()
                                             |> List.map (fun (a, b) -> a.Key, b.Key)
                                             |> List.toArray
-                                        )
-                                        (fun (a, b) -> string a + "->" + string b)
+                                        ),
+                                        (fun (a, b) -> string a + "->" + string b),
                                         (drawEdge repaint byKey laneOf)
+                                    )
                                 ]
 
                             Html.fragment (

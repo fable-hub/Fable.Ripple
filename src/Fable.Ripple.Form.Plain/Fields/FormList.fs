@@ -201,9 +201,9 @@ module FormList =
                 Html.div
                     [
                         attr.className "rf-list__items"
-                        Html.each
-                            config.Elements
-                            (fun element -> element.Key)
+                        Html.each (
+                            config.Elements,
+                            (fun element -> element.Key),
                             (fun element ->
                                 Html.div
                                     [
@@ -226,6 +226,7 @@ module FormList =
                                         | None -> Html.none
                                     ]
                             )
+                        )
                     ]
                 match attributes.Add with
                 | Some label ->

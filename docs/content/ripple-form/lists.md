@@ -121,10 +121,10 @@ let asCards (context: RenderContext) (config: FormList.RenderConfig) : DomItem =
             Html.div
                 [
                     attr.className "rf-list__items"
-                    Html.each
-                        config.Elements
-                        (fun element -> element.Key)
-                        (fun element ->
+                    Html.each (
+                        config.Elements,
+                        (fun element -> element.Key),
+                        fun element ->
                             Html.div
                                 [
                                     attr.className "card"
@@ -138,7 +138,7 @@ let asCards (context: RenderContext) (config: FormList.RenderConfig) : DomItem =
                                             Html.text "Not coming"
                                         ]
                                 ]
-                        )
+                    )
                 ]
             Html.button
                 [

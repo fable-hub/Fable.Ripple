@@ -121,7 +121,7 @@ let render () =
                 [
                     attr.className "moves-list"
 
-                    Html.each (fun () -> results () |> List.toArray) id (fun s -> Html.li s)
+                    Html.each ((fun () -> results () |> List.toArray), id, (fun s -> Html.li s))
                 ]
 
             Html.show (

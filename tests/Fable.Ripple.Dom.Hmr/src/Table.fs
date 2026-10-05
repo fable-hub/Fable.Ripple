@@ -28,9 +28,9 @@ let view (count: int) : DomItem =
             attr.id "table"
             Html.tbody
                 [
-                    Html.each
-                        (fun () -> rows.Value)
-                        (fun r -> r.Id)
+                    Html.each (
+                        rows,
+                        (fun r -> r.Id),
                         (fun r ->
                             // Reactive per row, so each row contributes real nodes to
                             // the graph - a static row contributes none.
@@ -46,5 +46,6 @@ let view (count: int) : DomItem =
                                         ]
                                 ]
                         )
+                    )
                 ]
         ]

@@ -147,10 +147,11 @@ let render () =
 
             Html.ul
                 [
-                    Html.each
-                        (fun () -> entries.Value |> List.toArray)
-                        (fun e -> e.Id)
+                    Html.each (
+                        (fun () -> entries.Value |> List.toArray),
+                        (fun e -> e.Id),
                         (fun e -> todoItem e (fun () -> removeTodo e.Id))
+                    )
                 ]
 
             Html.p

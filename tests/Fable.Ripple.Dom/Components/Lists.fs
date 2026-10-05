@@ -86,9 +86,9 @@ let private keyedList () : DomItem =
                 [
                     attr.id "list"
 
-                    Html.each
-                        (fun () -> rows.Value)
-                        _.Id
+                    Html.each (
+                        rows,
+                        _.Id,
                         (fun row ->
                             builds.Value <- builds.Peek() + 1
                             Signal.onCleanup (fun () -> cleanups.Value <- cleanups.Peek() + 1)
@@ -100,6 +100,7 @@ let private keyedList () : DomItem =
                                     Html.input []
                                 ]
                         )
+                    )
                 ]
 
             Html.output
@@ -127,9 +128,9 @@ let private eachPosition () : DomItem =
                     attr.className "before"
                     Html.text "BEFORE"
                 ]
-            Html.each
-                (fun () -> items.Value)
-                id
+            Html.each (
+                items,
+                id,
                 (fun x ->
                     Html.span
                         [
@@ -137,6 +138,7 @@ let private eachPosition () : DomItem =
                             Html.text x
                         ]
                 )
+            )
             Html.span
                 [
                     attr.className "after"

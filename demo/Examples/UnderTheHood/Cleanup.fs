@@ -68,5 +68,5 @@ let render () =
                         ]
                 ]
 
-            Html.ul [ Html.each (fun () -> stopwatches.Value) id stopwatch ]
+            Html.ul [ Html.each (stopwatches, id, stopwatch) ]
         ]

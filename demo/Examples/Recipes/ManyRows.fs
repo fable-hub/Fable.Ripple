@@ -206,7 +206,7 @@ let render () =
                     Html.table
                         [
                             attr.className "bench-table"
-                            Html.tbody [ Html.each (fun () -> rows.Value) (fun r -> r.Id) row ]
+                            Html.tbody [ Html.each (rows, (fun r -> r.Id), row) ]
                         ]
                 ]
 

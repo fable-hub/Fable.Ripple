@@ -138,7 +138,7 @@ let render () =
             Html.ul
                 [
                     attr.className "drag-list"
-                    Html.each (fun () -> rows.Value) (fun r -> r.Id) row
+                    Html.each (rows, (fun r -> r.Id), row)
                 ]
 
         ]

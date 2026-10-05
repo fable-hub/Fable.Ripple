@@ -39,7 +39,7 @@ let list () : DomItem =
     Html.ul
         [
             attr.id "rows"
-            Html.each (fun () -> items.Value) (fun i -> i.Id) row
+            Html.each (items, (fun i -> i.Id), row)
         ]
 
 /// A component inside a dynamic region - `dynamic` caches the node it inserted.

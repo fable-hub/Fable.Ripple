@@ -98,10 +98,10 @@ module SelectField =
                         ]
                 | None -> Html.none
 
-                Html.each
-                    (fun () -> options () |> Array.ofList)
-                    (fun optionItem -> optionItem.Key)
-                    (fun optionItem ->
+                Html.each (
+                    (fun () -> options () |> Array.ofList),
+                    (fun (optionItem: OptionItem) -> optionItem.Key),
+                    (fun (optionItem: OptionItem) ->
                         Html.option
                             [
                                 attr.value optionItem.Key
@@ -113,6 +113,7 @@ module SelectField =
                                 )
                             ]
                     )
+                )
 
                 // Read after the options so a new option can be selected in the same flush.
                 attr.value (fun () ->

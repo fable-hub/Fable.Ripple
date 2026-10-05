@@ -147,14 +147,24 @@ For mutually exclusive branches that each hold form state, a few `Html.show`{fsh
 open Fable.Ripple
 open Fable.Ripple.Dom
 
-type Item = { Id: int; Label: string }
+type Item =
+    {
+        Id: int
+        Label: string
+    }
 
 let app () =
     let items =
         Var.create
             [|
-                { Id = 1; Label = "first" }
-                { Id = 2; Label = "second" }
+                {
+                    Id = 1
+                    Label = "first"
+                }
+                {
+                    Id = 2
+                    Label = "second"
+                }
             |]
 
     let nextId = Var.create 3
@@ -185,13 +195,7 @@ let app () =
                     Html.text "Reverse"
                 ]
 
-            Html.ul
-                [
-                    Html.each
-                        (fun () -> items.Value)
-                        _.Id
-                        (fun item -> Html.li [ Html.text item.Label ])
-                ]
+            Html.ul [ Html.each (items, _.Id, fun item -> Html.li [ Html.text item.Label ]) ]
         ]
 
 Html.mount "app" app |> ignore

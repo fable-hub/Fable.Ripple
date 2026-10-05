@@ -240,8 +240,9 @@ let logPane (log: Log) : DomItem =
                 |> ignore
             )
 
-            Html.each
-                (fun () -> log.Lines.Value |> List.toArray |> Array.mapi (fun i l -> i, l))
-                fst
-                (fun (_, line) -> Html.div [ Html.text line ])
+            Html.each (
+                (fun () -> log.Lines.Value |> List.toArray |> Array.mapi (fun i l -> i, l)),
+                fst,
+                (fun (_, line: string) -> Html.div [ Html.text line ])
+            )
         ]

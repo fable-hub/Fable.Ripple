@@ -82,14 +82,15 @@ module Fields =
                 Html.datalist
                     [
                         attr.id listId
-                        Html.each
+                        Html.each (
                             (fun () ->
                                 config.Attributes.Suggestions()
                                 |> List.filter (fun s -> s.Contains config.Value.Value)
                                 |> List.toArray
-                            )
-                            id
-                            (fun s -> Html.option [ attr.value s ])
+                            ),
+                            id,
+                            fun s -> Html.option [ attr.value s ]
+                        )
                     ]
             ]
         |> PlainView.withLabelAndError config.Attributes.Label config
@@ -175,14 +176,15 @@ module Fields =
                 Html.datalist
                     [
                         attr.id listId
-                        Html.each
+                        Html.each (
                             (fun () ->
                                 config.Attributes.Suggestions()
                                 |> List.filter (fun s -> s.Contains config.Value.Value)
                                 |> List.toArray
-                            )
-                            id
-                            (fun s -> Html.option [ attr.value s ])
+                            ),
+                            id,
+                            fun s -> Html.option [ attr.value s ]
+                        )
                     ]
             ]
         |> PlainView.withLabelAndError config.Attributes.Label config

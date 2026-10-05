@@ -225,12 +225,13 @@ let render () =
                 [
                     attr.className "moves-list"
 
-                    Html.each
-                        (fun () -> visible () |> List.toArray)
-                        (fun (name, _, _) -> name)
+                    Html.each (
+                        (fun () -> visible () |> List.toArray),
+                        (fun (name, _, _) -> name),
                         (fun (name, tag, hits) ->
                             Html.li [ Html.text (sprintf "%s  [%s]  %d" name tag hits) ]
                         )
+                    )
                 ]
 
         ]

@@ -321,12 +321,7 @@ type Html =
     static member fragment(items: DomItem list) : DomItem = Apply(fun e -> applyItems e items)
 
     /// Reactive keyed list: one element per item, reconciled by key.
-    static member each
-        (getItems: unit -> 'a[])
-        (keyOf: 'a -> 'k)
-        (render: 'a -> DomItem)
-        : DomItem
-        =
+    static member each(getItems: unit -> 'a[], keyOf: 'a -> 'k, render: 'a -> DomItem) : DomItem =
         Apply(fun parent ->
             // An anchor, not `null`: rows are inserted before it rather than
             // appended, so a list that is empty when it is built still puts its
@@ -337,6 +332,10 @@ type Html =
             Dom.keyedEach parent anchor getItems keyOf (fun x -> toElement (render x))
             |> ignore
         )
+
+    /// Reactive keyed list driven by a signal of items.
+    static member each(items: Signal<'a[]>, keyOf: 'a -> 'k, render: 'a -> DomItem) : DomItem =
+        Html.each ((fun () -> items.Value), keyOf, render)
 
     /// Reactive subtree: rebuilds `f ()` in place whenever the signals it reads
     /// change; each rebuild runs in its own `Signal.root`, disposed on rebuild/

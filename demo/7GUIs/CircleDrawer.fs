@@ -212,9 +212,9 @@ let render () =
                     on.mouseLeave onLeave
                     on.contextMenu onContextMenu
 
-                    Html.each
-                        (fun () -> circles.Value)
-                        (fun c -> c.Id)
+                    Html.each (
+                        circles,
+                        (fun c -> c.Id),
                         (fun c ->
                             Html.div
                                 [
@@ -245,6 +245,7 @@ let render () =
                                     )
                                 ]
                         )
+                    )
 
                     // Dims the drawing area while the frame is open, so it reads
                     // as taking priority. Clicking it closes, like a modal

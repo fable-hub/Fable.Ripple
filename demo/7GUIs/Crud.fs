@@ -113,9 +113,9 @@ let render () =
                                     attr.className "listbox"
                                     attr.role "listbox"
 
-                                    Html.each
-                                        (fun () -> filtered ())
-                                        (fun p -> p.Id)
+                                    Html.each (
+                                        (fun () -> filtered ()),
+                                        (fun p -> p.Id),
                                         (fun p ->
                                             Html.li
                                                 [
@@ -130,6 +130,7 @@ let render () =
                                                     Html.text (rowText p)
                                                 ]
                                         )
+                                    )
                                 ]
                         ]
 
