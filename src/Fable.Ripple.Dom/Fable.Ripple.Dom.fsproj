@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="Base.fs" />
     <Compile Include="Dom.fs" />
+    <Compile Include="Template.fs" />
     <Compile Include="Attributes.fs" />
     <Compile Include="Events.fs" />
     <Compile Include="Html.fs" />

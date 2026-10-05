@@ -274,7 +274,40 @@ try {
         "Qtwo:1",
     );
 
-    console.log("8. a component inside a dynamic region");
+    console.log("8. a component as an Html.template row");
+    const fast = () =>
+        page.evaluate(() => ({
+            count: document.querySelectorAll("#fast li").length,
+            one: document.querySelector("#fast-1")?.textContent,
+            two: document.querySelector("#fast-2")?.textContent,
+        }));
+    check("rows render from the component skeleton", await fast(), {
+        count: 2,
+        one: "Fone:0",
+        two: "Ftwo:0",
+    });
+    await page.click("#fast-1");
+    await page.click("#fast-1");
+    check("rows keep state on the item", await fast(), {
+        count: 2,
+        one: "Fone:2",
+        two: "Ftwo:0",
+    });
+
+    edit("Rows.fs", '"F" + item.Value.Label', '"G" + item.Value.Label');
+    await page.waitForFunction(
+        () => document.querySelector("#fast-1")?.textContent?.startsWith("G"),
+        { timeout: 60000 },
+    );
+    check("rows hot-swap, keeping item state", await fast(), {
+        count: 2,
+        one: "Gone:2",
+        two: "Gtwo:0",
+    });
+    await page.click("#fast-2");
+    check("rows still interactive after the swap", (await fast()).two, "Gtwo:1");
+
+    console.log("9. a component inside a dynamic region");
     const branch = () => page.textContent("#branch");
     check("branch renders", await branch(), "Bleft:0");
     await page.click("#branch");

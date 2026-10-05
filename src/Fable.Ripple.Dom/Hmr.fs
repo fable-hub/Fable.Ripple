@@ -131,7 +131,11 @@ module Hmr =
             while not (List.isEmpty rest) do
                 match List.head rest with
                 | Child node -> parent.insertBefore (node, anchor) |> ignore
-                | item -> applyItem (parent :?> Element) item
+                | item ->
+                    if Recording.active then
+                        applyItemRecording (parent :?> Element) item
+                    else
+                        applyItem (parent :?> Element) item
 
                 rest <- List.tail rest
         )
@@ -198,104 +202,112 @@ module Hmr =
     let private boundaryOf (k: string) (impl: Var<obj>) (args: obj[]) : DomItem =
         let path = place k
 
-        let build (f: obj) =
-            Signal.root (fun () ->
-                let saved = enter path
-                let item = Signal.untracked (fun () -> applyArgs f args)
-                leave saved
-                item
-            )
+        if Recording.active then
+            Recording.dependOn impl
+            let saved = enter path
+            let item = applyArgs (impl.Peek()) args
+            leave saved
+            item
+        else
 
-        let firstItem, firstDispose = build impl.Value
+            let build (f: obj) =
+                Signal.root (fun () ->
+                    let saved = enter path
+                    let item = Signal.untracked (fun () -> applyArgs f args)
+                    leave saved
+                    item
+                )
 
-        match firstItem with
-        // A component that renders one element is that element, so it can sit anywhere
-        // a `DomItem` can - an `Html.each` row included, which needs one node per key.
-        | Child node ->
-            let mutable current = node
-            let mutable dispose = firstDispose
-            let mutable built = true
+            let firstItem, firstDispose = build impl.Value
 
-            Signal.autorun (fun () ->
-                let f = impl.Value
-
-                if built then
-                    built <- false
-                else
-                    countRebuild ()
-                    let t0 = now ()
-                    let parent = current.parentNode
-                    let captured = capture current
-                    dispose.Dispose()
-
-                    let next, d = build f
-                    dispose <- d
-
-                    match next with
-                    | Child fresh ->
-                        if not (isNull parent) then
-                            parent.replaceChild (fresh, current) |> ignore
-                            replaceTrackedNode current fresh
-
-                        current <- fresh
-                        restore current captured
-                    | _ -> ()
-
-                    recordRebuild (now () - t0)
-            )
-
-            Signal.onCleanup (fun () -> dispose.Dispose())
-            Child current
-
-        // A fragment, bare attributes or nothing at all has no single node to stand
-        // for it, so it is rebuilt between anchors in its parent.
-        | _ ->
-            firstDispose.Dispose()
-
-            Apply(fun parent ->
-                let startA = document.createComment "b[" :> Node
-                let endA = document.createComment "]b" :> Node
-                parent.appendChild startA |> ignore
-                parent.appendChild endA |> ignore
-
-                let mutable current: IDisposable option = None
-
-                let clear () =
-                    current |> Option.iter (fun d -> d.Dispose())
-                    current <- None
-                    let mutable n = startA.nextSibling
-
-                    while not (isNull n) && not (obj.ReferenceEquals(n, endA)) do
-                        let next = n.nextSibling
-                        parent.removeChild n |> ignore
-                        n <- next
+            match firstItem with
+            // A component that renders one element is that element, so it can sit anywhere
+            // a `DomItem` can - an `Html.each` row included, which needs one node per key.
+            | Child node ->
+                let mutable current = node
+                let mutable dispose = firstDispose
+                let mutable built = true
 
                 Signal.autorun (fun () ->
                     let f = impl.Value
-                    countRebuild ()
-                    let captured = capture parent
-                    let t0 = now ()
-                    clear ()
 
-                    let item, dispose = build f
+                    if built then
+                        built <- false
+                    else
+                        countRebuild ()
+                        let t0 = now ()
+                        let parent = current.parentNode
+                        let captured = capture current
+                        dispose.Dispose()
 
-                    match item with
-                    | Child node -> parent.insertBefore (node, endA) |> ignore
-                    | Empty _ -> ()
-                    | Apply run ->
-                        if isSplice item then
-                            runSplice item parent endA
-                        else
-                            run parent
+                        let next, d = build f
+                        dispose <- d
 
-                    current <- Some dispose
+                        match next with
+                        | Child fresh ->
+                            if not (isNull parent) then
+                                parent.replaceChild (fresh, current) |> ignore
+                                replaceTrackedNode current fresh
 
-                    restore parent captured
-                    recordRebuild (now () - t0)
+                            current <- fresh
+                            restore current captured
+                        | _ -> ()
+
+                        recordRebuild (now () - t0)
                 )
 
-                Signal.onCleanup clear
-            )
+                Signal.onCleanup (fun () -> dispose.Dispose())
+                Child current
+
+            // A fragment, bare attributes or nothing at all has no single node to stand
+            // for it, so it is rebuilt between anchors in its parent.
+            | _ ->
+                firstDispose.Dispose()
+
+                Apply(fun parent ->
+                    let startA = document.createComment "b[" :> Node
+                    let endA = document.createComment "]b" :> Node
+                    parent.appendChild startA |> ignore
+                    parent.appendChild endA |> ignore
+
+                    let mutable current: IDisposable option = None
+
+                    let clear () =
+                        current |> Option.iter (fun d -> d.Dispose())
+                        current <- None
+                        let mutable n = startA.nextSibling
+
+                        while not (isNull n) && not (obj.ReferenceEquals(n, endA)) do
+                            let next = n.nextSibling
+                            parent.removeChild n |> ignore
+                            n <- next
+
+                    Signal.autorun (fun () ->
+                        let f = impl.Value
+                        countRebuild ()
+                        let captured = capture parent
+                        let t0 = now ()
+                        clear ()
+
+                        let item, dispose = build f
+
+                        match item with
+                        | Child node -> parent.insertBefore (node, endA) |> ignore
+                        | Empty _ -> ()
+                        | Apply run ->
+                            if isSplice item then
+                                runSplice item parent endA
+                            else
+                                run parent
+
+                        current <- Some dispose
+
+                        restore parent captured
+                        recordRebuild (now () - t0)
+                    )
+
+                    Signal.onCleanup clear
+                )
 
     /// Emitted by the plugin in place of the component's own body.
     ///

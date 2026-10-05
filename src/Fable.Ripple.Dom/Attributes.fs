@@ -137,7 +137,7 @@ type attr =
         Apply(fun e ->
             let inp = e :?> HTMLInputElement
             Signal.autorun (fun () -> inp.value <- c.Value)
-            e.addEventListener ("input", fun _ -> Signal.batch (fun () -> c.Value <- inp.value))
+            listen e "input" (fun _ -> c.Value <- inp.value)
         )
 
     /// Two-way checkbox binding.
@@ -145,11 +145,7 @@ type attr =
         Apply(fun e ->
             let inp = e :?> HTMLInputElement
             Signal.autorun (fun () -> inp.``checked`` <- c.Value)
-
-            e.addEventListener (
-                "change",
-                fun _ -> Signal.batch (fun () -> c.Value <- inp.``checked``)
-            )
+            listen e "change" (fun _ -> c.Value <- inp.``checked``)
         )
 
     (*
@@ -345,4 +341,10 @@ type attr =
     /// focus it, attach an observer, mount a third-party widget. Runs while the
     /// element is being built, inside the enclosing `Signal.root`, so any effect or
     /// `Signal.onCleanup` registered here tears down with the element.
-    static member ref(f: HTMLElement -> unit) : DomItem = Apply(fun e -> f (e :?> HTMLElement))
+    static member ref(f: HTMLElement -> unit) : DomItem =
+        Apply(fun e ->
+            if Recording.active then
+                Recording.dynamic <- true
+            else
+                f (e :?> HTMLElement)
+        )

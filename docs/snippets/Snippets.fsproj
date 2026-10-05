@@ -21,6 +21,7 @@
         <Compile Include="../../src/Fable.Ripple/Builder.fs" />
         <Compile Include="../../src/Fable.Ripple.Dom/Base.fs" />
         <Compile Include="../../src/Fable.Ripple.Dom/Dom.fs" />
+        <Compile Include="../../src/Fable.Ripple.Dom/Template.fs" />
         <Compile Include="../../src/Fable.Ripple.Dom/Attributes.fs" />
         <Compile Include="../../src/Fable.Ripple.Dom/Events.fs" />
         <Compile Include="../../src/Fable.Ripple.Dom/Html.fs" />

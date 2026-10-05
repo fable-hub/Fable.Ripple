@@ -72,6 +72,171 @@ let main _ =
                 )
 
                 testList (
+                    "Rows",
+                    [
+                        testComponent (
+                            "renders one clone per item with the row's values",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do! assertLocator (root.locator "li") (haveCount 3)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(2) span")
+                                            (haveText "item 2")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(2)")
+                                            (haveAttribute "data-id" "2")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(3)")
+                                            (haveAttribute "data-id" "3")
+                                }
+                        )
+
+                        testComponent (
+                            "nested show and each are built per row at their position",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(2) em")
+                                            (haveText "second")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) em")
+                                            (haveCount 0)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) i")
+                                            (haveCount 2)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) i:nth-of-type(2) + u + b")
+                                            (haveText "end")
+
+                                    do! click (root.locator "li:nth-child(1) button.tag")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) i")
+                                            (haveCount 3)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(2) i")
+                                            (haveCount 2)
+                                }
+                        )
+
+                        testComponent (
+                            "a fragment in a row is recorded once, with its bindings",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) u")
+                                            (haveCount 1)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) u")
+                                            (haveText "frag1")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(3)")
+                                            (haveAttribute "data-frag" "3")
+                                }
+                        )
+
+                        testComponent (
+                            "a handler inside a nested list still sees the outer row",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do! click (root.locator "li:nth-child(2) i:nth-of-type(1)")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(2) span")
+                                            (haveText "a")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) span")
+                                            (haveText "item 1")
+                                }
+                        )
+
+                        testComponent (
+                            "a reactive text follows the row's own signal",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do! click (root.locator "li:nth-child(1) button.rename")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) span")
+                                            (haveText "item 1!")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(2) span")
+                                            (haveText "item 2")
+                                }
+                        )
+
+                        testComponent (
+                            "a class toggle follows a shared signal",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do! click (root.locator "li:nth-child(3) button.select")
+                                    do! assertLocator (root.locator "li.selected") (haveCount 1)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li.selected span")
+                                            (haveText "item 3")
+
+                                    do! click (root.locator "li:nth-child(1) button.select")
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li.selected span")
+                                            (haveText "item 1")
+                                }
+                        )
+
+                        testComponent (
+                            "rows are keyed: a removed item's element leaves, the others stay",
+                            "RowsList",
+                            fun root ->
+                                promise {
+                                    do! click (root.locator "#drop-first")
+                                    do! assertLocator (root.locator "li") (haveCount 2)
+
+                                    do!
+                                        assertLocator
+                                            (root.locator "li:nth-child(1) span")
+                                            (haveText "item 2")
+                                }
+                        )
+                    ]
+                )
+
+                testList (
                     "Checkbox",
                     [
                         testComponent (

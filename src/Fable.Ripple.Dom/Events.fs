@@ -61,33 +61,18 @@ type on =
     *)
     /// Fires on each keystroke; hands the input's current text.
     static member input(h: string -> unit) : DomItem =
-        Apply(fun e ->
-            e.addEventListener (
-                "input",
-                fun ev -> Signal.batch (fun () -> h ((ev.target :?> HTMLInputElement).value))
-            )
-        )
+        onEvent "input" (fun (ev: Event) -> h ((ev.target :?> HTMLInputElement).value))
 
     /// Raw `input` event.
     static member input(h: Event -> unit) : DomItem = onEvent "input" h
 
     /// Fires on commit (blur/enter); hands the input's current text.
     static member change(h: string -> unit) : DomItem =
-        Apply(fun e ->
-            e.addEventListener (
-                "change",
-                fun ev -> Signal.batch (fun () -> h ((ev.target :?> HTMLInputElement).value))
-            )
-        )
+        onEvent "change" (fun (ev: Event) -> h ((ev.target :?> HTMLInputElement).value))
 
     /// Checkbox/radio commit; hands the `checked` state.
     static member checkedChange(h: bool -> unit) : DomItem =
-        Apply(fun e ->
-            e.addEventListener (
-                "change",
-                fun ev -> Signal.batch (fun () -> h ((ev.target :?> HTMLInputElement).``checked``))
-            )
-        )
+        onEvent "change" (fun (ev: Event) -> h ((ev.target :?> HTMLInputElement).``checked``))
 
     static member submit(h: Event -> unit) : DomItem = onEvent "submit" h
     static member reset(h: Event -> unit) : DomItem = onEvent "reset" h

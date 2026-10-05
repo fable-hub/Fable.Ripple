@@ -140,6 +140,7 @@ let theme =
                     Menu.page "ripple-dom/events.md"
                     Menu.page "ripple-dom/bindings.md"
                     Menu.page "ripple-dom/control-flow.md"
+                    Menu.page "ripple-dom/templates.md"
                     Menu.page "ripple-dom/svg.md"
                 ]
             // Menu.section "Patterns" [ Menu.page "ripple-dom/async-data.md" ]

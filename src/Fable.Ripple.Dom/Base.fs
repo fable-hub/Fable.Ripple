@@ -35,6 +35,119 @@ module Base =
     let svgNamespace = "http://www.w3.org/2000/svg"
 
     (*
+        Recording: how `Html.template` learns a row's dynamic parts
+    *)
+
+    /// What a recorded part does on the clone of its node.
+    type internal RecordedKind =
+        /// `Fn` is a `unit -> string` read bound to a text node
+        | Text = 0
+        /// `Fn` is an `Event -> unit` handler for the event `Name`
+        | On = 1
+        /// `Fn` is an `Element -> unit` to run against the cloned element
+        | Apply = 2
+        /// `Fn` is a `Node -> unit` to run with the cloned anchor
+        | Splice = 3
+
+    /// One dynamic part of a row skeleton, captured while the row function ran
+    /// once: the node it belongs to and what to do on the clone of that node.
+    [<Struct>]
+    type internal Recorded =
+        {
+            Node: Node
+            Kind: RecordedKind
+            Name: string
+            Fn: obj
+        }
+
+    /// While a template function runs for `Html.template`, the primitives record
+    /// their dynamic work against the skeleton instead of doing it. A helper built
+    /// on `Base` that creates an effect or a listener of its own takes part with
+    /// `isActive` and `markDynamic`.
+    module Recording =
+
+        let mutable internal active = false
+
+        /// Set by a primitive that would have created an effect or a listener, so
+        /// `applyItems` records the `Apply` it just ran.
+        let mutable internal dynamic = false
+
+        /// True while a template function runs. A helper that would create an
+        /// effect or a listener must call `markDynamic` instead and return.
+        let isActive () = active
+
+        /// Tell the walker to record the current `Apply` and run it again on every
+        /// row. Call it, and do nothing else, when `isActive ()` is true.
+        let markDynamic () = dynamic <- true
+
+        let mutable private list: ResizeArray<Recorded> = null
+        let mutable private deps: ResizeArray<Signal<obj>> = null
+
+        let internal start () =
+            let prev = struct (active, list, deps)
+            active <- true
+            list <- ResizeArray<Recorded>()
+            deps <- ResizeArray<Signal<obj>>()
+            prev
+
+        /// The recorded parts and the signals the skeleton was built from.
+        let internal stop
+            (struct (prevActive, prevList, prevDeps))
+            : ResizeArray<Recorded> * ResizeArray<Signal<obj>>
+            =
+            let recorded = list
+            let dependencies = deps
+            active <- prevActive
+            list <- prevList
+            deps <- prevDeps
+            recorded, dependencies
+
+        /// A signal the skeleton depends on: when it changes, the skeleton is
+        /// stale and the list rebuilds. Hot reload uses it for a component's
+        /// implementation.
+        let internal dependOn (signal: Signal<obj>) = deps.Add signal
+
+        /// A reactive text node to bind per row.
+        let internal text (node: Node) (read: unit -> string) =
+            list.Add
+                {
+                    Node = node
+                    Kind = RecordedKind.Text
+                    Name = ""
+                    Fn = box read
+                }
+
+        /// An event listener to attach per row.
+        let internal on (node: Node) (name: string) (handler: Event -> unit) =
+            list.Add
+                {
+                    Node = node
+                    Kind = RecordedKind.On
+                    Name = name
+                    Fn = box handler
+                }
+
+        /// An `Apply` to run per row against the cloned element.
+        let internal apply (node: Node) (run: Element -> unit) =
+            list.Add
+                {
+                    Node = node
+                    Kind = RecordedKind.Apply
+                    Name = ""
+                    Fn = box run
+                }
+
+        /// A list or dynamic subtree to build per row at the cloned anchor.
+        let internal splice (anchor: Node) (run: Node -> unit) =
+            list.Add
+                {
+                    Node = anchor
+                    Kind = RecordedKind.Splice
+                    Name = ""
+                    Fn = box run
+                }
+
+    (*
         Element construction
     *)
 
@@ -45,14 +158,33 @@ module Base =
         | Child node -> element.appendChild node |> ignore
         | Empty _ -> ()
 
+    /// `applyItem` while recording: an `Apply` that flagged itself dynamic is
+    /// recorded with the element it ran against.
+    let internal applyItemRecording (element: Element) (item: DomItem) =
+        match item with
+        | Apply run ->
+            Recording.dynamic <- false
+            run element
+
+            if Recording.dynamic then
+                Recording.apply element run
+                Recording.dynamic <- false
+        | Child node -> element.appendChild node |> ignore
+        | Empty _ -> ()
+
     /// Apply every item to `element`. A direct cons-cell walk (not `for … in list`,
     /// which Fable lowers to an allocating enumerator + try/finally per element).
     let applyItems (element: Element) (items: DomItem list) =
         let mutable rest = items
 
-        while not (List.isEmpty rest) do
-            applyItem element (List.head rest)
-            rest <- List.tail rest
+        if Recording.active then
+            while not (List.isEmpty rest) do
+                applyItemRecording element (List.head rest)
+                rest <- List.tail rest
+        else
+            while not (List.isEmpty rest) do
+                applyItem element (List.head rest)
+                rest <- List.tail rest
 
     /// Create an HTML element, apply every item to it, return it (wrapped as a child).
     let createElement (tag: string) (items: DomItem list) : DomItem =
@@ -108,15 +240,19 @@ module Base =
     /// only when the callback's result differs from the last value written.
     let bindAttribute (name: string) (callback: unit -> string) : DomItem =
         Apply(fun element ->
-            let mutable prev: string = null
+            if Recording.active then
+                Recording.dynamic <- true
+            else
+                let mutable prev: string = null
 
-            Signal.autorun (fun () ->
-                let v = callback ()
+                Signal.autorun (fun () ->
+                    let v = callback ()
 
-                if not (obj.ReferenceEquals(v, prev)) then
-                    prev <- v
-                    element.setAttribute (name, v)
-            )
+                    if not (obj.ReferenceEquals(v, prev)) then
+                        prev <- v
+                        element.setAttribute (name, v)
+                )
+
         )
 
     /// Reactive attribute driven by a signal.
@@ -140,17 +276,21 @@ module Base =
     /// Reactive present/absent boolean attribute driven by a callback.
     let bindBooleanAttribute (name: string) (callback: unit -> bool) : DomItem =
         Apply(fun element ->
-            let mutable prev = false
-            let mutable first = true
+            if Recording.active then
+                Recording.dynamic <- true
+            else
+                let mutable prev = false
+                let mutable first = true
 
-            Signal.autorun (fun () ->
-                let v = callback ()
+                Signal.autorun (fun () ->
+                    let v = callback ()
 
-                if first || v <> prev then
-                    first <- false
-                    prev <- v
-                    setFlag element name v
-            )
+                    if first || v <> prev then
+                        first <- false
+                        prev <- v
+                        setFlag element name v
+                )
+
         )
 
     /// Reactive present/absent boolean attribute driven by a signal.
@@ -169,17 +309,21 @@ module Base =
     /// Reactive property driven by an auto-tracked callback.
     let bindProperty (name: string) (callback: unit -> 'a) : DomItem =
         Apply(fun element ->
-            let mutable prev: obj = null
-            let mutable first = true
+            if Recording.active then
+                Recording.dynamic <- true
+            else
+                let mutable prev: obj = null
+                let mutable first = true
 
-            Signal.autorun (fun () ->
-                let v = box (callback ())
+                Signal.autorun (fun () ->
+                    let v = box (callback ())
 
-                if first || not (obj.ReferenceEquals(v, prev)) then
-                    first <- false
-                    prev <- v
-                    element?(name) <- v
-            )
+                    if first || not (obj.ReferenceEquals(v, prev)) then
+                        first <- false
+                        prev <- v
+                        element?(name) <- v
+                )
+
         )
 
     /// Reactive property driven by a signal.
@@ -188,12 +332,26 @@ module Base =
 
     /// Attach an event listener; the handler is cast to its concrete event type
     /// (erased) and its writes are auto-batched into one flush per event.
+    /// Attach a listener whose handler runs batched, and under the row context
+    /// the listener was created in, if any.
+    let listen (element: Node) (name: string) (handler: Event -> unit) =
+        let context = Signal.context ()
+
+        element.addEventListener (
+            name,
+            fun event ->
+                if isNull context then
+                    Signal.batch (fun () -> handler event)
+                else
+                    Signal.withContext context (fun () -> Signal.batch (fun () -> handler event))
+        )
+
     let onEvent (name: string) (handler: 'e -> unit) : DomItem =
         Apply(fun element ->
-            element.addEventListener (
-                name,
-                fun event -> Signal.batch (fun () -> handler (unbox event))
-            )
+            if Recording.active then
+                Recording.on element name (unbox handler)
+            else
+                listen element name (unbox handler)
         )
 
     /// `classList` token manipulation (not whole-string `setAttribute`), so these
@@ -248,23 +406,27 @@ module Base =
         /// binding last applied, toggling only what changed - other tokens are untouched.
         let bind (callback: unit -> (string * bool) list) : DomItem =
             Apply(fun element ->
-                let applied = HashSet<string>()
+                if Recording.active then
+                    Recording.dynamic <- true
+                else
+                    let applied = HashSet<string>()
 
-                Signal.autorun (fun () ->
-                    let next = HashSet<string>()
-                    iterEnabled (callback ()) (fun token -> next.Add token |> ignore)
+                    Signal.autorun (fun () ->
+                        let next = HashSet<string>()
+                        iterEnabled (callback ()) (fun token -> next.Add token |> ignore)
 
-                    for token in applied do
-                        if not (next.Contains token) then
-                            element.classList.remove token
+                        for token in applied do
+                            if not (next.Contains token) then
+                                element.classList.remove token
 
-                    for token in next do
-                        if not (applied.Contains token) then
-                            element.classList.add token
+                        for token in next do
+                            if not (applied.Contains token) then
+                                element.classList.add token
 
-                    applied.Clear()
-                    applied.UnionWith next
-                )
+                        applied.Clear()
+                        applied.UnionWith next
+                    )
+
             )
 
         /// Toggle a single class token by a static flag.
@@ -274,15 +436,19 @@ module Base =
         /// Toggle a single class token by a reactive flag.
         let bindToggle (name: string) (callback: unit -> bool) : DomItem =
             Apply(fun element ->
-                let mutable prev = false
-                let mutable first = true
+                if Recording.active then
+                    Recording.dynamic <- true
+                else
+                    let mutable prev = false
+                    let mutable first = true
 
-                Signal.autorun (fun () ->
-                    let v = callback ()
+                    Signal.autorun (fun () ->
+                        let v = callback ()
 
-                    if first || v <> prev then
-                        first <- false
-                        prev <- v
-                        setToken element v name
-                )
+                        if first || v <> prev then
+                            first <- false
+                            prev <- v
+                            setToken element v name
+                    )
+
             )

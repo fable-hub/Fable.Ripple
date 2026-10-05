@@ -42,6 +42,46 @@ let list () : DomItem =
             Html.each (items, (fun i -> i.Id), row)
         ]
 
+type FastItem =
+    {
+        Id: int
+        Label: string
+        Hits: Var<int>
+    }
+
+/// A component as an `Html.template` row: it runs once, so its state lives on the item.
+[<Component>]
+let fastRow (item: Signal<FastItem>) : DomItem =
+    Html.li
+        [
+            attr.custom ("id", fun () -> "fast-" + string item.Value.Id)
+            on.click (fun _ -> item.Value.Hits.Value <- item.Value.Hits.Value + 1)
+            Html.text (fun () -> "F" + item.Value.Label + ":" + string item.Value.Hits.Value)
+        ]
+
+[<Component>]
+let fastList () : DomItem =
+    let items =
+        Var.create
+            [|
+                {
+                    Id = 1
+                    Label = "one"
+                    Hits = Var.create 0
+                }
+                {
+                    Id = 2
+                    Label = "two"
+                    Hits = Var.create 0
+                }
+            |]
+
+    Html.ul
+        [
+            attr.id "fast"
+            Html.template (items, (fun i -> i.Id), fastRow)
+        ]
+
 /// A component inside a dynamic region - `dynamic` caches the node it inserted.
 [<Component>]
 let branch (name: string) : DomItem =

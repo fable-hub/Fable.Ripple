@@ -21,6 +21,7 @@ let private app () =
             Pair.both ()
             Rows.list ()
             Rows.switcher ()
+            Rows.fastList ()
         ]
 
 Html.mount "app" app |> ignore

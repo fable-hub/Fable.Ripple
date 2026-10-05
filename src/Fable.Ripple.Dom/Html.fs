@@ -24,15 +24,19 @@ type Html =
 
     static member text(f: unit -> string) : DomItem =
         let t = document.createTextNode ""
-        let mutable prev: string = null
 
-        Signal.autorun (fun () ->
-            let v = f ()
+        if Recording.active then
+            Recording.text t f
+        else
+            let mutable prev: string = null
 
-            if not (obj.ReferenceEquals(v, prev)) then
-                prev <- v
-                t.nodeValue <- v
-        )
+            Signal.autorun (fun () ->
+                let v = f ()
+
+                if not (obj.ReferenceEquals(v, prev)) then
+                    prev <- v
+                    t.nodeValue <- v
+            )
 
         Child(t :> Node)
 
@@ -329,13 +333,73 @@ type Html =
             let anchor = document.createComment "each" :> Node
             parent.appendChild anchor |> ignore
 
-            Dom.keyedEach parent anchor getItems keyOf (fun x -> toElement (render x))
-            |> ignore
+            let build (anchor: Node) =
+                Dom.keyedEach
+                    anchor.parentNode
+                    anchor
+                    getItems
+                    keyOf
+                    (fun x -> toElement (render x))
+                |> ignore
+
+            if Recording.active then
+                Recording.splice anchor build
+            else
+                build anchor
         )
 
     /// Reactive keyed list driven by a signal of items.
     static member each(items: Signal<'a[]>, keyOf: 'a -> 'k, render: 'a -> DomItem) : DomItem =
         Html.each ((fun () -> items.Value), keyOf, render)
+
+    /// Reactive keyed list whose row is described once: `render` runs one time
+    /// against a row signal, and every item gets a clone of the result with the
+    /// row's bindings attached. Read the row inside a function only.
+    static member template
+        (getItems: unit -> 'a[], keyOf: 'a -> 'k, render: Signal<'a> -> DomItem)
+        : DomItem
+        =
+        Apply(fun parent ->
+            let anchor = document.createComment "template" :> Node
+            parent.appendChild anchor |> ignore
+
+            let build (anchor: Node) =
+#if DEBUG
+                // A swap of a component used in `render` must re-record the skeleton.
+                let mutable list: IDisposable = null
+                let mutable dependencies: ResizeArray<Signal<obj>> = null
+
+                Signal.autorun (fun () ->
+                    if not (isNull list) then
+                        list.Dispose()
+
+                    Signal.untracked (fun () ->
+                        let realise, deps = Template.compile render
+                        dependencies <- deps
+                        list <- Dom.keyedEach anchor.parentNode anchor getItems keyOf realise
+                    )
+
+                    for i in 0 .. dependencies.Count - 1 do
+                        dependencies.[i].Value |> ignore
+                )
+#else
+                let realise, _ = Template.compile render
+
+                Dom.keyedEach anchor.parentNode anchor getItems keyOf realise |> ignore
+#endif
+
+            if Recording.active then
+                Recording.splice anchor build
+            else
+                build anchor
+        )
+
+    /// `template` driven by a signal of items.
+    static member template
+        (items: Signal<'a[]>, keyOf: 'a -> 'k, render: Signal<'a> -> DomItem)
+        : DomItem
+        =
+        Html.template ((fun () -> items.Value), keyOf, render)
 
     /// Reactive subtree: rebuilds `f ()` in place whenever the signals it reads
     /// change; each rebuild runs in its own `Signal.root`, disposed on rebuild/
@@ -345,47 +409,52 @@ type Html =
             let anchor = document.createComment "dynamic" :> Node
             parent.appendChild anchor |> ignore
 
-            // `Node option`, not `Node`: a branch may legitimately render nothing
-            // (`Html.none`), leaving a scope to dispose but no node to remove.
-            let mutable current: (Node option * IDisposable) option = None
+            if Recording.active then
+                Recording.splice anchor (fun anchor -> Html.dynamicAt anchor.parentNode anchor f)
+            else
+                Html.dynamicAt parent anchor f
+        )
 
-            let clear () =
-                current
-                |> Option.iter (fun (node, dispose) ->
-                    dispose.Dispose()
-                    node |> Option.iter (fun n -> parent.removeChild n |> ignore)
-                )
+    static member private dynamicAt (parent: Node) (anchor: Node) (f: unit -> DomItem) : unit =
+        (
+         // `Node option`, not `Node`: a branch may legitimately render nothing
+         // (`Html.none`), leaving a scope to dispose but no node to remove.
+         let mutable current: (Node option * IDisposable) option = None
 
-                current <- None
+         let clear () =
+             current
+             |> Option.iter (fun (node, dispose) ->
+                 dispose.Dispose()
+                 node |> Option.iter (fun n -> parent.removeChild n |> ignore)
+             )
 
-            Signal.autorun (fun () ->
-                clear ()
+             current <- None
 
-                let node, dispose =
-                    Signal.root (fun () ->
-                        match f () with
-                        | Apply _ -> failwith "Html.dynamic expects an element or Html.none"
-                        | Child node -> Some node
-                        | Empty _ -> None
-                    )
+         Signal.autorun (fun () ->
+             clear ()
 
-                node |> Option.iter (fun n -> parent.insertBefore (n, anchor) |> ignore)
-                current <- Some(node, dispose)
+             let node, dispose =
+                 Signal.root (fun () ->
+                     match f () with
+                     | Apply _ -> failwith "Html.dynamic expects an element or Html.none"
+                     | Child node -> Some node
+                     | Empty _ -> None
+                 )
+
+             node |> Option.iter (fun n -> parent.insertBefore (n, anchor) |> ignore)
+             current <- Some(node, dispose)
 
 #if DEBUG
-                node
-                |> Option.iter (fun n ->
-                    Base.trackNode
-                        n
-                        (fun fresh ->
-                            current <- current |> Option.map (fun (_, d) -> Some fresh, d)
-                        )
-                )
+             node
+             |> Option.iter (fun n ->
+                 Base.trackNode
+                     n
+                     (fun fresh -> current <- current |> Option.map (fun (_, d) -> Some fresh, d))
+             )
 #endif
-            )
+         )
 
-            Signal.onCleanup clear
-        )
+         Signal.onCleanup clear)
 
     /// `switch` over a value computed by `read`, for a shape that depends on more
     /// than one signal without naming a derived signal for it.
