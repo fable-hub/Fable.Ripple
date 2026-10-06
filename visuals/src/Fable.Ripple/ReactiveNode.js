@@ -1,9 +1,12 @@
 
+import { defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 
 export function Defaults_noRecompute() {
     return false;
 }
+
+export let Context_current = createAtom(defaultOf());
 
 /**
  * Non-generic graph node: dependency edges, marking state, and the type-erased
@@ -16,6 +19,7 @@ export class ReactiveNode {
         this["Queued@"] = false;
         this["Disposed@"] = false;
         this["Affected@"] = false;
+        this["Context@"] = Context_current();
         this["DeadObservers@"] = 0;
         this["FirstSource@"] = undefined;
         this["RestSources@"] = undefined;
@@ -106,6 +110,20 @@ export function ReactiveNode__get_Affected(__) {
  */
 export function ReactiveNode__set_Affected_Z1FBCCD16(__, v) {
     __["Affected@"] = v;
+}
+
+/**
+ * The `Context.current` this node was created under.
+ */
+export function ReactiveNode__get_Context(__) {
+    return __["Context@"];
+}
+
+/**
+ * The `Context.current` this node was created under.
+ */
+export function ReactiveNode__set_Context_4E60E31B(__, v) {
+    __["Context@"] = v;
 }
 
 /**

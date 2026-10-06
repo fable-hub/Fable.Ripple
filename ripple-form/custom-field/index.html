@@ -77,14 +77,15 @@ type AutoCompleteField =
                 Html.datalist
                     [
                         attr.id listId
-                        Html.each
+                        Html.each (
                             (fun () -&gt;
                                 config.Attributes.Suggestions()
                                 |&gt; List.filter (fun s -&gt; s.Contains config.Value.Value)
                                 |&gt; List.toArray
-                            )
-                            id
-                            (fun s -&gt; Html.option [ attr.value s ])
+                            ),
+                            id,
+                            fun s -&gt; Html.option [ attr.value s ]
+                        )
                     ]
             ]
         |&gt; PlainView.withLabelAndError config.Attributes.Label config'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Fields</span> <span class="tok-operator">=</span>
@@ -108,14 +109,15 @@ type AutoCompleteField =
 </span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">datalist</span>
 </span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
 </span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">id</span> listId
-</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">each</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">each</span> <span class="tok-punctuation">(</span>
 </span><span class="nacara-code__line">                            <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span>
 </span><span class="nacara-code__line">                                config<span class="tok-punctuation">.</span><span class="tok-property">Attributes</span><span class="tok-punctuation">.</span><span class="tok-property">Suggestions</span><span class="tok-constant">()</span>
 </span><span class="nacara-code__line">                                <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">filter</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">s</span> <span class="tok-keyword">-></span> s<span class="tok-punctuation">.</span><span class="tok-property">Contains</span> config<span class="tok-punctuation">.</span><span class="tok-property">Value</span><span class="tok-punctuation">.</span><span class="tok-property">Value</span><span class="tok-punctuation">)</span>
 </span><span class="nacara-code__line">                                <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">toArray</span>
-</span><span class="nacara-code__line">                            <span class="tok-punctuation">)</span>
-</span><span class="nacara-code__line">                            id
-</span><span class="nacara-code__line">                            <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">s</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">option</span> <span class="tok-punctuation">[</span> attr<span class="tok-punctuation">.</span><span class="tok-property">value</span> s <span class="tok-punctuation">])</span>
+</span><span class="nacara-code__line">                            <span class="tok-punctuation">),</span>
+</span><span class="nacara-code__line">                            id<span class="tok-punctuation">,</span>
+</span><span class="nacara-code__line">                            <span class="tok-keyword">fun</span> <span class="tok-parameter">s</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">option</span> <span class="tok-punctuation">[</span> attr<span class="tok-punctuation">.</span><span class="tok-property">value</span> s <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">)</span>
 </span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">            <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">PlainView</span><span class="tok-punctuation">.</span><span class="tok-property">withLabelAndError</span> config<span class="tok-punctuation">.</span><span class="tok-property">Attributes</span><span class="tok-punctuation">.</span><span class="tok-property">Label</span> config
@@ -190,14 +192,15 @@ module Fields =
                 Html.datalist
                     [
                         attr.id listId
-                        Html.each
+                        Html.each (
                             (fun () -&gt;
                                 config.Attributes.Suggestions()
                                 |&gt; List.filter (fun s -&gt; s.Contains config.Value.Value)
                                 |&gt; List.toArray
-                            )
-                            id
-                            (fun s -&gt; Html.option [ attr.value s ])
+                            ),
+                            id,
+                            fun s -&gt; Html.option [ attr.value s ]
+                        )
                     ]
             ]
         |&gt; PlainView.withLabelAndError config.Attributes.Label config
@@ -305,14 +308,15 @@ Html.mount "app" view |&gt; ignore'><div class="nacara-code__body"><pre><code><s
 </span><span class="nacara-code__line">                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">datalist</span>
 </span><span class="nacara-code__line">                    <span class="tok-punctuation">[</span>
 </span><span class="nacara-code__line">                        attr<span class="tok-punctuation">.</span><span class="tok-property">id</span> listId
-</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">each</span>
+</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">each</span> <span class="tok-punctuation">(</span>
 </span><span class="nacara-code__line">                            <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-punctuation">()</span> <span class="tok-keyword">-></span>
 </span><span class="nacara-code__line">                                config<span class="tok-punctuation">.</span><span class="tok-property">Attributes</span><span class="tok-punctuation">.</span><span class="tok-property">Suggestions</span><span class="tok-constant">()</span>
 </span><span class="nacara-code__line">                                <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">filter</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">s</span> <span class="tok-keyword">-></span> s<span class="tok-punctuation">.</span><span class="tok-property">Contains</span> config<span class="tok-punctuation">.</span><span class="tok-property">Value</span><span class="tok-punctuation">.</span><span class="tok-property">Value</span><span class="tok-punctuation">)</span>
 </span><span class="nacara-code__line">                                <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">toArray</span>
-</span><span class="nacara-code__line">                            <span class="tok-punctuation">)</span>
-</span><span class="nacara-code__line">                            id
-</span><span class="nacara-code__line">                            <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">s</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">option</span> <span class="tok-punctuation">[</span> attr<span class="tok-punctuation">.</span><span class="tok-property">value</span> s <span class="tok-punctuation">])</span>
+</span><span class="nacara-code__line">                            <span class="tok-punctuation">),</span>
+</span><span class="nacara-code__line">                            id<span class="tok-punctuation">,</span>
+</span><span class="nacara-code__line">                            <span class="tok-keyword">fun</span> <span class="tok-parameter">s</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">option</span> <span class="tok-punctuation">[</span> attr<span class="tok-punctuation">.</span><span class="tok-property">value</span> s <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">)</span>
 </span><span class="nacara-code__line">                    <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">            <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">PlainView</span><span class="tok-punctuation">.</span><span class="tok-property">withLabelAndError</span> config<span class="tok-punctuation">.</span><span class="tok-property">Attributes</span><span class="tok-punctuation">.</span><span class="tok-property">Label</span> config

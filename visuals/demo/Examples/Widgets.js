@@ -2,7 +2,7 @@
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 import { Signal_observerCount, Signal_effect, Var_create } from "../../src/Fable.Ripple/Api.js";
 import { Var$1__get_Value, Var$1__Peek, Var$1__set_Value_2B595 } from "../../src/Fable.Ripple/Types.js";
-import { Html_each, Html_fragment_Z714D7FBE, Html_text_5106B011, Html_text_Z721C83C5, Html_span_Z714D7FBE, Html_div_Z714D7FBE } from "../../src/Fable.Ripple.Dom/Html.js";
+import { Html_each_Z7426A257, Html_fragment_Z714D7FBE, Html_text_5106B011, Html_text_Z721C83C5, Html_span_Z714D7FBE, Html_div_Z714D7FBE } from "../../src/Fable.Ripple.Dom/Html.js";
 import { attr_ref_1F9A456B, attr_classList_ZA225E0A, attr_className_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Attributes.js";
 import { toArray, length, tryFindIndex, singleton, append, empty, map, ofArray } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
@@ -291,6 +291,6 @@ export function logPane(log) {
                 el.scrollTop = el.scrollHeight;
             }, 0);
         });
-    }), Html_each(() => mapIndexed((i, l) => [i, l], toArray(Var$1__get_Value(Log__get_Lines(log)))), (tuple) => (tuple[0] | 0), (tupledArg) => Html_div_Z714D7FBE(singleton(Html_text_Z721C83C5(tupledArg[1]))))]));
+    }), Html_each_Z7426A257(() => mapIndexed((i, l) => [i, l], toArray(Var$1__get_Value(Log__get_Lines(log)))), (tuple) => (tuple[0] | 0), (tupledArg) => Html_div_Z714D7FBE(singleton(Html_text_Z721C83C5(tupledArg[1]))))]));
 }
 

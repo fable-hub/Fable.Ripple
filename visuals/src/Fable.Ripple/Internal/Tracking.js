@@ -1,7 +1,7 @@
 
 import { item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceCount, sourceAt } from "./Graph.js";
-import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
+import { ReactiveNode_$ctor_73324B86, ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__get_Context, Context_current, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 
 let current = undefined;
 
@@ -82,6 +82,7 @@ function recompute(node) {
     current = node;
     currentGets = undefined;
     currentGetsIndex = 0;
+    Context_current(ReactiveNode__get_Context(node));
     let changed = false;
     try {
         changed = ((matchValue = ReactiveNode__get_EffectFn(node), (matchValue == null) ? ReactiveNode__get_Recompute(node)() : ((matchValue(), false))));
@@ -106,6 +107,7 @@ function recompute(node) {
         current = prevCurrent;
         currentGets = prevGets;
         currentGetsIndex = (prevIndex | 0);
+        Context_current(Context_current());
     }
     if (changed) {
         const n = node;
@@ -132,6 +134,31 @@ function recompute(node) {
                 }
             }
         }
+    }
+}
+
+const probeNode = ReactiveNode_$ctor_73324B86(0, true);
+
+/**
+ * Run `fn` once as if it were an effect, and return the sources it read
+ * (deduplicated, in read order) without linking them. `ValueNone` when it
+ * read nothing.
+ */
+export function probe(fn) {
+    const prevCurrent = current;
+    const prevGets = currentGets;
+    const prevIndex = currentGetsIndex | 0;
+    current = probeNode;
+    currentGets = undefined;
+    currentGetsIndex = 0;
+    try {
+        fn();
+        return currentGets;
+    }
+    finally {
+        current = prevCurrent;
+        currentGets = prevGets;
+        currentGetsIndex = (prevIndex | 0);
     }
 }
 

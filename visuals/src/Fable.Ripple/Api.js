@@ -1,10 +1,12 @@
 
 import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
-import { untracked, updateIfNecessary } from "./Internal/Tracking.js";
+import { untracked, updateIfNecessary, probe } from "./Internal/Tracking.js";
+import { Context_current, ReactiveNode__set_State_Z12CE0414 } from "./ReactiveNode.js";
+import { item } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { observerCount, addObserver, addSource } from "./Internal/Graph.js";
 import { batch } from "./Internal/Scheduler.js";
 import { ScopeModule_onCleanup, ScopeModule_root } from "./Internal/Scope.js";
-import { observerCount } from "./Internal/Graph.js";
 
 function Var_defaultEquals(a, b) {
     return equals_1(a, b);
@@ -102,9 +104,20 @@ export function Signal_bind(f, a) {
 /**
  * Run `fn` now and re-run it whenever a signal it reads changes. The effect
  * lives as long as the enclosing scope; there is no handle to dispose it earlier.
+ * A body that reads no signal on its first run is not kept.
  */
 export function Signal_autorun(fn) {
-    updateIfNecessary(Effect_$ctor_3A5B6456(fn));
+    const matchValue = probe(fn);
+    if (matchValue != null) {
+        const sources = matchValue;
+        const eff = Effect_$ctor_3A5B6456(fn);
+        ReactiveNode__set_State_Z12CE0414(eff, 0);
+        for (let i = 0; i <= (sources.length - 1); i++) {
+            const s = item(i, sources);
+            addSource(eff, s);
+            addObserver(s, eff);
+        }
+    }
 }
 
 /**
@@ -151,6 +164,35 @@ export function Signal_root(fn) {
  */
 export function Signal_onCleanup(fn) {
     ScopeModule_onCleanup(fn);
+}
+
+/**
+ * The ambient context, see `withContext`. `null` outside one.
+ */
+export function Signal_context() {
+    return Context_current();
+}
+
+/**
+ * Set the ambient context. Pair with a read of `context ()` to restore it;
+ * `withContext` does that for a function.
+ */
+export function Signal_setContext(value) {
+    Context_current(value);
+}
+
+/**
+ * Run `fn` with `value` as the ambient context. Every effect and computed
+ * created inside captures it and runs under it again when it re-evaluates.
+ */
+export function Signal_withContext(value, fn) {
+    Context_current(value);
+    try {
+        return fn();
+    }
+    finally {
+        Context_current(Context_current());
+    }
 }
 
 /**

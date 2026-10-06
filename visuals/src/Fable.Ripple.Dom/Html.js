@@ -1,10 +1,11 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { EmptyMarker, Base_toElement, Base_applyItems, Base_emptyMarker, Base_createElement } from "./Base.js";
+import { EmptyMarker, Base_Recording_splice, Base_toElement, Base_applyItems, Base_emptyMarker, Base_Recording_text, Base_Recording_active, Base_createElement } from "./Base.js";
 import { Exception, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { singleton } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { keyedEach } from "./Dom.js";
+import { Template_compile } from "./Template.js";
 
 /**
  * HTML elements, text, keyed lists, conditionals, fragments and mounting. Each
@@ -33,14 +34,19 @@ export function Html_text_Z721C83C5(s) {
 
 export function Html_text_5106B011(f) {
     const t = document.createTextNode("");
-    let prev = defaultOf();
-    Signal_autorun(() => {
-        const v = f();
-        if (!(v === prev)) {
-            prev = v;
-            t.nodeValue = v;
-        }
-    });
+    if (Base_Recording_active()) {
+        Base_Recording_text(t, f);
+    }
+    else {
+        let prev = defaultOf();
+        Signal_autorun(() => {
+            const v = f();
+            if (!(v === prev)) {
+                prev = v;
+                t.nodeValue = v;
+            }
+        });
+    }
     return t;
 }
 
@@ -619,12 +625,56 @@ export function Html_fragment_Z714D7FBE(items) {
 /**
  * Reactive keyed list: one element per item, reconciled by key.
  */
-export function Html_each(getItems, keyOf, render) {
+export function Html_each_Z7426A257(getItems, keyOf, render) {
     return (parent) => {
         const anchor = document.createComment("each");
         parent.appendChild(anchor);
-        keyedEach(parent, anchor, getItems, keyOf, (x) => Base_toElement(render(x)));
+        const build = (anchor_1) => {
+            keyedEach(anchor_1.parentNode, anchor_1, getItems, keyOf, (x) => Base_toElement(render(x)));
+        };
+        if (Base_Recording_active()) {
+            Base_Recording_splice(anchor, build);
+        }
+        else {
+            build(anchor);
+        }
     };
+}
+
+/**
+ * Reactive keyed list driven by a signal of items.
+ */
+export function Html_each_Z415C6E8C(items, keyOf, render) {
+    return Html_each_Z7426A257(() => items.Value, keyOf, render);
+}
+
+/**
+ * Reactive keyed list whose row is described once: `render` runs one time
+ * against a row signal, and every item gets a clone of the result with the
+ * row's bindings attached. Read the row inside a function only.
+ */
+export function Html_template_19CC1398(getItems, keyOf, render) {
+    return (parent) => {
+        const anchor = document.createComment("template");
+        parent.appendChild(anchor);
+        const build = (anchor_1) => {
+            const patternInput = Template_compile(render);
+            keyedEach(anchor_1.parentNode, anchor_1, getItems, keyOf, patternInput[0]);
+        };
+        if (Base_Recording_active()) {
+            Base_Recording_splice(anchor, build);
+        }
+        else {
+            build(anchor);
+        }
+    };
+}
+
+/**
+ * `template` driven by a signal of items.
+ */
+export function Html_template_2CB6DF45(items, keyOf, render) {
+    return Html_template_19CC1398(() => items.Value, keyOf, render);
 }
 
 /**
@@ -636,44 +686,55 @@ export function Html_dynamic_70E9CA6A(f) {
     return (parent) => {
         const anchor = document.createComment("dynamic");
         parent.appendChild(anchor);
-        let current = undefined;
-        const clear = () => {
-            const option_3 = current;
-            if (option_3 != null) {
-                const tupledArg = option_3;
-                disposeSafe(tupledArg[1]);
-                const option_1 = tupledArg[0];
-                if (option_1 != null) {
-                    const n = option_1;
-                    parent.removeChild(n);
-                }
-            }
-            current = undefined;
-        };
-        Signal_autorun(() => {
-            clear();
-            const patternInput = Signal_root(() => {
-                const matchValue = f();
-                if (matchValue instanceof Node) {
-                    return matchValue;
-                }
-                else if (matchValue instanceof EmptyMarker) {
-                    return undefined;
-                }
-                else {
-                    throw new Exception("Html.dynamic expects an element or Html.none");
-                }
+        if (Base_Recording_active()) {
+            Base_Recording_splice(anchor, (anchor_1) => {
+                Html_dynamicAt(anchor_1.parentNode, anchor_1, f);
             });
-            const node_2 = patternInput[0];
-            const option_5 = node_2;
-            if (option_5 != null) {
-                const n_1 = option_5;
-                parent.insertBefore(n_1, anchor);
-            }
-            current = [node_2, patternInput[1]];
-        });
-        Signal_onCleanup(clear);
+        }
+        else {
+            Html_dynamicAt(parent, anchor, f);
+        }
     };
+}
+
+function Html_dynamicAt(parent, anchor, f) {
+    let current = undefined;
+    const clear = () => {
+        const option_3 = current;
+        if (option_3 != null) {
+            const tupledArg = option_3;
+            disposeSafe(tupledArg[1]);
+            const option_1 = tupledArg[0];
+            if (option_1 != null) {
+                const n = option_1;
+                parent.removeChild(n);
+            }
+        }
+        current = undefined;
+    };
+    Signal_autorun(() => {
+        clear();
+        const patternInput = Signal_root(() => {
+            const matchValue = f();
+            if (matchValue instanceof Node) {
+                return matchValue;
+            }
+            else if (matchValue instanceof EmptyMarker) {
+                return undefined;
+            }
+            else {
+                throw new Exception("Html.dynamic expects an element or Html.none");
+            }
+        });
+        const node_2 = patternInput[0];
+        const option_5 = node_2;
+        if (option_5 != null) {
+            const n_1 = option_5;
+            parent.insertBefore(n_1, anchor);
+        }
+        current = [node_2, patternInput[1]];
+    });
+    Signal_onCleanup(clear);
 }
 
 /**

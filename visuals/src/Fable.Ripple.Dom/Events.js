@@ -1,7 +1,6 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
 import { Base_onEvent } from "./Base.js";
-import { Signal_batch } from "../Fable.Ripple/Api.js";
 
 /**
  * DOM events, read as `on.click`, `on.input`, `on.keyDown`, ... Every handler's
@@ -129,13 +128,9 @@ export function on_wheel_4B7763D7(h) {
  * Fires on each keystroke; hands the input's current text.
  */
 export function on_input_41EFD311(h) {
-    return (e) => {
-        e.addEventListener("input", (ev) => {
-            Signal_batch(() => {
-                h(ev.target.value);
-            });
-        });
-    };
+    return Base_onEvent("input", (ev) => {
+        h(ev.target.value);
+    });
 }
 
 /**
@@ -149,26 +144,18 @@ export function on_input_7DDE0344(h) {
  * Fires on commit (blur/enter); hands the input's current text.
  */
 export function on_change_41EFD311(h) {
-    return (e) => {
-        e.addEventListener("change", (ev) => {
-            Signal_batch(() => {
-                h(ev.target.value);
-            });
-        });
-    };
+    return Base_onEvent("change", (ev) => {
+        h(ev.target.value);
+    });
 }
 
 /**
  * Checkbox/radio commit; hands the `checked` state.
  */
 export function on_checkedChange_50F94480(h) {
-    return (e) => {
-        e.addEventListener("change", (ev) => {
-            Signal_batch(() => {
-                h(ev.target.checked);
-            });
-        });
-    };
+    return Base_onEvent("change", (ev) => {
+        h(ev.target.checked);
+    });
 }
 
 export function on_submit_7DDE0344(h) {

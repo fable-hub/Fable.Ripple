@@ -1,9 +1,9 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
+import { Base_Recording_dynamic, Base_Recording_active, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
 import { join } from "../../fable_modules/fable-library-js.5.18.0/String.js";
 import { map } from "../../fable_modules/fable-library-js.5.18.0/List.js";
-import { Signal_batch, Signal_autorun } from "../Fable.Ripple/Api.js";
+import { Signal_autorun } from "../Fable.Ripple/Api.js";
 import { Var$1__set_Value_2B595, Var$1__get_Value } from "../Fable.Ripple/Types.js";
 import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 
@@ -229,10 +229,8 @@ export function attr_bindValue_Z5BF31D29(c) {
         Signal_autorun(() => {
             inp.value = Var$1__get_Value(c);
         });
-        e.addEventListener("input", (_arg) => {
-            Signal_batch(() => {
-                Var$1__set_Value_2B595(c, inp.value);
-            });
+        Base_listen(e, "input", (_arg) => {
+            Var$1__set_Value_2B595(c, inp.value);
         });
     };
 }
@@ -246,10 +244,8 @@ export function attr_bindChecked_5AB39E06(c) {
         Signal_autorun(() => {
             inp.checked = Var$1__get_Value(c);
         });
-        e.addEventListener("change", (_arg) => {
-            Signal_batch(() => {
-                Var$1__set_Value_2B595(c, inp.checked);
-            });
+        Base_listen(e, "change", (_arg) => {
+            Var$1__set_Value_2B595(c, inp.checked);
         });
     };
 }
@@ -733,7 +729,12 @@ export function attr_prop_7CDAB96A(name, f) {
  */
 export function attr_ref_1F9A456B(f) {
     return (e) => {
-        f(e);
+        if (Base_Recording_active()) {
+            Base_Recording_dynamic(true);
+        }
+        else {
+            f(e);
+        }
     };
 }
 

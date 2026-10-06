@@ -46,6 +46,9 @@
     <loc>https://fable-hub.github.io/Fable.Ripple/reference/fable-ripple-dom/fable-ripple-dom/base/classlist/</loc>
   </url>
   <url>
+    <loc>https://fable-hub.github.io/Fable.Ripple/reference/fable-ripple-dom/fable-ripple-dom/base/recording/</loc>
+  </url>
+  <url>
     <loc>https://fable-hub.github.io/Fable.Ripple/reference/fable-ripple-dom/fable-ripple-dom/dom/</loc>
   </url>
   <url>
@@ -407,6 +410,9 @@
   </url>
   <url>
     <loc>https://fable-hub.github.io/Fable.Ripple/ripple-dom/svg/</loc>
+  </url>
+  <url>
+    <loc>https://fable-hub.github.io/Fable.Ripple/ripple-dom/templates/</loc>
   </url>
   <url>
     <loc>https://fable-hub.github.io/Fable.Ripple/ripple-dom/testing/</loc>

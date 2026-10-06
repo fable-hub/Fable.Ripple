@@ -5,10 +5,10 @@ import { record_type, class_type, int32_type, string_type } from "../../fable_mo
 import { addToSet, tryGetValue } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
 import { disposeSafe, getEnumerator, equals, defaultOf, int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { filter, toArray } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
-import { item as item_2 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
-import { Var$1__set_Value_2B595, Var$1__get_Value, Var$1 } from "../Fable.Ripple/Types.js";
+import { item as item_3 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { Var$1__set_Value_2B595, Var$1__get_Value, Var$1__Peek, Var$1 } from "../Fable.Ripple/Types.js";
 import { empty, cons, tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.18.0/List.js";
-import { Base_replaceTrackedNode, EmptyMarker } from "./Base.js";
+import { Base_replaceTrackedNode, Base_Recording_dependOn, EmptyMarker, Base_applyItemRecording, Base_Recording_active } from "./Base.js";
 import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Core.js";
 import { Var_create, Signal_onCleanup, Signal_autorun, Signal_untracked, Signal_root } from "../Fable.Ripple/Api.js";
 
@@ -67,7 +67,7 @@ function leave(saved) {
         const bag = matchValue[1];
         const stale = toArray((source = bag.keys(), filter((f1 = ((objectArg = frame.Seen, (item) => objectArg.has(item))), (arg) => !f1(arg)), source)));
         for (let idx = 0; idx <= (stale.length - 1); idx++) {
-            const name = item_2(idx, stale);
+            const name = item_3(idx, stale);
             bag.delete(name);
         }
     }
@@ -133,15 +133,21 @@ export function fragment(items) {
                 parent.insertBefore(matchValue, anchor);
             }
             else {
-                const element = parent;
-                const item_1 = matchValue;
-                if (item_1 instanceof Node) {
-                    element.appendChild(item_1);
-                }
-                else if (item_1 instanceof EmptyMarker) {
+                const item = matchValue;
+                if (Base_Recording_active()) {
+                    Base_applyItemRecording(parent, item);
                 }
                 else {
-                    item_1(element);
+                    const element = parent;
+                    const item_1 = item;
+                    if (item_1 instanceof Node) {
+                        element.appendChild(item_1);
+                    }
+                    else if (item_1 instanceof EmptyMarker) {
+                    }
+                    else {
+                        item_1(element);
+                    }
                 }
             }
             rest = tail(rest);
@@ -236,98 +242,107 @@ function restore(root, captured) {
 
 function boundaryOf(k, impl, args) {
     const path = place(k);
-    const build = (f) => Signal_root(() => {
+    if (Base_Recording_active()) {
+        Base_Recording_dependOn(impl);
         const saved = enter(path);
-        const item = Signal_untracked(() => (f.apply(null, args)));
+        const item = Var$1__Peek(impl).apply(null, args);
         leave(saved);
         return item;
-    });
-    const patternInput = build(Var$1__get_Value(impl));
-    const firstItem = patternInput[0];
-    const firstDispose = patternInput[1];
-    if (firstItem instanceof Node) {
-        let current = firstItem;
-        let dispose = firstDispose;
-        let built = true;
-        Signal_autorun(() => {
-            const f_1 = Var$1__get_Value(impl);
-            if (built) {
-                built = false;
-            }
-            else {
-                globalThis.__rebuilds = (globalThis.__rebuilds || 0) + 1;
-                const t0 = performance.now();
-                const parent = current.parentNode;
-                const captured = capture(current);
-                disposeSafe(dispose);
-                const patternInput_1 = build(f_1);
-                const next = patternInput_1[0];
-                dispose = patternInput_1[1];
-                if (next instanceof Node) {
-                    const fresh = next;
-                    if (!Operators_IsNull(parent)) {
-                        parent.replaceChild(fresh, current);
-                        Base_replaceTrackedNode(current, fresh);
-                    }
-                    current = fresh;
-                    restore(current, captured);
-                }
-                (globalThis.__rebuildMs = globalThis.__rebuildMs || []).push((performance.now()) - t0);
-            }
-        });
-        Signal_onCleanup(() => {
-            disposeSafe(dispose);
-        });
-        return current;
     }
     else {
-        disposeSafe(firstDispose);
-        return (parent_1) => {
-            const startA = document.createComment("b[");
-            const endA = document.createComment("]b");
-            parent_1.appendChild(startA);
-            parent_1.appendChild(endA);
-            let current_1 = undefined;
-            const clear = () => {
-                const option_1 = current_1;
-                if (option_1 != null) {
-                    disposeSafe(option_1);
-                }
-                current_1 = undefined;
-                let n = startA.nextSibling;
-                while (!Operators_IsNull(n) && !(n === endA)) {
-                    const next_1 = n.nextSibling;
-                    parent_1.removeChild(n);
-                    n = next_1;
-                }
-            };
+        const build = (f) => Signal_root(() => {
+            const saved_1 = enter(path);
+            const item_1 = Signal_untracked(() => (f.apply(null, args)));
+            leave(saved_1);
+            return item_1;
+        });
+        const patternInput = build(Var$1__get_Value(impl));
+        const firstItem = patternInput[0];
+        const firstDispose = patternInput[1];
+        if (firstItem instanceof Node) {
+            let current = firstItem;
+            let dispose = firstDispose;
+            let built = true;
             Signal_autorun(() => {
-                const f_2 = Var$1__get_Value(impl);
-                globalThis.__rebuilds = (globalThis.__rebuilds || 0) + 1;
-                const captured_1 = capture(parent_1);
-                const t0_1 = performance.now();
-                clear();
-                const patternInput_2 = build(f_2);
-                const item_1 = patternInput_2[0];
-                if (item_1 instanceof EmptyMarker) {
-                }
-                else if (typeof item_1 === "function") {
-                    if (item_1 != null && item_1.__splice === true) {
-                        item_1(parent_1, endA);
-                    }
-                    else {
-                        item_1(parent_1);
-                    }
+                const f_1 = Var$1__get_Value(impl);
+                if (built) {
+                    built = false;
                 }
                 else {
-                    parent_1.insertBefore(item_1, endA);
+                    globalThis.__rebuilds = (globalThis.__rebuilds || 0) + 1;
+                    const t0 = performance.now();
+                    const parent = current.parentNode;
+                    const captured = capture(current);
+                    disposeSafe(dispose);
+                    const patternInput_1 = build(f_1);
+                    const next = patternInput_1[0];
+                    dispose = patternInput_1[1];
+                    if (next instanceof Node) {
+                        const fresh = next;
+                        if (!Operators_IsNull(parent)) {
+                            parent.replaceChild(fresh, current);
+                            Base_replaceTrackedNode(current, fresh);
+                        }
+                        current = fresh;
+                        restore(current, captured);
+                    }
+                    (globalThis.__rebuildMs = globalThis.__rebuildMs || []).push((performance.now()) - t0);
                 }
-                current_1 = patternInput_2[1];
-                restore(parent_1, captured_1);
-                (globalThis.__rebuildMs = globalThis.__rebuildMs || []).push((performance.now()) - t0_1);
             });
-            Signal_onCleanup(clear);
-        };
+            Signal_onCleanup(() => {
+                disposeSafe(dispose);
+            });
+            return current;
+        }
+        else {
+            disposeSafe(firstDispose);
+            return (parent_1) => {
+                const startA = document.createComment("b[");
+                const endA = document.createComment("]b");
+                parent_1.appendChild(startA);
+                parent_1.appendChild(endA);
+                let current_1 = undefined;
+                const clear = () => {
+                    const option_1 = current_1;
+                    if (option_1 != null) {
+                        disposeSafe(option_1);
+                    }
+                    current_1 = undefined;
+                    let n = startA.nextSibling;
+                    while (!Operators_IsNull(n) && !(n === endA)) {
+                        const next_1 = n.nextSibling;
+                        parent_1.removeChild(n);
+                        n = next_1;
+                    }
+                };
+                Signal_autorun(() => {
+                    const f_2 = Var$1__get_Value(impl);
+                    globalThis.__rebuilds = (globalThis.__rebuilds || 0) + 1;
+                    const captured_1 = capture(parent_1);
+                    const t0_1 = performance.now();
+                    clear();
+                    const patternInput_2 = build(f_2);
+                    const item_2 = patternInput_2[0];
+                    if (item_2 instanceof EmptyMarker) {
+                    }
+                    else if (typeof item_2 === "function") {
+                        if (item_2 != null && item_2.__splice === true) {
+                            item_2(parent_1, endA);
+                        }
+                        else {
+                            item_2(parent_1);
+                        }
+                    }
+                    else {
+                        parent_1.insertBefore(item_2, endA);
+                    }
+                    current_1 = patternInput_2[1];
+                    restore(parent_1, captured_1);
+                    (globalThis.__rebuildMs = globalThis.__rebuildMs || []).push((performance.now()) - t0_1);
+                });
+                Signal_onCleanup(clear);
+            };
+        }
     }
 }
 

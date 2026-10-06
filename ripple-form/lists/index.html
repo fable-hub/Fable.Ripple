@@ -168,10 +168,10 @@ let asCards (context: RenderContext) (config: FormList.RenderConfig) : DomItem =
             Html.div
                 [
                     attr.className "rf-list__items"
-                    Html.each
-                        config.Elements
-                        (fun element -&gt; element.Key)
-                        (fun element -&gt;
+                    Html.each (
+                        config.Elements,
+                        (fun element -&gt; element.Key),
+                        fun element -&gt;
                             Html.div
                                 [
                                     attr.className "card"
@@ -185,7 +185,7 @@ let asCards (context: RenderContext) (config: FormList.RenderConfig) : DomItem =
                                             Html.text "Not coming"
                                         ]
                                 ]
-                        )
+                    )
                 ]
             Html.button
                 [
@@ -254,10 +254,10 @@ Html.mount "app" view |&gt; ignore'><div class="nacara-code__body"><pre><code><s
 </span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
 </span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
 </span><span class="nacara-code__line">                    attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"rf-list__items"</span>
-</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">each</span>
-</span><span class="nacara-code__line">                        config<span class="tok-punctuation">.</span><span class="tok-property">Elements</span>
-</span><span class="nacara-code__line">                        <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">element</span> <span class="tok-keyword">-></span> element<span class="tok-punctuation">.</span><span class="tok-property">Key</span><span class="tok-punctuation">)</span>
-</span><span class="nacara-code__line">                        <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">element</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">each</span> <span class="tok-punctuation">(</span>
+</span><span class="nacara-code__line">                        config<span class="tok-punctuation">.</span><span class="tok-property">Elements</span><span class="tok-punctuation">,</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">element</span> <span class="tok-keyword">-></span> element<span class="tok-punctuation">.</span><span class="tok-property">Key</span><span class="tok-punctuation">),</span>
+</span><span class="nacara-code__line">                        <span class="tok-keyword">fun</span> <span class="tok-parameter">element</span> <span class="tok-keyword">-></span>
 </span><span class="nacara-code__line">                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span>
 </span><span class="nacara-code__line">                                <span class="tok-punctuation">[</span>
 </span><span class="nacara-code__line">                                    attr<span class="tok-punctuation">.</span><span class="tok-property">className</span> <span class="tok-string">"card"</span>
@@ -271,7 +271,7 @@ Html.mount "app" view |&gt; ignore'><div class="nacara-code__body"><pre><code><s
 </span><span class="nacara-code__line">                                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-string">"Not coming"</span>
 </span><span class="nacara-code__line">                                        <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">                                <span class="tok-punctuation">]</span>
-</span><span class="nacara-code__line">                        <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                    <span class="tok-punctuation">)</span>
 </span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
 </span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">button</span>
 </span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
