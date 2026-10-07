@@ -1,5 +1,7 @@
 ---
 last_commit_released: a4a9d66ac6e2262f4729837b527dd4ff44026e9d
+depends_on:
+  - ../Fable.Ripple.Dom/
 ---
 
 # Changelog

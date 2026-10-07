@@ -1,5 +1,8 @@
 ---
 last_commit_released: d9e367255a9e3ba0a4ff4b29b0e15df69d7bcbac
+depends_on:
+  - ../Fable.Ripple.Form/
+  - ../Fable.Ripple.Dom/
 ---
 
 # Changelog
