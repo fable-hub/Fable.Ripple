@@ -28,7 +28,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Fable.Core" />
-    <PackageReference Include="Fable.Browser.Dom" />
     <PackageReference Include="Fable.Promise" />
     <PackageReference Include="Glutinum.Types" />
     <PackageReference Include="Scriptorium.Nib.Browser" />

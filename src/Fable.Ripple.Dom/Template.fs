@@ -1,7 +1,8 @@
 namespace Fable.Ripple.Dom
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Core
+open Fable.Core.JsInterop
 open Fable.Ripple
 open Base
 
@@ -40,12 +41,12 @@ module internal Template =
             let mutable index = 0
             let mutable s = n.previousSibling
 
-            while not (isNull s) do
+            while s.IsSome do
                 index <- index + 1
-                s <- s.previousSibling
+                s <- s.Value.previousSibling
 
             path.Add index
-            n <- n.parentNode
+            n <- n.parentNode.Value
 
         path.Reverse()
         path
@@ -140,7 +141,7 @@ module internal Template =
 
                 if not (obj.ReferenceEquals(v, prev)) then
                     prev <- v
-                    node.nodeValue <- v
+                    node.nodeValue <- Some v
             )
         | RecordedKind.On -> listen node binding.Name (unbox binding.Fn)
         | RecordedKind.Apply ->
@@ -167,15 +168,16 @@ module internal Template =
         Signal.setContext context
 
         try
+            // The plan only walks hops the skeleton has, so every one of these is Some.
             while i < plan.Count do
                 let op = opAt plan i
 
                 if op = opDown then
-                    node <- node.firstChild
+                    node <- !!node.firstChild
                 elif op = opNext then
-                    node <- node.nextSibling
+                    node <- !!node.nextSibling
                 elif op = opUp then
-                    node <- node.parentNode
+                    node <- !!node.parentNode
                 else
                     apply (bindingAt bindings (op - 3)) node context
 

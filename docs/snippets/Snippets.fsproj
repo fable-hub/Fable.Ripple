@@ -50,9 +50,7 @@
     <ItemGroup>
         <PackageReference Update="FSharp.Core" Version="10.1.301" />
         <PackageReference Include="Fable.Core" Version="5.2.0" />
-        <PackageReference Include="Fable.Browser.Dom" Version="2.20.0" />
+        <PackageReference Include="Glutinum.Web" Version="1.0.0-beta.6" />
         <PackageReference Include="Fable.Promise" Version="3.2.0" />
-        <PackageReference Include="Fable.Browser.Css" Version="2.5.0" />
-        <PackageReference Include="Fable.Browser.Event" Version="1.7.0" />
     </ItemGroup>
 </Project>

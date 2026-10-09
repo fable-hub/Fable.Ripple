@@ -2,8 +2,8 @@ namespace Fable.Ripple.Dom
 
 open System
 open System.Collections.Generic
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Ripple
@@ -130,7 +130,7 @@ module Hmr =
 
             while not (List.isEmpty rest) do
                 match List.head rest with
-                | Child node -> parent.insertBefore (node, anchor) |> ignore
+                | Child node -> parent.insertBefore (node, Option.ofObj anchor) |> ignore
                 | item ->
                     if Recording.active then
                         applyItemRecording (parent :?> Element) item
@@ -147,29 +147,27 @@ module Hmr =
     // changes the shape around it loses focus.
 
     let private capture (root: Node) =
-        let active = document.activeElement
+        let rec pathTo (n: Node) acc =
+            if obj.ReferenceEquals(n, root) then
+                Some acc
+            else
+                match n.parentNode with
+                | None -> None
+                | Some p ->
+                    let mutable i = 0
+                    let mutable c = p.firstChild
 
-        if isNull (box active) || isNull (box root) || not (root.contains active) then
-            None
-        else
-            let rec pathTo (n: Node) acc =
-                if obj.ReferenceEquals(n, root) then
-                    Some acc
-                else
-                    match n.parentNode with
-                    | null -> None
-                    | p ->
-                        let mutable i = 0
-                        let mutable c = p.firstChild
+                    while c.IsSome && not (obj.ReferenceEquals(c.Value, n)) do
+                        i <- i + 1
+                        c <- c.Value.nextSibling
 
-                        while not (isNull c) && not (obj.ReferenceEquals(c, n)) do
-                            i <- i + 1
-                            c <- c.nextSibling
+                    pathTo p (i :: acc)
 
-                        pathTo p (i :: acc)
-
+        match document.activeElement with
+        | Some active when not (isNull (box root)) && root.contains (Some(active :> Node)) ->
             pathTo (active :> Node) []
             |> Option.map (fun p -> p, active?selectionStart, active?selectionEnd)
+        | _ -> None
 
     let private restore (root: Node) (captured: (int list * obj * obj) option) =
         captured
@@ -181,8 +179,8 @@ module Hmr =
                 if ok then
                     let children = node.childNodes
 
-                    if i < children.length then
-                        node <- children.item i
+                    if float i < children.length then
+                        node <- children.item (float i)
                     else
                         ok <- false
 
@@ -245,9 +243,11 @@ module Hmr =
 
                         match next with
                         | Child fresh ->
-                            if not (isNull parent) then
+                            parent
+                            |> Option.iter (fun parent ->
                                 parent.replaceChild (fresh, current) |> ignore
                                 replaceTrackedNode current fresh
+                            )
 
                             current <- fresh
                             restore current captured
@@ -277,9 +277,9 @@ module Hmr =
                         current <- None
                         let mutable n = startA.nextSibling
 
-                        while not (isNull n) && not (obj.ReferenceEquals(n, endA)) do
-                            let next = n.nextSibling
-                            parent.removeChild n |> ignore
+                        while n.IsSome && not (obj.ReferenceEquals(n.Value, endA)) do
+                            let next = n.Value.nextSibling
+                            parent.removeChild n.Value |> ignore
                             n <- next
 
                     Signal.autorun (fun () ->
@@ -292,7 +292,7 @@ module Hmr =
                         let item, dispose = build f
 
                         match item with
-                        | Child node -> parent.insertBefore (node, endA) |> ignore
+                        | Child node -> parent.insertBefore (node, Some endA) |> ignore
                         | Empty _ -> ()
                         | Apply run ->
                             if isSplice item then

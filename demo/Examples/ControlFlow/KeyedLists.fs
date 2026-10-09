@@ -1,6 +1,6 @@
 module Demo.Examples.ControlFlow.KeyedLists
 
-open Browser.Types // demo-hide-line
+open Glutinum.Web // demo-hide-line
 open Fable.Core // demo-hide-line
 open Fable.Core.JsInterop // demo-hide-line
 open Fable.Ripple

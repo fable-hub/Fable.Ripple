@@ -1,7 +1,7 @@
 module Demo.SevenGUIs.Todos
 
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 
@@ -57,14 +57,14 @@ let private todoItem (todo: TodoEntry) (onRemove: unit -> unit) : DomItem =
                                 window.setTimeout ((fun () -> el.focus ()), 0) |> ignore
                             )
                             on.keyDown (fun e ->
-                                let input = e.target :?> HTMLInputElement
+                                let input = unbox<HTMLInputElement> e.target
 
                                 match e.key with
                                 | "Enter" -> commit input
                                 | "Escape" -> isEditing.Value <- false
                                 | _ -> ()
                             )
-                            on.blur (fun e -> commit (e.target :?> HTMLInputElement))
+                            on.blur (fun e -> commit (unbox<HTMLInputElement> e.target))
                         ]
                 ),
                 // Read mode: double-click to edit; strike through when done.

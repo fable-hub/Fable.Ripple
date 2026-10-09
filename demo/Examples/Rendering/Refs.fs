@@ -1,7 +1,7 @@
 module Demo.Examples.Rendering.Refs
 
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Ripple

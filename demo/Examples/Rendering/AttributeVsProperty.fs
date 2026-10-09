@@ -1,7 +1,7 @@
 module Demo.Examples.Rendering.AttributeVsProperty
 
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Demo.Examples.Components // demo-hide-line
@@ -26,7 +26,7 @@ let render () =
     let mutable propEl: HTMLInputElement option = None
 
     let describe (el: HTMLInputElement) =
-        sprintf "attribute=%s  property=%s" (el.getAttribute "value") el.value
+        sprintf "attribute=%s  property=%s" (defaultArg (el.getAttribute "value") "") el.value
 
     // Deferred by one macrotask on purpose. Handler bodies are batched, so
     // the attribute and property bindings have not run yet while the handler is

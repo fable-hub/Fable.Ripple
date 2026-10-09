@@ -1,6 +1,7 @@
 module Demo.Examples.Widgets
 
-open Browser
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 

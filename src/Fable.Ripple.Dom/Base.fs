@@ -1,8 +1,8 @@
 namespace Fable.Ripple.Dom
 
 open System.Collections.Generic
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Ripple
@@ -194,7 +194,7 @@ module Base =
 
     /// Create a namespaced element (SVG), apply every item, return it as a child.
     let createElementNS (ns: string) (tag: string) (items: DomItem list) : DomItem =
-        let element = document.createElementNS (ns, tag)
+        let element = document.createElementNS (Some ns, tag)
         applyItems element items
         Child(element :> Node)
 
@@ -339,11 +339,12 @@ module Base =
 
         element.addEventListener (
             name,
-            fun event ->
+            Some(fun event ->
                 if isNull context then
                     Signal.batch (fun () -> handler event)
                 else
                     Signal.withContext context (fun () -> Signal.batch (fun () -> handler event))
+            )
         )
 
     let onEvent (name: string) (handler: 'e -> unit) : DomItem =

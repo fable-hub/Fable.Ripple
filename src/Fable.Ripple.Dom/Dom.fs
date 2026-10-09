@@ -2,8 +2,8 @@ namespace Fable.Ripple.Dom
 
 open System
 open System.Collections.Generic
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Core
 open Fable.Ripple
 
@@ -22,7 +22,7 @@ module Dom =
     let bindText (parent: Node) (f: unit -> string) =
         let t = document.createTextNode ""
         parent.appendChild t |> ignore
-        Signal.autorun (fun () -> t.nodeValue <- f ())
+        Signal.autorun (fun () -> t.nodeValue <- Some(f ()))
 
     /// Reactive attribute.
     let bindAttr (e: HTMLElement) (name: string) (f: unit -> string) =
@@ -93,12 +93,12 @@ module Dom =
                 keep.[k] <- true
                 k <- prev.[k]
 
-    /// Render `items` into `parent` (rows placed before `anchor`, which may be
-    /// null to append). Each row's `render` runs in its own `Signal.root`, disposed
+    /// Render `items` into `parent` (rows placed before `anchor`, `None` to
+    /// append). Each row's `render` runs in its own `Signal.root`, disposed
     /// when the row leaves or the enclosing scope tears down.
     let keyedEach
         (parent: Node)
-        (anchor: Node)
+        (anchor: Node option)
         (getItems: unit -> 'a[])
         (keyOf: 'a -> 'k)
         (render: 'a -> HTMLElement)
@@ -178,19 +178,15 @@ module Dom =
         // A Range delete over the (always contiguous) row span was measured
         // slower than both branches.
         let removeAllRowNodes () =
-            let hasAnchor = not (obj.ReferenceEquals(anchor, null))
-
             let owned =
-                if hasAnchor then
+                if anchor.IsSome then
                     order.Length + 1
                 else
                     order.Length
 
             if int parent.childNodes.length = owned then
-                parent.textContent <- ""
-
-                if hasAnchor then
-                    parent.appendChild anchor |> ignore
+                parent.textContent <- Some ""
+                anchor |> Option.iter (fun anchor -> parent.appendChild anchor |> ignore)
             else
                 for i in 0 .. rows.Length - 1 do
                     parent.removeChild rows.[i].Node |> ignore
@@ -287,7 +283,7 @@ module Dom =
                 // `nextSibling`, since they are the reference for the row to their left.
                 let mutable nextSibling =
                     if endNew + 1 < n then
-                        newRows.[endNew + 1].Node :> Node
+                        Some(newRows.[endNew + 1].Node :> Node)
                     else
                         anchor
 
@@ -297,7 +293,7 @@ module Dom =
                     if not keep.[i - start] then
                         parent.insertBefore (node, nextSibling) |> ignore
 
-                    nextSibling <- node
+                    nextSibling <- Some node
 
                 order <- newKeys
                 rows <- newRows

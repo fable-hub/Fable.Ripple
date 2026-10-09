@@ -1,6 +1,6 @@
 module Demo.Examples.Schematic
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Ripple

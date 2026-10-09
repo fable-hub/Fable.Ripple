@@ -1,6 +1,6 @@
 namespace Fable.Ripple.Dom
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple
 open Base
 
@@ -61,18 +61,18 @@ type on =
     *)
     /// Fires on each keystroke; hands the input's current text.
     static member input(h: string -> unit) : DomItem =
-        onEvent "input" (fun (ev: Event) -> h ((ev.target :?> HTMLInputElement).value))
+        onEvent "input" (fun (ev: Event) -> h ((ev.target.Value :?> HTMLInputElement).value))
 
     /// Raw `input` event.
     static member input(h: Event -> unit) : DomItem = onEvent "input" h
 
     /// Fires on commit (blur/enter); hands the input's current text.
     static member change(h: string -> unit) : DomItem =
-        onEvent "change" (fun (ev: Event) -> h ((ev.target :?> HTMLInputElement).value))
+        onEvent "change" (fun (ev: Event) -> h ((ev.target.Value :?> HTMLInputElement).value))
 
     /// Checkbox/radio commit; hands the `checked` state.
     static member checkedChange(h: bool -> unit) : DomItem =
-        onEvent "change" (fun (ev: Event) -> h ((ev.target :?> HTMLInputElement).``checked``))
+        onEvent "change" (fun (ev: Event) -> h ((ev.target.Value :?> HTMLInputElement).``checked``))
 
     static member submit(h: Event -> unit) : DomItem = onEvent "submit" h
     static member reset(h: Event -> unit) : DomItem = onEvent "reset" h

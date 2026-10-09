@@ -1,6 +1,7 @@
 module Demo.Router
 
-open Browser
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple.Dom.Routing
 open Fable.UrlParser.UrlCodec
 open Demo.Catalogue

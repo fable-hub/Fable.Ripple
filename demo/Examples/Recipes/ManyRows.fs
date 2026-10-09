@@ -83,7 +83,7 @@ let render () =
     let timings = Log()
 
     let timed name f =
-        Browser.Dom.window.setTimeout (
+        Glutinum.Web.Exports.window.setTimeout (
             (fun () ->
                 let before = now ()
                 f ()

@@ -1,6 +1,6 @@
 namespace Fable.Ripple.Form.Plain
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Fable.Core.JsInterop

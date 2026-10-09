@@ -267,7 +267,7 @@ let validateAsync
 
     let cancel () =
         generation <- generation + 1
-        timer |> Option.iter Browser.Dom.window.clearTimeout
+        Glutinum.Web.Exports.clearTimeout timer
         timer <- None
 
     Signal.effect (fun () ->
@@ -287,7 +287,7 @@ let validateAsync
                 validating.Value <- true
 
                 timer <-
-                    Browser.Dom.window.setTimeout (
+                    Glutinum.Web.Exports.setTimeout (
                         (fun () ->
                             timer <- None
 

@@ -1,6 +1,6 @@
 module Demo.Examples.Components
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple.Dom
 
 // The demo's own styling, behind a typed API.

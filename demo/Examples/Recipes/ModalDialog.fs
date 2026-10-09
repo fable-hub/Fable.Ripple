@@ -1,7 +1,7 @@
 module Demo.Examples.Recipes.ModalDialog
 
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Core.JsInterop
 open Fable.Ripple
 open Fable.Ripple.Dom
@@ -37,8 +37,8 @@ let render () =
             (fun () ->
                 focusReturned.Value <-
                     match document.activeElement with
-                    | null -> "(none)"
-                    | el -> el.tagName.ToLower() + " \"" + el.textContent.Trim() + "\""
+                    | None -> "(none)"
+                    | Some el -> el.tagName.ToLower() + " \"" + el.textContent.Trim() + "\""
             ),
             0
         )

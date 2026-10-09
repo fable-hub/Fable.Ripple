@@ -73,7 +73,7 @@ let private copyState = Var.create Ready
 
 /// Return to `copy` shortly, whichever way it went.
 let private settle () =
-    Browser.Dom.window.setTimeout ((fun () -> copyState.Value <- Ready), 1500)
+    Glutinum.Web.Exports.window.setTimeout ((fun () -> copyState.Value <- Ready), 1500)
     |> ignore
 
 /// The code panel's right-hand control: copy the listing, for pasting into a
@@ -115,13 +115,13 @@ let private codeAction () =
 /// page, so nothing else marks which of its links is "now".
 let private syncActiveNavLink () =
     let hash = router.Href(currentRoute ())
-    let links = Browser.Dom.document.querySelectorAll ".nacara-sidebar__link"
+    let links = Glutinum.Web.Exports.document.querySelectorAll ".nacara-sidebar__link"
 
-    for i in 0 .. links.length - 1 do
-        let el = links.item i :?> Browser.Types.HTMLElement
-        let href = el.getAttribute "href"
+    for i in 0 .. int links.length - 1 do
+        let el = unbox<Glutinum.Web.HTMLElement> (links.item (float i))
 
-        if not (isNull href) && href.EndsWith hash then
+        match el.getAttribute "href" with
+        | Some href when href.EndsWith hash ->
             el.setAttribute ("aria-current", "page")
 
             // The theme collapses a menu section into `<details>`, and it only
@@ -130,8 +130,7 @@ let private syncActiveNavLink () =
             match el.closest "details.nacara-sidebar__group" with
             | Some group -> group.setAttribute ("open", "")
             | None -> ()
-        else
-            el.removeAttribute "aria-current"
+        | _ -> el.removeAttribute "aria-current"
 
 let render () =
     // `#/` is not a page. Readers arrive from the docs with their bearings

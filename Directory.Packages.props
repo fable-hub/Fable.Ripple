@@ -20,7 +20,8 @@
     <PackageVersion Include="Fable.Promise" Version="3.2.0" />
     <PackageVersion Include="FSharp.Core" Version="10.1.301" />
     <PackageVersion Include="FSharp.Data.Adaptive" Version="1.2.26" />
-    <PackageVersion Include="Glutinum.Types" Version="0.1.0" />
+    <PackageVersion Include="Glutinum.Types" Version="1.0.0-beta.4" />
+    <PackageVersion Include="Glutinum.Web" Version="1.0.0-beta.6" />
     <PackageVersion Include="Nacara.Core" Version="2.0.0-beta.6" />
     <PackageVersion Include="Nacara.Plugin.Markdown" Version="1.0.0-beta.2" />
     <PackageVersion Include="Nacara.Plugin.Highlight.TreeSitter" Version="1.0.0-beta.2" />

@@ -1,7 +1,7 @@
 module Demo.SevenGUIs.CircleDrawer
 
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 
@@ -69,7 +69,7 @@ let render () =
         |> Array.tryHead
 
     let localXY (e: MouseEvent) =
-        let rect = (e.currentTarget :?> HTMLElement).getBoundingClientRect ()
+        let rect = (unbox<HTMLElement> e.currentTarget).getBoundingClientRect ()
         e.clientX - rect.left, e.clientY - rect.top
 
     let onMove (e: MouseEvent) =
@@ -323,8 +323,8 @@ let render () =
                                                 // back inside the canvas - near an
                                                 // edge it would otherwise be clipped.
                                                 match d.parentElement with
-                                                | null -> ()
-                                                | parent ->
+                                                | None -> ()
+                                                | Some parent ->
                                                     let pr = parent.getBoundingClientRect ()
                                                     let dr = d.getBoundingClientRect ()
                                                     let x, y = adjustAt.Value

@@ -1,6 +1,6 @@
 namespace Fable.Ripple.Form.Plain
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Fable.Ripple.Form
@@ -28,8 +28,9 @@ module Sortable =
             [
                 attr.draggable true
                 on.dragStart (fun ev ->
-                    ev.dataTransfer.setData ("text/plain", "new:" + payload) |> ignore
-                    ev.dataTransfer.effectAllowed <- "copy"
+                    let transfer = ev.dataTransfer.Value
+                    transfer.setData ("text/plain", "new:" + payload) |> ignore
+                    transfer.effectAllowed <- DataTransfer.effectAllowed.copy
                 )
             ]
 
@@ -77,9 +78,9 @@ module Sortable =
 
                     let rects =
                         [
-                            for i in 0 .. rows.length - 1 do
+                            for i in 0 .. int rows.length - 1 do
                                 let row = rows.[i] :?> HTMLElement
-                                int (row.dataset.["key"]), row.getBoundingClientRect ()
+                                int row.dataset.["key"].Value, row.getBoundingClientRect ()
                         ]
 
                     match rects with
@@ -103,7 +104,7 @@ module Sortable =
             let handleDrop (ev: DragEvent) =
                 ev.preventDefault ()
                 ev.stopPropagation ()
-                let data = ev.dataTransfer.getData "text/plain"
+                let data = ev.dataTransfer.Value.getData "text/plain"
                 let index = dropIndex ()
                 dropAt.Value <- None
 
@@ -138,13 +139,16 @@ module Sortable =
                                         attr.title "Drag to reorder"
                                         attr.draggable true
                                         on.dragStart (fun ev ->
-                                            ev.dataTransfer.setData (
+                                            let transfer = ev.dataTransfer.Value
+
+                                            transfer.setData (
                                                 "text/plain",
                                                 $"row:{listId}:{index ()}"
                                             )
                                             |> ignore
 
-                                            ev.dataTransfer.effectAllowed <- "move"
+                                            transfer.effectAllowed <-
+                                                DataTransfer.effectAllowed.move
                                         )
                                         on.dragEnd (fun _ -> dropAt.Value <- None)
                                         Html.text "⠿"
@@ -205,8 +209,8 @@ module Sortable =
                     on.dragLeave (fun ev ->
                         // Leaving for a descendant still counts as inside.
                         match canvas, ev.relatedTarget with
-                        | Some canvas, related when
-                            not (isNull related) && canvas.contains (related :?> Node)
+                        | Some canvas, Some related when
+                            canvas.contains (Some(unbox<Node> related))
                             ->
                             ()
                         | _ -> dropAt.Value <- None

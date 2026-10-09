@@ -1,7 +1,10 @@
 module Fable.Ripple.Dom.Test.Components.Rendering
 
 open System
-open Browser
+open Glutinum.Web
+open type Glutinum.Web.Exports
+open Fable.Core
+open Fable.Core.JsInterop
 open Fable.Ripple
 open Fable.Ripple.Dom
 
@@ -180,7 +183,7 @@ let private fragment () : DomItem =
         ]
 
 let private foreignNode () : DomItem =
-    let em = document.createElement "em"
+    let em: Glutinum.Web.HTMLElement = document.createElement "em"
     em.textContent <- "adopted"
 
     Html.div
@@ -201,7 +204,7 @@ let private svg () : DomItem =
 
     Html.div
         [
-            Svg.svg [ Svg.rect [ attr.ref (fun el -> ns.Value <- el.namespaceURI) ] ]
+            Svg.svg [ Svg.rect [ attr.ref (fun el -> ns.Value <- defaultArg el.namespaceURI "") ] ]
             Html.output
                 [
                     attr.id "ns"

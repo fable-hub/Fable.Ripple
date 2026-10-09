@@ -1,6 +1,6 @@
 module Demo.Examples.Recipes.DragToReorder
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Demo.Examples.Components // demo-hide-line

@@ -30,9 +30,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Fable.Core" />
-    <PackageReference Include="Fable.Browser.Dom" />
-    <PackageReference Include="Fable.Browser.Css" />
-    <PackageReference Include="Fable.Browser.Event" />
+    <PackageReference Include="Glutinum.Web" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 namespace Fable.Ripple.Dom.Test
 
 open Fable.Ripple.Dom
-open Browser
+open type Glutinum.Web.Exports
 
 (*
     RippleRegistry - browser-side component registration.

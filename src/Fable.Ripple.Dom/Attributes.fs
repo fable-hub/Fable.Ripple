@@ -1,6 +1,6 @@
 namespace Fable.Ripple.Dom
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple
 open Base
 

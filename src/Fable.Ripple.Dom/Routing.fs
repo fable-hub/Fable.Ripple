@@ -1,8 +1,8 @@
 module Fable.Ripple.Dom.Routing
 
 open System
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 
 (*

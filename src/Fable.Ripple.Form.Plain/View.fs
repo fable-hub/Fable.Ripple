@@ -1,6 +1,6 @@
 namespace Fable.Ripple.Form.Plain
 
-open Browser.Types
+open Glutinum.Web
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Fable.Ripple.Form
@@ -86,13 +86,11 @@ module View =
 
     // Event handlers run inside a batch: `aria-invalid` is only written once they return.
     let focusFirstInvalid (formElement: HTMLElement option) : unit =
-        Browser.Dom.window.setTimeout (
+        Glutinum.Web.Exports.setTimeout (
             (fun () ->
                 formElement
-                |> Option.bind (fun element ->
-                    element.querySelector "[aria-invalid=true]" |> Option.ofObj
-                )
-                |> Option.iter (fun element -> (element :?> HTMLElement).focus ())
+                |> Option.bind (fun element -> element.querySelector "[aria-invalid=true]")
+                |> Option.iter (fun element -> (unbox<HTMLElement> element).focus ())
             ),
             0
         )

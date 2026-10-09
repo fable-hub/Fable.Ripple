@@ -1,8 +1,8 @@
 namespace Fable.Ripple.Dom
 
 open System
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Base
 
@@ -35,7 +35,7 @@ type Html =
 
                 if not (obj.ReferenceEquals(v, prev)) then
                     prev <- v
-                    t.nodeValue <- v
+                    t.nodeValue <- Some v
             )
 
         Child(t :> Node)
@@ -327,7 +327,7 @@ type Html =
     /// Reactive keyed list: one element per item, reconciled by key.
     static member each(getItems: unit -> 'a[], keyOf: 'a -> 'k, render: 'a -> DomItem) : DomItem =
         Apply(fun parent ->
-            // An anchor, not `null`: rows are inserted before it rather than
+            // An anchor, not `None`: rows are inserted before it rather than
             // appended, so a list that is empty when it is built still puts its
             // rows where it was declared instead of after its later siblings.
             let anchor = document.createComment "each" :> Node
@@ -335,8 +335,8 @@ type Html =
 
             let build (anchor: Node) =
                 Dom.keyedEach
-                    anchor.parentNode
-                    anchor
+                    anchor.parentNode.Value
+                    (Some anchor)
                     getItems
                     keyOf
                     (fun x -> toElement (render x))
@@ -376,7 +376,14 @@ type Html =
                     Signal.untracked (fun () ->
                         let realise, deps = Template.compile render
                         dependencies <- deps
-                        list <- Dom.keyedEach anchor.parentNode anchor getItems keyOf realise
+
+                        list <-
+                            Dom.keyedEach
+                                anchor.parentNode.Value
+                                (Some anchor)
+                                getItems
+                                keyOf
+                                realise
                     )
 
                     for i in 0 .. dependencies.Count - 1 do
@@ -385,7 +392,8 @@ type Html =
 #else
                 let realise, _ = Template.compile render
 
-                Dom.keyedEach anchor.parentNode anchor getItems keyOf realise |> ignore
+                Dom.keyedEach anchor.parentNode.Value (Some anchor) getItems keyOf realise
+                |> ignore
 #endif
 
             if Recording.active then
@@ -410,7 +418,9 @@ type Html =
             parent.appendChild anchor |> ignore
 
             if Recording.active then
-                Recording.splice anchor (fun anchor -> Html.dynamicAt anchor.parentNode anchor f)
+                Recording.splice
+                    anchor
+                    (fun anchor -> Html.dynamicAt anchor.parentNode.Value anchor f)
             else
                 Html.dynamicAt parent anchor f
         )
@@ -441,7 +451,9 @@ type Html =
                      | Empty _ -> None
                  )
 
-             node |> Option.iter (fun n -> parent.insertBefore (n, anchor) |> ignore)
+             node
+             |> Option.iter (fun n -> parent.insertBefore (n, Option.ofObj anchor) |> ignore)
+
              current <- Some(node, dispose)
 
 #if DEBUG
@@ -523,7 +535,11 @@ type Html =
     /// `view` is a function, not a `DomItem`: a `DomItem` argument would be built -
     /// effects and all - before `mount` opened the scope that is meant to own it.
     static member mount (id: string) (view: unit -> DomItem) : IDisposable =
-        let container = document.getElementById id
+        let container =
+            match document.getElementById id with
+            | Some container -> container
+            | None -> failwith $"Html.mount: no element with id '%s{id}'"
+
         let built, scope = Signal.root (fun () -> toElement (view ()))
         let mutable node = built :> Node
 

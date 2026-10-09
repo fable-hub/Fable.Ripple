@@ -239,7 +239,7 @@ let private beginLoad (path: string) (name: string) =
         let loader: obj = sources?(path)
 
         if isNullOrUndefined loader then
-            Browser.Dom.console.warn (
+            Glutinum.Web.Exports.console.warn (
                 "No source for "
                 + path
                 + " - restart the dev server if that file was added after it started."
@@ -259,7 +259,7 @@ let private beginLoad (path: string) (name: string) =
                 // at startup because listings load lazily, so this fires the
                 // moment the broken page is opened.
                 for problem in parts.Problems do
-                    Browser.Dom.console.error ($"{path} - {problem}")
+                    Glutinum.Web.Exports.console.error ($"{path} - {problem}")
 
                 let listing =
                     {
@@ -270,7 +270,7 @@ let private beginLoad (path: string) (name: string) =
                 ready.Value <- Map.add path listing (ready.Peek())
             )
             |> Promise.catch (fun error ->
-                Browser.Dom.console.warn ("Could not load " + path + ": " + error.Message)
+                Glutinum.Web.Exports.console.warn ("Could not load " + path + ": " + error.Message)
             )
             |> ignore
 

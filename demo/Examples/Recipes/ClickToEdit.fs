@@ -1,7 +1,7 @@
 module Demo.Examples.Recipes.ClickToEdit
 
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Demo.Examples.Components // demo-hide-line

@@ -343,7 +343,7 @@ let private batching () =
 
     // on.* handlers batch their writes; the unbatched case must escape to a timeout.
     let writeAll (batchIt: bool) =
-        Browser.Dom.window.setTimeout (
+        Glutinum.Web.Exports.window.setTimeout (
             (fun () ->
                 let writes () =
                     a.Value <- a.Value + 1
@@ -412,14 +412,14 @@ let private visuals =
         ]
 
 let private mountAll () =
-    let hosts = Browser.Dom.document.querySelectorAll "[data-visual]"
+    let hosts = Glutinum.Web.Exports.document.querySelectorAll "[data-visual]"
 
-    for i in 0 .. hosts.length - 1 do
-        let host = hosts.item i :?> Browser.Types.HTMLElement
-        let name = host.getAttribute "data-visual"
+    for i in 0 .. int hosts.length - 1 do
+        let host = unbox<Glutinum.Web.HTMLElement> (hosts.item (float i))
+        let name = defaultArg (host.getAttribute "data-visual") ""
 
         match Map.tryFind name visuals with
         | Some make -> host.appendChild (Html.render (make ())) |> ignore
-        | None -> Browser.Dom.console.warn $"No visual named '{name}'"
+        | None -> Glutinum.Web.Exports.console.warn $"No visual named '{name}'"
 
 mountAll ()

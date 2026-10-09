@@ -2,8 +2,8 @@ module Demo.SevenGUIs.Cells
 
 open System
 open System.Collections.Generic
-open Browser
-open Browser.Types
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 

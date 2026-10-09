@@ -1,6 +1,7 @@
 module Demo.Examples.ControlFlow.Fragments
 
-open Browser
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Demo.Examples.Components // demo-hide-line
@@ -23,8 +24,9 @@ let private cells () =
 
 /// Counting has to wait a macrotask: `attr.ref` fires while the element is
 /// being built, and its children have not been appended yet.
-let private count (into: Var<int>) (el: Browser.Types.HTMLElement) =
-    window.setTimeout ((fun () -> into.Value <- el.children.length), 0) |> ignore
+let private count (into: Var<int>) (el: Glutinum.Web.HTMLElement) =
+    window.setTimeout ((fun () -> into.Value <- int el.children.length), 0)
+    |> ignore
 
 let render () =
     let wrappedCount = Var.create 0
@@ -32,9 +34,9 @@ let render () =
 
     // A node built with the raw DOM API, spliced in with Html.node.
     let handMade =
-        let el = document.createElement "code"
+        let el: HTMLElement = document.createElement "code"
         el.textContent <- "built with document.createElement"
-        el :> Types.Node
+        el :> Node
 
     Html.fragment
         [
