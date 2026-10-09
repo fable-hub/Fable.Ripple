@@ -8,6 +8,10 @@ export function Defaults_noRecompute() {
 
 export let Context_current = createAtom(defaultOf());
 
+export function Context_get() {
+    return Context_current();
+}
+
 /**
  * Non-generic graph node: dependency edges, marking state, and the type-erased
  * re-evaluation hook.

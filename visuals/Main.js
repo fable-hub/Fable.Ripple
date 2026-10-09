@@ -8,9 +8,10 @@ import { Var$1__Peek, Var$1__get_Signal, Var$1__set_Value_2B595, Var$1__get_Valu
 import { NodeModule_bindingWith, NodeModule_derivedWith, NodeModule_sourceWith } from "./demo/Examples/Schematic.js";
 import { comparePrimitives, int32ToString } from "./fable_modules/fable-library-js.5.18.0/Util.js";
 import { NodeModule_beating, NodeModule_bindingWith as NodeModule_bindingWith_1, schematic, NodeModule_flag, legend, op_EqualsEqualsGreater, graph, NodeModule_counting } from "./demo/Examples/Schematic.js";
-import { on_click_58BC8925 } from "./src/Fable.Ripple.Dom/Events.js";
+import { on_click_2527B487 } from "./src/Fable.Ripple.Dom/Events.js";
 import { singleton as singleton_1, ofArray } from "./fable_modules/fable-library-js.5.18.0/List.js";
 import { tryFind, ofList } from "./fable_modules/fable-library-js.5.18.0/Map.js";
+import { defaultArg } from "./fable_modules/fable-library-js.5.18.0/Option.js";
 import { concat } from "./fable_modules/fable-library-js.5.18.0/String.js";
 
 function controls(buttons) {
@@ -34,9 +35,9 @@ function introGraph() {
     const bNode = NodeModule_sourceWith("Var b", () => int32ToString(b.Peek()));
     const totalNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.computed", () => int32ToString(total.Peek())));
     const readNode = NodeModule_bindingWith("binding", () => int32ToString(total.Peek()));
-    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
+    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         bump(a);
-    }), Html_text_Z721C83C5("Bump a")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
+    }), Html_text_Z721C83C5("Bump a")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
         bump(b);
     }), Html_text_Z721C83C5("Bump b")]))])), graph(repaint, ofArray([op_EqualsEqualsGreater(aNode, totalNode), op_EqualsEqualsGreater(bNode, totalNode), op_EqualsEqualsGreater(totalNode, readNode)])), legend]));
 }
@@ -65,12 +66,12 @@ function bindRewiring() {
     const fahrenheitNode = NodeModule_sourceWith("Var fahrenheit", () => int32ToString(fahrenheit.Peek()));
     const bindNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.bind", () => int32ToString(shown.Peek())));
     const readNode = NodeModule_bindingWith("binding", () => int32ToString(shown.Peek()));
-    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
+    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         Var$1__set_Value_2B595(useCelsius, !Var$1__get_Value(useCelsius));
         Repaint__Now(repaint);
-    }), Html_text_Z721C83C5("Flip the selector")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
+    }), Html_text_Z721C83C5("Flip the selector")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
         bump(celsius);
-    }), Html_text_Z721C83C5("Bump celsius")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_2) => {
+    }), Html_text_Z721C83C5("Bump celsius")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_2) => {
         bump(fahrenheit);
     }), Html_text_Z721C83C5("Bump fahrenheit")]))])), schematic(repaint, ofArray([selectorNode, celsiusNode, fahrenheitNode, bindNode, readNode]), () => toList(delay(() => append(singleton(op_EqualsEqualsGreater(selectorNode, bindNode)), delay(() => append(Var$1__get_Value(useCelsius) ? singleton(op_EqualsEqualsGreater(celsiusNode, bindNode)) : singleton(op_EqualsEqualsGreater(fahrenheitNode, bindNode)), delay(() => singleton(op_EqualsEqualsGreater(bindNode, readNode))))))))), legend]));
 }
@@ -101,9 +102,9 @@ function cutoffChain() {
     const parityNode = NodeModule_counting(parityRuns, NodeModule_derivedWith("parity", () => parity.Peek()));
     const upperNode = NodeModule_counting(upperRuns, NodeModule_derivedWith("upper", () => upper.Peek()));
     const readNode = NodeModule_bindingWith("binding", () => upper.Peek());
-    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
+    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         step(2);
-    }), Html_text_Z721C83C5("+2 (parity kept)")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
+    }), Html_text_Z721C83C5("+2 (parity kept)")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
         step(1);
     }), Html_text_Z721C83C5("+1 (parity flips)")]))])), graph(repaint, ofArray([op_EqualsEqualsGreater(nNode, parityNode), op_EqualsEqualsGreater(parityNode, upperNode), op_EqualsEqualsGreater(upperNode, readNode)])), legend]));
 }
@@ -122,9 +123,9 @@ function equalWrite() {
     };
     const nameNode = NodeModule_sourceWith("Var name", () => name.Peek());
     const effectNode = NodeModule_counting(runs, NodeModule_bindingWith_1("effect", () => Var$1__Peek(name)));
-    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
+    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         write(Var$1__Peek(name));
-    }), Html_text_Z721C83C5("Write the same value again")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
+    }), Html_text_Z721C83C5("Write the same value again")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
         write(Var$1__Peek(name) + "!");
     }), Html_text_Z721C83C5("Write a new value")]))])), graph(repaint, singleton_1(op_EqualsEqualsGreater(nameNode, effectNode))), legend]));
 }
@@ -148,12 +149,12 @@ function autoTracking() {
     const bNode = NodeModule_sourceWith("Var b", () => int32ToString(b.Peek()));
     const totalNode = NodeModule_counting(runs, NodeModule_derivedWith("Signal.computed", () => int32ToString(total.Peek())));
     const readNode = NodeModule_bindingWith("binding", () => int32ToString(total.Peek()));
-    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg) => {
+    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         Var$1__set_Value_2B595(includeB, !Var$1__get_Value(includeB));
         Repaint__Now(repaint);
-    }), Html_text_Z721C83C5("Toggle read b")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
+    }), Html_text_Z721C83C5("Toggle read b")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
         bump(a);
-    }), Html_text_Z721C83C5("Bump a")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_2) => {
+    }), Html_text_Z721C83C5("Bump a")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_2) => {
         bump(b);
     }), Html_text_Z721C83C5("Bump b")]))])), schematic(repaint, ofArray([switchNode, aNode, bNode, totalNode, readNode]), () => toList(delay(() => append(singleton(op_EqualsEqualsGreater(switchNode, totalNode)), delay(() => append(singleton(op_EqualsEqualsGreater(aNode, totalNode)), delay(() => append(Var$1__get_Value(includeB) ? singleton(op_EqualsEqualsGreater(bNode, totalNode)) : empty(), delay(() => singleton(op_EqualsEqualsGreater(totalNode, readNode))))))))))), legend]));
 }
@@ -193,9 +194,9 @@ function batching() {
     const cNode = NodeModule_sourceWith("Var c", () => int32ToString(c.Peek()));
     const totalNode = NodeModule_beating(() => (Probe__get_Hits(recomputed) | 0), NodeModule_derivedWith("Signal.map3", () => int32ToString(total.Peek())));
     const subNode = NodeModule_counting(fired, NodeModule_bindingWith_1("subscriber", () => int32ToString(total.Peek())));
-    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_1) => {
+    return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
         writeAll(false);
-    }), Html_text_Z721C83C5("Three writes, no batch")])), Html_button_Z714D7FBE(ofArray([on_click_58BC8925((_arg_2) => {
+    }), Html_text_Z721C83C5("Three writes, no batch")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_2) => {
         writeAll(true);
     }), Html_text_Z721C83C5("Three writes, batched")]))])), graph(repaint, ofArray([op_EqualsEqualsGreater(aNode, totalNode), op_EqualsEqualsGreater(bNode, totalNode), op_EqualsEqualsGreater(cNode, totalNode), op_EqualsEqualsGreater(totalNode, subNode)])), legend]));
 }
@@ -206,9 +207,9 @@ const visuals = ofList(ofArray([["signals-intro", introGraph], ["signals-bind", 
 
 function mountAll() {
     const hosts = document.querySelectorAll("[data-visual]");
-    for (let i = 0; i <= (hosts.length - 1); i++) {
+    for (let i = 0; i <= (~~hosts.length - 1); i++) {
         const host = hosts.item(i);
-        const name = host.getAttribute("data-visual");
+        const name = defaultArg(host.getAttribute("data-visual"), "");
         const matchValue = tryFind(name, visuals);
         if (matchValue == null) {
             console.warn(concat("No visual named \'", name, "\'"));

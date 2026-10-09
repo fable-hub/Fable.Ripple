@@ -3,6 +3,7 @@ import { Signal_setContext, Signal_autorun, Signal_context } from "../Fable.Ripp
 import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Core.js";
 import { defaultOf, comparePrimitives, Exception } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { value } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
 import { min } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
 import { initialize, item } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { Base_toElement, Base_Recording_stop, Base_Recording_start, Base_listen } from "./Base.js";
@@ -48,12 +49,12 @@ function Template_pathOf(root, node) {
     while (!(n === root)) {
         let index = 0;
         let s = n.previousSibling;
-        while (!Operators_IsNull(s)) {
+        while (s != null) {
             index = ((index + 1) | 0);
-            s = s.previousSibling;
+            s = value(s).previousSibling;
         }
         void (path.push(index));
-        n = n.parentNode;
+        n = value(n.parentNode);
     }
     path.reverse();
     return path;

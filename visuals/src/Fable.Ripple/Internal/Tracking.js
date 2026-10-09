@@ -1,7 +1,7 @@
 
 import { item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceCount, sourceAt } from "./Graph.js";
-import { ReactiveNode_$ctor_73324B86, ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__get_Context, Context_current, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
+import { ReactiveNode_$ctor_73324B86, ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 
 let current = undefined;
 
@@ -79,6 +79,7 @@ function recompute(node) {
     const prevCurrent = current;
     const prevGets = currentGets;
     const prevIndex = currentGetsIndex | 0;
+    const prevContext = Context_get();
     current = node;
     currentGets = undefined;
     currentGetsIndex = 0;
@@ -107,7 +108,7 @@ function recompute(node) {
         current = prevCurrent;
         currentGets = prevGets;
         currentGetsIndex = (prevIndex | 0);
-        Context_current(Context_current());
+        Context_current(prevContext);
     }
     if (changed) {
         const n = node;

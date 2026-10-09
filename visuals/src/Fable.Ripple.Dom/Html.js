@@ -5,7 +5,9 @@ import { Exception, disposeSafe, defaultOf } from "../../fable_modules/fable-lib
 import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { singleton } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { keyedEach } from "./Dom.js";
+import { ofNullable, value as value_2 } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
 import { Template_compile } from "./Template.js";
+import { concat } from "../../fable_modules/fable-library-js.5.18.0/String.js";
 
 /**
  * HTML elements, text, keyed lists, conditionals, fragments and mounting. Each
@@ -609,7 +611,7 @@ export function Html_get_none() {
  * output of a non-Fable library - as a child. Standard DOM rules apply: a node
  * already mounted is *moved*, not copied.
  */
-export function Html_node_171AE942(n) {
+export function Html_node_Z784CC560(n) {
     return n;
 }
 
@@ -630,7 +632,7 @@ export function Html_each_Z7426A257(getItems, keyOf, render) {
         const anchor = document.createComment("each");
         parent.appendChild(anchor);
         const build = (anchor_1) => {
-            keyedEach(anchor_1.parentNode, anchor_1, getItems, keyOf, (x) => Base_toElement(render(x)));
+            keyedEach(value_2(anchor_1.parentNode), anchor_1, getItems, keyOf, (x) => Base_toElement(render(x)));
         };
         if (Base_Recording_active()) {
             Base_Recording_splice(anchor, build);
@@ -659,7 +661,7 @@ export function Html_template_19CC1398(getItems, keyOf, render) {
         parent.appendChild(anchor);
         const build = (anchor_1) => {
             const patternInput = Template_compile(render);
-            keyedEach(anchor_1.parentNode, anchor_1, getItems, keyOf, patternInput[0]);
+            keyedEach(value_2(anchor_1.parentNode), anchor_1, getItems, keyOf, patternInput[0]);
         };
         if (Base_Recording_active()) {
             Base_Recording_splice(anchor, build);
@@ -688,7 +690,7 @@ export function Html_dynamic_70E9CA6A(f) {
         parent.appendChild(anchor);
         if (Base_Recording_active()) {
             Base_Recording_splice(anchor, (anchor_1) => {
-                Html_dynamicAt(anchor_1.parentNode, anchor_1, f);
+                Html_dynamicAt(value_2(anchor_1.parentNode), anchor_1, f);
             });
         }
         else {
@@ -730,7 +732,7 @@ function Html_dynamicAt(parent, anchor, f) {
         const option_5 = node_2;
         if (option_5 != null) {
             const n_1 = option_5;
-            parent.insertBefore(n_1, anchor);
+            parent.insertBefore(n_1, ofNullable(anchor));
         }
         current = [node_2, patternInput[1]];
     });
@@ -793,17 +795,24 @@ export function Html_render_62D6BEC0(item) {
  * effects and all - before `mount` opened the scope that is meant to own it.
  */
 export function Html_mount(id, view) {
-    const container = document.getElementById(id);
+    let container_1;
+    const matchValue = document.getElementById(id);
+    if (matchValue == null) {
+        throw new Exception(concat("Html.mount: no element with id \'", id, "\'"));
+    }
+    else {
+        container_1 = matchValue;
+    }
     const patternInput = Signal_root(() => Base_toElement(view()));
     let node = patternInput[0];
-    container.appendChild(node);
+    container_1.appendChild(node);
     let live = true;
     return {
         Dispose() {
             if (live) {
                 live = false;
                 disposeSafe(patternInput[1]);
-                container.removeChild(node);
+                container_1.removeChild(node);
             }
         },
     };

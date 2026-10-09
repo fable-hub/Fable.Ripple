@@ -727,7 +727,7 @@ export function attr_prop_7CDAB96A(name, f) {
  * element is being built, inside the enclosing `Signal.root`, so any effect or
  * `Signal.onCleanup` registered here tears down with the element.
  */
-export function attr_ref_1F9A456B(f) {
+export function attr_ref_7CBEC989(f) {
     return (e) => {
         if (Base_Recording_active()) {
             Base_Recording_dynamic(true);

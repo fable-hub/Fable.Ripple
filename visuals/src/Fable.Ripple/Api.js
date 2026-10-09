@@ -2,7 +2,7 @@
 import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
 import { untracked, updateIfNecessary, probe } from "./Internal/Tracking.js";
-import { Context_current, ReactiveNode__set_State_Z12CE0414 } from "./ReactiveNode.js";
+import { Context_get, Context_current, ReactiveNode__set_State_Z12CE0414 } from "./ReactiveNode.js";
 import { item } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { observerCount, addObserver, addSource } from "./Internal/Graph.js";
 import { batch } from "./Internal/Scheduler.js";
@@ -186,12 +186,13 @@ export function Signal_setContext(value) {
  * created inside captures it and runs under it again when it re-evaluates.
  */
 export function Signal_withContext(value, fn) {
+    const prev = Context_get();
     Context_current(value);
     try {
         return fn();
     }
     finally {
-        Context_current(Context_current());
+        Context_current(prev);
     }
 }
 

@@ -10,7 +10,7 @@ import { List_distinct, List_countBy, List_groupBy } from "../../fable_modules/f
 import { empty as empty_1, exists, append, singleton, collect, delay as delay_1, toList } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
 import { Signal_effect, Signal_untracked } from "../../src/Fable.Ripple/Api.js";
 import { Svg_defs_Z714D7FBE, svgAttr_viewBox_Z721C83C5, Svg_svg_Z714D7FBE, Svg_circle_Z714D7FBE, Svg_path_Z714D7FBE, Svg_elem, Svg_text_Z714D7FBE, svgAttr_custom_Z384F8060, Svg_rect_Z714D7FBE, Svg_g_Z714D7FBE } from "../../src/Fable.Ripple.Dom/Svg.js";
-import { attr_style_Z721C83C5, attr_ref_1F9A456B, attr_className_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Attributes.js";
+import { attr_style_Z721C83C5, attr_ref_7CBEC989, attr_className_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Attributes.js";
 import { Html_span_Z714D7FBE, Html_each_Z7426A257, Html_div_Z714D7FBE, Html_figure_Z714D7FBE, Html_get_none, Html_text_5106B011, Html_fragment_Z714D7FBE, Html_text_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Html.js";
 import { ofList, tryFind } from "../../fable_modules/fable-library-js.5.18.0/Map.js";
 import { min as min_1, max as max_1 } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
@@ -355,7 +355,7 @@ function nodeClass(_arg) {
 
 function drawNode(repaint, flashOn, p) {
     const n = p.Node;
-    return Svg_g_Z714D7FBE(toList(delay_1(() => append(singleton(attr_className_Z721C83C5(nodeClass(n.Kind))), delay_1(() => append(singleton(attr_ref_1F9A456B((el) => {
+    return Svg_g_Z714D7FBE(toList(delay_1(() => append(singleton(attr_className_Z721C83C5(nodeClass(n.Kind))), delay_1(() => append(singleton(attr_ref_7CBEC989((el) => {
         if (flashOn == null) {
         }
         else {
@@ -428,7 +428,7 @@ function drawEdge(repaint, placed, laneOf, fromKey, toKey) {
                 const arg_13 = elbow + radius;
                 path = toText(printf("M %f %f H %f Q %f %f %f %f V %f Q %f %f %f %f H %f"))(x1)(y1)(arg_5)(elbow)(y1)(elbow)(arg_9)(arg_10)(elbow)(y2)(arg_13)(y2)(x2);
             }
-            return Svg_g_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-edge"), Svg_path_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("d", path), svgAttr_custom_Z384F8060("marker-end", "url(#sch-arrow)")])), Svg_circle_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-pulse"), svgAttr_custom_Z384F8060("r", "4"), attr_style_Z721C83C5(toText(printf("offset-path: path(\'%s\')"))(path)), attr_ref_1F9A456B((el) => {
+            return Svg_g_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-edge"), Svg_path_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("d", path), svgAttr_custom_Z384F8060("marker-end", "url(#sch-arrow)")])), Svg_circle_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-pulse"), svgAttr_custom_Z384F8060("r", "4"), attr_style_Z721C83C5(toText(printf("offset-path: path(\'%s\')"))(path)), attr_ref_7CBEC989((el) => {
                 const matchValue_3 = b.Node.Runs;
                 const matchValue_4 = a.Node.Runs;
                 let matchResult_1, runs;

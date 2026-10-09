@@ -5,7 +5,7 @@ import { record_type, int32_type, class_type } from "../../fable_modules/fable-l
 import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
 import { Dictionary } from "../../fable_modules/fable-library-js.5.18.0/MutableMap.js";
 import { HashIdentity_Structural } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Collections.js";
-import { equals, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { defaultOf, equals, disposeSafe } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 import { min } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
 import { tryGetValue } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
 
@@ -51,7 +51,7 @@ class Row extends Record {
 }
 
 function Row_$reflection() {
-    return record_type("Fable.Ripple.Dom.Dom.Row", [], Row, () => [["Node", class_type("Browser.Types.HTMLElement", undefined)], ["Dispose", class_type("System.IDisposable")], ["Seen", int32_type], ["Index", int32_type]]);
+    return record_type("Fable.Ripple.Dom.Dom.Row", [], Row, () => [["Node", class_type("Glutinum.Web.HTMLElement", undefined)], ["Dispose", class_type("System.IDisposable")], ["Seen", int32_type], ["Index", int32_type]]);
 }
 
 function markLis(src, keep) {
@@ -90,8 +90,8 @@ function markLis(src, keep) {
 }
 
 /**
- * Render `items` into `parent` (rows placed before `anchor`, which may be
- * null to append). Each row's `render` runs in its own `Signal.root`, disposed
+ * Render `items` into `parent` (rows placed before `anchor`, `None` to
+ * append). Each row's `render` runs in its own `Signal.root`, disposed
  * when the row leaves or the enclosing scope tears down.
  */
 export function keyedEach(parent, anchor, getItems, keyOf, render) {
@@ -113,12 +113,13 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
         }
     };
     const removeAllRowNodes = () => {
-        const hasAnchor = !(anchor === defaultOf());
-        const owned = (hasAnchor ? (order.length + 1) : order.length) | 0;
-        if (parent.childNodes.length === owned) {
+        const owned = ((anchor != null) ? (order.length + 1) : order.length) | 0;
+        if (~~parent.childNodes.length === owned) {
             parent.textContent = "";
-            if (hasAnchor) {
-                parent.appendChild(anchor);
+            const option_1 = anchor;
+            if (option_1 != null) {
+                const anchor_1 = option_1;
+                parent.appendChild(anchor_1);
             }
         }
         else {

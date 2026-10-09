@@ -46,7 +46,7 @@ export class Base_Recorded extends Record {
 }
 
 export function Base_Recorded_$reflection() {
-    return record_type("Fable.Ripple.Dom.Base.Recorded", [], Base_Recorded, () => [["Node", class_type("Browser.Types.Node", undefined)], ["Kind", enum_type("Fable.Ripple.Dom.Base.RecordedKind", int32_type, [["Text", 0], ["On", 1], ["Apply", 2], ["Splice", 3]])], ["Name", string_type], ["Fn", obj_type]]);
+    return record_type("Fable.Ripple.Dom.Base.Recorded", [], Base_Recorded, () => [["Node", class_type("Glutinum.Web.Node", undefined)], ["Kind", enum_type("Fable.Ripple.Dom.Base.RecordedKind", int32_type, [["Text", 0], ["On", 1], ["Apply", 2], ["Splice", 3]])], ["Name", string_type], ["Fn", obj_type]]);
 }
 
 export let Base_Recording_active = createAtom(false);
