@@ -135,7 +135,7 @@ module Signal =
     /// Run `fn` with `value` as the ambient context. Every effect and computed
     /// created inside captures it and runs under it again when it re-evaluates.
     let internal withContext (value: obj) (fn: unit -> 'a) : 'a =
-        let prev = Context.current
+        let prev = Context.get ()
         Context.current <- value
 
         try

@@ -24,6 +24,10 @@ module internal Context =
 
     let mutable current: obj = null
 
+    // Fable inlines `let prev = current` into its use site, which in a `try/finally`
+    // is after the mutation; going through a function pins the read.
+    let get () : obj = current
+
 /// Non-generic graph node: dependency edges, marking state, and the type-erased
 /// re-evaluation hook.
 type ReactiveNode internal (initialState: NodeState, isEffect: bool) =

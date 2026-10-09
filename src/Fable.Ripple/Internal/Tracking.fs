@@ -78,7 +78,7 @@ module internal Tracking =
         let prevCurrent = current
         let prevGets = currentGets
         let prevIndex = currentGetsIndex
-        let prevContext = Context.current
+        let prevContext = Context.get ()
         current <- ValueSome node
         currentGets <- ValueNone
         currentGetsIndex <- 0
