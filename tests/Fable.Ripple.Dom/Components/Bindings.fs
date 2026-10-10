@@ -1,5 +1,6 @@
 module Fable.Ripple.Dom.Test.Components.Bindings
 
+open Glutinum.Web
 open Fable.Ripple
 open Fable.Ripple.Dom
 open Fable.Ripple.Dom.Routing
@@ -91,9 +92,32 @@ let private hashRouter () : DomItem =
                 ]
         ]
 
+/// `on.change` handed the raw event, which is how a checkbox reads `checked`.
+let private rawChange () : DomItem =
+    let state = Var.create "unset"
+
+    Html.div
+        [
+            Html.input
+                [
+                    attr.id "box"
+                    attr.type' "checkbox"
+
+                    on.change (fun (ev: Event) ->
+                        state.Value <- string (unbox<HTMLInputElement> ev.target).``checked``
+                    )
+                ]
+            Html.output
+                [
+                    attr.id "state"
+                    Html.text state
+                ]
+        ]
+
 let all: (string * (unit -> DomItem)) list =
     [
         "BindValue", bindValue
         "BindCheckedFromCode", bindCheckedFromCode
+        "RawChange", rawChange
         "HashRouter", hashRouter
     ]

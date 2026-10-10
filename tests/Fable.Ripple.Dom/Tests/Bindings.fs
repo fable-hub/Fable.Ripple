@@ -43,6 +43,19 @@ let tests =
             )
 
             testComponent (
+                "on.change hands the raw event, so a checkbox can read `checked`",
+                "RawChange",
+                fun root ->
+                    promise {
+                        do! assertLocator (root.locator "#state") (haveText "unset")
+                        do! click (root.locator "#box")
+                        do! assertLocator (root.locator "#state") (haveText "true")
+                        do! click (root.locator "#box")
+                        do! assertLocator (root.locator "#state") (haveText "false")
+                    }
+            )
+
+            testComponent (
                 "HashRouter follows a link to a hash",
                 "HashRouter",
                 fun root ->

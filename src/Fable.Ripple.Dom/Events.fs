@@ -70,6 +70,9 @@ type on =
     static member change(h: string -> unit) : DomItem =
         onEvent "change" (fun (ev: Event) -> h ((ev.target.Value :?> HTMLInputElement).value))
 
+    /// Raw `change` event.
+    static member change(h: Event -> unit) : DomItem = onEvent "change" h
+
     /// Checkbox/radio commit; hands the `checked` state.
     static member checkedChange(h: bool -> unit) : DomItem =
         onEvent "change" (fun (ev: Event) -> h ((ev.target.Value :?> HTMLInputElement).``checked``))
