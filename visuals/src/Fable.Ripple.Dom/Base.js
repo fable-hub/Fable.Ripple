@@ -268,6 +268,35 @@ export function Base_bindAttributeSignal(name, signal) {
 }
 
 /**
+ * Reactive number-valued attribute. The DOM is written only when the number
+ * differs from the last one written.
+ */
+export function Base_bindNumberAttribute(name, callback) {
+    return (element) => {
+        if (Base_Recording_active()) {
+            Base_Recording_dynamic(true);
+        }
+        else {
+            let prev = Number.NaN;
+            Signal_autorun(() => {
+                const v = callback();
+                if (v !== prev) {
+                    prev = v;
+                    element.setAttribute(name, v.toString());
+                }
+            });
+        }
+    };
+}
+
+/**
+ * Reactive number-valued attribute driven by a signal.
+ */
+export function Base_bindNumberAttributeSignal(name, signal) {
+    return Base_bindNumberAttribute(name, () => signal.Value);
+}
+
+/**
  * Static present/absent boolean attribute (e.g. `required`, `hidden`).
  */
 export function Base_booleanAttribute(name, value) {

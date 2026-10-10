@@ -1,6 +1,6 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { Base_bindAttribute, Base_bindAttributeSignal, Base_attribute, Base_svgNamespace, Base_createElementNS } from "./Base.js";
+import { Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttribute, Base_bindAttributeSignal, Base_attribute, Base_svgNamespace, Base_createElementNS } from "./Base.js";
 import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
 
 /**
@@ -791,5 +791,16 @@ export function svgAttr_custom_Z5AD79149(name, c) {
 
 export function svgAttr_custom_1B55B38A(name, f) {
     return Base_bindAttribute(name, f);
+}
+
+/**
+ * Number-valued attribute, formatted only when the number changes.
+ */
+export function svgAttr_custom_61D8030A(name, f) {
+    return Base_bindNumberAttribute(name, f);
+}
+
+export function svgAttr_custom_Z7045B0C9(name, c) {
+    return Base_bindNumberAttributeSignal(name, c);
 }
 

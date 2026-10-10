@@ -1,6 +1,6 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { Base_Recording_dynamic, Base_Recording_active, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
+import { Base_Recording_dynamic, Base_Recording_active, Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
 import { join } from "../../fable_modules/fable-library-js.5.18.0/String.js";
 import { map } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { Signal_autorun } from "../Fable.Ripple/Api.js";
@@ -708,6 +708,17 @@ export function attr_custom_Z5AD79149(name, c) {
 
 export function attr_custom_1B55B38A(name, f) {
     return Base_bindAttribute(name, f);
+}
+
+/**
+ * Number-valued attribute, formatted only when the number changes.
+ */
+export function attr_custom_61D8030A(name, f) {
+    return Base_bindNumberAttribute(name, f);
+}
+
+export function attr_custom_Z7045B0C9(name, c) {
+    return Base_bindNumberAttributeSignal(name, c);
 }
 
 /**
