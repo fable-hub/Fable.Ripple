@@ -151,6 +151,13 @@ export function on_change_41EFD311(h) {
 }
 
 /**
+ * Raw `change` event.
+ */
+export function on_change_6763566(h) {
+    return Base_onEvent("change", h);
+}
+
+/**
  * Checkbox/radio commit; hands the `checked` state.
  */
 export function on_checkedChange_50F94480(h) {
