@@ -1,7 +1,8 @@
 module Main
 
 open Fable.Core.JsInterop
-open Browser
+open Glutinum.Web
+open type Glutinum.Web.Exports
 open Fable.Ripple.Dom
 
 window?__loadId <- string (System.Random().Next(100000, 999999))

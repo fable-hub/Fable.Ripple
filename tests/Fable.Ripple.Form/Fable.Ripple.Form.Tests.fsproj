@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <PackageReference Include="Fable.Core" />
-    <PackageReference Include="Fable.Browser.Dom" />
     <PackageReference Include="Fable.Promise" />
     <PackageReference Include="Scriptorium.Nib.Browser" />
   </ItemGroup>
