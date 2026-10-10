@@ -154,6 +154,16 @@ attr.custom ("aria-current", fun () -> if active.Value then "true" else "false")
 
 It calls `setAttribute`{js}, so it writes the markup rather than the live property. For a name that is a form property, use the named member above.
 
+Give it a number rather than a string when the value is numeric:
+
+```fsharp
+attr.custom ("data-count", fun () -> total.Value)
+```
+
+The binding compares the number and formats it only when it changed, so a re-run that produces
+the same value costs a comparison rather than a string. `svgAttr.custom`{fsharp} takes the same
+shapes.
+
 ## Refs
 
 `attr.ref`{fsharp} hands you the raw `HTMLElement`{fsharp} - to attach an observer, mount a third-party widget, or read a measurement:

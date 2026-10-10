@@ -333,6 +333,12 @@ type attr =
     static member custom(name: string, c: Signal<string>) : DomItem = bindAttributeSignal name c
     static member custom(name: string, f: unit -> string) : DomItem = bindAttribute name f
 
+    /// Number-valued attribute, formatted only when the number changes.
+    static member custom(name: string, f: unit -> float) : DomItem = bindNumberAttribute name f
+
+    static member custom(name: string, c: Signal<float>) : DomItem =
+        bindNumberAttributeSignal name c
+
     /// Arbitrary live DOM property - sets `element[name]`, not an attribute.
     static member prop(name: string, v: obj) : DomItem = property name v
     static member prop(name: string, f: unit -> obj) : DomItem = bindProperty name f

@@ -386,3 +386,9 @@ type svgAttr =
     static member custom(name: string, v: string) : DomItem = attribute name v
     static member custom(name: string, c: Signal<string>) : DomItem = bindAttributeSignal name c
     static member custom(name: string, f: unit -> string) : DomItem = bindAttribute name f
+
+    /// Number-valued attribute, formatted only when the number changes.
+    static member custom(name: string, f: unit -> float) : DomItem = bindNumberAttribute name f
+
+    static member custom(name: string, c: Signal<float>) : DomItem =
+        bindNumberAttributeSignal name c

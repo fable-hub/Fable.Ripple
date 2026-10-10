@@ -277,6 +277,102 @@ let private mountDisposal () : DomItem =
                 ]
         ]
 
+[<Emit("""(function (el, name, sink) {
+    new MutationObserver(function (records) { sink(records.length); })
+        .observe(el, { attributes: true, attributeFilter: [name] });
+})($0, $1, $2)""")>]
+let private countAttributeWrites (element: Element) (name: string) (sink: int -> unit) : unit =
+    jsNative
+
+let private numericAttributes () : DomItem =
+    let x = Var.create 10.0
+    let other = Var.create 0
+    let writes = Var.create 0
+
+    Html.div
+        [
+            Svg.svg
+                [
+                    attr.id "canvas"
+                    svgAttr.custom ("width", fun () -> 120.0)
+
+                    Svg.line
+                        [
+                            attr.id "seg"
+                            svgAttr.custom ("x1", fun () -> x.Value)
+                            svgAttr.custom ("stroke-width", fun () -> x.Value / 5.0)
+                        ]
+                ]
+
+            Html.div
+                [
+                    attr.id "box"
+
+                    attr.custom (
+                        "data-n",
+                        fun () ->
+                            // re-runs when `other` changes, but the number is the same
+                            other.Value |> ignore
+                            x.Value
+                    )
+
+                    // after the binding, so the first write is not counted
+                    attr.ref (fun element ->
+                        countAttributeWrites
+                            element
+                            "data-n"
+                            (fun n -> writes.Value <- writes.Value + n)
+                    )
+                ]
+
+            Html.button
+                [
+                    attr.id "bump-x"
+                    on.click (fun _ -> x.Value <- x.Value + 1.0)
+                    Html.text "x"
+                ]
+
+            Html.button
+                [
+                    attr.id "bump-other"
+                    on.click (fun _ -> other.Value <- other.Value + 1)
+                    Html.text "other"
+                ]
+
+            Html.output
+                [
+                    attr.id "writes"
+                    Html.text (fun () -> string writes.Value)
+                ]
+        ]
+
+let private numericTemplate () : DomItem =
+    let offset = Var.create 0.0
+    let rows = Signal.map (fun (o: float) -> Array.init 3 id) offset
+
+    Html.div
+        [
+            Svg.svg
+                [
+                    attr.id "rows"
+
+                    Html.template (
+                        rows,
+                        id,
+                        fun (row: Signal<int>) ->
+                            Svg.line
+                                [ svgAttr.custom ("x1", fun () -> offset.Value + float row.Value) ]
+                    )
+                ]
+
+            Html.button
+                [
+                    attr.id "shift"
+                    on.click (fun _ -> offset.Value <- offset.Value + 10.0)
+                    Html.text "shift"
+                ]
+        ]
+
 let all: (string * (unit -> DomItem)) list =
     [
         "ReactiveText", reactiveText
@@ -288,5 +384,7 @@ let all: (string * (unit -> DomItem)) list =
         "ForeignNode", foreignNode
         "Ref", reference
         "Svg", svg
+        "NumericAttributes", numericAttributes
+        "NumericTemplate", numericTemplate
         "MountDisposal", mountDisposal
     ]

@@ -142,6 +142,63 @@ let tests =
                     }
             )
 
+            testComponent (
+                "a number-valued attribute renders and follows its signal",
+                "NumericAttributes",
+                fun root ->
+                    promise {
+                        do! assertLocator (root.locator "#seg") (haveAttribute "x1" "10")
+                        do! assertLocator (root.locator "#seg") (haveAttribute "stroke-width" "2")
+                        do! assertLocator (root.locator "#canvas") (haveAttribute "width" "120")
+                        do! click (root.locator "#bump-x")
+                        do! assertLocator (root.locator "#seg") (haveAttribute "x1" "11")
+                        do! assertLocator (root.locator "#seg") (haveAttribute "stroke-width" "2.2")
+                    }
+            )
+
+            testComponent (
+                "a number-valued attribute does not write when the number is unchanged",
+                "NumericAttributes",
+                fun root ->
+                    promise {
+                        do! assertLocator (root.locator "#box") (haveAttribute "data-n" "10")
+                        do! click (root.locator "#bump-other")
+                        do! assertLocator (root.locator "#writes") (haveText "0")
+                        do! click (root.locator "#bump-x")
+                        do! assertLocator (root.locator "#box") (haveAttribute "data-n" "11")
+                        do! assertLocator (root.locator "#writes") (haveText "1")
+                    }
+            )
+
+            testComponent (
+                "a number-valued binding works inside Html.template",
+                "NumericTemplate",
+                fun root ->
+                    promise {
+                        do!
+                            assertLocator
+                                (root.locator "#rows line:nth-child(1)")
+                                (haveAttribute "x1" "0")
+
+                        do!
+                            assertLocator
+                                (root.locator "#rows line:nth-child(3)")
+                                (haveAttribute "x1" "2")
+
+                        do! click (root.locator "#shift")
+
+                        do!
+                            assertLocator
+                                (root.locator "#rows line:nth-child(1)")
+                                (haveAttribute "x1" "10")
+
+                        do!
+                            assertLocator
+                                (root.locator "#rows line:nth-child(3)")
+                                (haveAttribute "x1" "12")
+                    }
+            )
+
             testList (
                 "Html.mount",
                 [

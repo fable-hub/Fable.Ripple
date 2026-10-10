@@ -260,6 +260,34 @@ module Base =
         bindAttribute name (fun () -> signal.Value)
 
     (*
+        Numeric attributes
+    *)
+
+    /// Reactive number-valued attribute. The DOM is written only when the number
+    /// differs from the last one written.
+    let bindNumberAttribute (name: string) (callback: unit -> float) : DomItem =
+        Apply(fun element ->
+            if Recording.active then
+                Recording.dynamic <- true
+            else
+                // `nan <> nan`, so the first run always writes.
+                let mutable prev = nan
+
+                Signal.autorun (fun () ->
+                    let v = callback ()
+
+                    if v <> prev then
+                        prev <- v
+                        element.setAttribute (name, string v)
+                )
+
+        )
+
+    /// Reactive number-valued attribute driven by a signal.
+    let bindNumberAttributeSignal (name: string) (signal: Signal<float>) : DomItem =
+        bindNumberAttribute name (fun () -> signal.Value)
+
+    (*
         Boolean (present/absent) attributes
     *)
 

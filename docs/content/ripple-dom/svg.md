@@ -47,10 +47,19 @@ Html.mount "app" app |> ignore
 
 ## Reactive geometry
 
-Most `svgAttr`{fsharp} members take a literal, because SVG geometry is usually static. Reactive geometry goes through `svgAttr.custom`{fsharp}, which has the same three shapes as `attr.custom`{fsharp} - a string, a function, or a signal:
+Most `svgAttr`{fsharp} members take a literal, because SVG geometry is usually static. Reactive geometry goes through `svgAttr.custom`{fsharp}, which takes a string, a function, or a signal:
 
 ```fsharp
 svgAttr.custom ("r", fun () -> string size.Value)
 ```
+
+Give it a number instead of a string when the value is numeric:
+
+```fsharp
+svgAttr.custom ("r", fun () -> size.Value)
+```
+
+The binding compares the number and formats it only when it changed, so a re-run that produces
+the same value costs a comparison rather than a string.
 
 The graph drawings on the [Fable.Ripple pages](../ripple/introduction.md#visualization) are built entirely this way - no diagramming library, just `Svg.*`{fsharp} and `attr.ref`{fsharp}.
