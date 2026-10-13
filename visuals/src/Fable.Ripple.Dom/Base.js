@@ -297,6 +297,47 @@ export function Base_bindNumberAttributeSignal(name, signal) {
 }
 
 /**
+ * Static inline style property, including a CSS custom property. Writes through
+ * `style.setProperty`, so it COMPOSES: other style sources on the element are
+ * left alone instead of being overwritten.
+ */
+export function Base_styleProperty(name, value) {
+    return (element) => {
+        element.style.setProperty(name, value);
+    };
+}
+
+/**
+ * Reactive inline style property driven by an auto-tracked callback. The DOM is
+ * written only when the callback's result differs from the last value written.
+ */
+export function Base_bindStyleProperty(name, callback) {
+    return (element) => {
+        if (Base_Recording_active()) {
+            Base_Recording_dynamic(true);
+        }
+        else {
+            const style = element.style;
+            let prev = defaultOf();
+            Signal_autorun(() => {
+                const v = callback();
+                if (!(v === prev)) {
+                    prev = v;
+                    style.setProperty(name, v);
+                }
+            });
+        }
+    };
+}
+
+/**
+ * Reactive inline style property driven by a signal.
+ */
+export function Base_bindStylePropertySignal(name, signal) {
+    return Base_bindStyleProperty(name, () => signal.Value);
+}
+
+/**
  * Static present/absent boolean attribute (e.g. `required`, `hidden`).
  */
 export function Base_booleanAttribute(name, value) {

@@ -1,6 +1,6 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { Base_Recording_dynamic, Base_Recording_active, Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
+import { Base_Recording_dynamic, Base_Recording_active, Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_bindStylePropertySignal, Base_bindStyleProperty, Base_styleProperty, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
 import { join } from "../../fable_modules/fable-library-js.5.18.0/String.js";
 import { map } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { Signal_autorun } from "../Fable.Ripple/Api.js";
@@ -106,6 +106,30 @@ export function attr_style_Z108492D4(s) {
  */
 export function attr_style_Z51B1D053(props) {
     return Base_attribute("style", join(";", map((tupledArg) => ((tupledArg[0] + ":") + tupledArg[1]), props)));
+}
+
+/**
+ * One inline style property, set through the `style.setProperty` DOM API - a CSS
+ * custom property (`"--gap"`) or a regular one (`"color"`). Composes with a base
+ * `attr.style` and with other properties instead of owning the whole attribute.
+ */
+export function attr_styleProperty_Z384F8060(name, v) {
+    return Base_styleProperty(name, v);
+}
+
+/**
+ * Reactive single style property: re-evaluates whenever the signals it reads
+ * change, writing only when the value actually changed.
+ */
+export function attr_styleProperty_1B55B38A(name, f) {
+    return Base_bindStyleProperty(name, f);
+}
+
+/**
+ * Single style property driven directly by a `Var`/`Signal<string>`.
+ */
+export function attr_styleProperty_Z5AD79149(name, s) {
+    return Base_bindStylePropertySignal(name, s);
 }
 
 export function attr_value_Z721C83C5(v) {
