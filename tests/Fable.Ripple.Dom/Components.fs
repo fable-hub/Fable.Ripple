@@ -1,8 +1,7 @@
-module Fable.Ripple.Dom.Test.Components
+module Fable.Ripple.Dom.Test.Components.Register
 
 open Fable.Ripple
 open Fable.Ripple.Dom
-open Fable.Ripple.Dom.Test.Components
 open type Fable.Ripple.Dom.Test.RippleRegistry
 
 (*
