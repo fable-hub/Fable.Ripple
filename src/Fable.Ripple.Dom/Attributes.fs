@@ -64,6 +64,20 @@ type attr =
     static member style(props: (string * string) list) : DomItem =
         attribute "style" (props |> List.map (fun (k, v) -> k + ":" + v) |> String.concat ";")
 
+    /// One inline style property, set through the `style.setProperty` DOM API - a CSS
+    /// custom property (`"--gap"`) or a regular one (`"color"`). Composes with a base
+    /// `attr.style` and with other properties instead of owning the whole attribute.
+    static member styleProperty(name: string, v: string) : DomItem = styleProperty name v
+
+    /// Reactive single style property: re-evaluates whenever the signals it reads
+    /// change, writing only when the value actually changed.
+    static member styleProperty(name: string, f: unit -> string) : DomItem =
+        bindStyleProperty name f
+
+    /// Single style property driven directly by a `Var`/`Signal<string>`.
+    static member styleProperty(name: string, s: Signal<string>) : DomItem =
+        bindStylePropertySignal name s
+
     (*
         Value (interactive: live DOM property)
     *)

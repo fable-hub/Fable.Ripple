@@ -133,6 +133,35 @@ let private classList () : DomItem =
                 ]
         ]
 
+let private styleProperty () : DomItem =
+    let height = Var.create 10
+    let width = Var.create "20px"
+
+    Html.div
+        [
+            Html.div
+                [
+                    attr.id "box"
+                    attr.style
+                        "height: var(--box-height); width: var(--box-width); color: var(--box-color)"
+                    attr.styleProperty ("--box-height", fun () -> $"%d{height.Value}px")
+                    attr.styleProperty ("--box-width", width)
+                    attr.styleProperty ("--box-color", "rgb(0, 128, 0)")
+                ]
+            Html.button
+                [
+                    attr.id "grow"
+                    on.click (fun _ -> height.Value <- height.Value + 5)
+                    Html.text "Grow"
+                ]
+            Html.button
+                [
+                    attr.id "widen"
+                    on.click (fun _ -> width.Value <- "40px")
+                    Html.text "Widen"
+                ]
+        ]
+
 let private eventBatching () : DomItem =
     let a = Var.create 0
     let b = Var.create 0
@@ -379,6 +408,7 @@ let all: (string * (unit -> DomItem)) list =
         "ReactiveAttributes", reactiveAttributes
         "InnerHtml", innerHtml
         "ClassList", classList
+        "StyleProperty", styleProperty
         "EventBatching", eventBatching
         "Fragment", fragment
         "ForeignNode", foreignNode

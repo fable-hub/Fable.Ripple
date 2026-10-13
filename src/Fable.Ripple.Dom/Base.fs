@@ -288,6 +288,40 @@ module Base =
         bindNumberAttribute name (fun () -> signal.Value)
 
     (*
+        Style properties (style.setProperty)
+    *)
+
+    /// Static inline style property, including a CSS custom property. Writes through
+    /// `style.setProperty`, so it COMPOSES: other style sources on the element are
+    /// left alone instead of being overwritten.
+    let styleProperty (name: string) (value: string) : DomItem =
+        Apply(fun element -> (element :?> HTMLElement).style.setProperty (name, Some value))
+
+    /// Reactive inline style property driven by an auto-tracked callback. The DOM is
+    /// written only when the callback's result differs from the last value written.
+    let bindStyleProperty (name: string) (callback: unit -> string) : DomItem =
+        Apply(fun element ->
+            if Recording.active then
+                Recording.dynamic <- true
+            else
+                let style = (element :?> HTMLElement).style
+                let mutable prev: string = null
+
+                Signal.autorun (fun () ->
+                    let v = callback ()
+
+                    if not (obj.ReferenceEquals(v, prev)) then
+                        prev <- v
+                        style.setProperty (name, Some v)
+                )
+
+        )
+
+    /// Reactive inline style property driven by a signal.
+    let bindStylePropertySignal (name: string) (signal: Signal<string>) : DomItem =
+        bindStyleProperty name (fun () -> signal.Value)
+
+    (*
         Boolean (present/absent) attributes
     *)
 

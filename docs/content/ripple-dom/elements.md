@@ -111,6 +111,48 @@ let app () =
 Html.mount "app" app |> ignore
 ```
 
+## Styles
+
+`attr.style`{fsharp} owns the `style` attribute and writes it whole - as a string, a reactive string, or a list of `property, value` pairs:
+
+```fsharp
+attr.style [ "color", "seagreen"; "font-weight", "bold" ]
+```
+
+`attr.styleProperty`{fsharp} sets a single property through the `setProperty`{js} DOM API. The name can be a CSS custom property, and a base `attr.style`{fsharp} on the same element is left alone:
+
+```fsharp live preset=app
+open Fable.Ripple
+open Fable.Ripple.Dom
+
+let app () =
+    let percent = Var.create 40
+
+    Html.div
+        [
+            Html.button
+                [
+                    on.click (fun _ -> percent.Value <- min 100 (percent.Value + 20))
+                    Html.text "More"
+                ]
+
+            Html.div
+                [
+                    attr.style "width: 200px; height: 8px; background: lightgray"
+
+                    Html.div
+                        [
+                            attr.style "height: 8px; background: seagreen; width: var(--fill)"
+                            attr.styleProperty ("--fill", fun () -> string percent.Value + "%")
+                        ]
+                ]
+        ]
+
+Html.mount "app" app |> ignore
+```
+
+The value takes the same three forms as an attribute: a literal, a thunk, or a signal. A reactive one writes to the DOM only when the value changed.
+
 ## Form properties
 
 `attr.value`{fsharp}, `attr.checked'`{fsharp}, `attr.disabled`{fsharp}, `attr.hidden`{fsharp}, `attr.selected`{fsharp}, `attr.readOnly`{fsharp}, `attr.required`{fsharp}, `attr.multiple`{fsharp} and `attr.isOpen`{fsharp} set DOM properties rather than attributes - what a running page reads:

@@ -83,6 +83,32 @@ let tests =
             )
 
             testComponent (
+                "styleProperty sets custom properties and keeps the base style",
+                "StyleProperty",
+                fun root ->
+                    promise {
+                        let box = root.locator "#box"
+
+                        do!
+                            assertLocator
+                                box
+                                (haveCSS "height" "10px"
+                                 >>. haveCSS "width" "20px"
+                                 >>. haveCSS "color" "rgb(0, 128, 0)")
+
+                        do! click (root.locator "#grow")
+                        do! click (root.locator "#widen")
+
+                        do!
+                            assertLocator
+                                box
+                                (haveCSS "height" "15px"
+                                 >>. haveCSS "width" "40px"
+                                 >>. haveCSS "color" "rgb(0, 128, 0)")
+                    }
+            )
+
+            testComponent (
                 "an event handler flushes its writes once",
                 "EventBatching",
                 fun root ->
