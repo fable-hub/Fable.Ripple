@@ -41,13 +41,13 @@
       },
       "Glutinum.Web": {
         "type": "Direct",
-        "requested": "[1.0.0-beta.6, )",
-        "resolved": "1.0.0-beta.6",
-        "contentHash": "RuJCi1wIff8sZpWyWlrLK0m6QbVBoYcddiMBZoROyp8tUOl4wqvwMARepQHwdv/BftpdT1teF40wPxDsbA24nQ==",
+        "requested": "[1.0.0-beta.11, )",
+        "resolved": "1.0.0-beta.11",
+        "contentHash": "F35HPJ1/ofCC6FD8kfjkNCovWame8xRmowANjZSBa7v4rjsT36M7OUDNAbsL6SJCc7gUaAi89AZdR1AS4QQVvA==",
         "dependencies": {
           "FSharp.Core": "10.1.301",
-          "Fable.Core": "5.2.0",
-          "Glutinum.Types": "1.0.0-beta.4"
+          "Fable.Core": "5.4.0",
+          "Glutinum.Types": "1.0.0-beta.10"
         }
       },
       "Fable.AST": {
@@ -69,7 +69,7 @@
           "Fable.Core": "[5.2.0, )",
           "Fable.Ripple": "[1.0.0, )",
           "Fable.Ripple.Plugin": "[1.0.0, )",
-          "Glutinum.Web": "[1.0.0-beta.6, )"
+          "Glutinum.Web": "[1.0.0-beta.11, )"
         }
       },
       "fable.ripple.form": {
@@ -79,7 +79,7 @@
           "Fable.Core": "[5.2.0, )",
           "Fable.Promise": "[3.2.1, )",
           "Fable.Ripple.Dom": "[1.0.0, )",
-          "Glutinum.Web": "[1.0.0-beta.6, )"
+          "Glutinum.Web": "[1.0.0-beta.11, )"
         }
       },
       "fable.ripple.plugin": {
@@ -90,12 +90,12 @@
       },
       "Glutinum.Types": {
         "type": "CentralTransitive",
-        "requested": "[1.0.0-beta.4, )",
-        "resolved": "1.0.0-beta.4",
-        "contentHash": "EgyktmIcqldwUD3qMFja26i1jwcCMm98C6Ecnbqlq2C8udcJX4SE/5VVJQtig2agq/BG0YUWWqp2O6VsUeRl1w==",
+        "requested": "[1.0.0-beta.10, )",
+        "resolved": "1.0.0-beta.10",
+        "contentHash": "y+NWgTBK7WuoFhyvXE+zIqpsUV80OM+dVniRrJeetry7uQm4lAt9rT6eUa34S9fUYAqsN+iS/puOfnF8wgxcbg==",
         "dependencies": {
           "FSharp.Core": "10.1.301",
-          "Fable.Core": "5.2.0"
+          "Fable.Core": "5.4.0"
         }
       }
     }
