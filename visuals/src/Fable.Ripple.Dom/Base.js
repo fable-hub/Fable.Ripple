@@ -530,6 +530,33 @@ export function Base_ClassList_add(pairs) {
 }
 
 /**
+ * Static always-on classes: add every token (composes with existing).
+ */
+export function Base_ClassList_addAll(names) {
+    return (element) => {
+        let rest = names;
+        while (!isEmpty(rest)) {
+            const name = head(rest);
+            if (name.indexOf(" ") < 0) {
+                if (name.length > 0) {
+                    element.classList.add(name);
+                }
+            }
+            else {
+                const arr = split(name, [" "], undefined, 0);
+                for (let idx = 0; idx <= (arr.length - 1); idx++) {
+                    const token_1 = item_1(idx, arr);
+                    if (token_1.length > 0) {
+                        element.classList.add(token_1);
+                    }
+                }
+            }
+            rest = tail(rest);
+        }
+    };
+}
+
+/**
  * Reactive conditional classes: diff the enabled token set against the one this
  * binding last applied, toggling only what changed - other tokens are untouched.
  */
@@ -541,7 +568,8 @@ export function Base_ClassList_bind(callback) {
         else {
             const applied = new Set([]);
             Signal_autorun(() => {
-                const next = new Set([]);
+                const next_1 = new Set([]);
+                const next = next_1;
                 let rest = callback();
                 while (!isEmpty(rest)) {
                     const patternInput = head(rest);
@@ -568,7 +596,7 @@ export function Base_ClassList_bind(callback) {
                 try {
                     while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
                         const token_2 = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]();
-                        if (!next.has(token_2)) {
+                        if (!next_1.has(token_2)) {
                             element.classList.remove(token_2);
                         }
                     }
@@ -576,12 +604,12 @@ export function Base_ClassList_bind(callback) {
                 finally {
                     disposeSafe(enumerator);
                 }
-                let enumerator_1 = getEnumerator(next);
+                let enumerator_1 = getEnumerator(next_1);
                 try {
                     while (enumerator_1["System.Collections.IEnumerator.MoveNext"]()) {
-                        const token_3 = enumerator_1["System.Collections.Generic.IEnumerator`1.get_Current"]();
-                        if (!applied.has(token_3)) {
-                            element.classList.add(token_3);
+                        const token_1_1 = enumerator_1["System.Collections.Generic.IEnumerator`1.get_Current"]();
+                        if (!applied.has(token_1_1)) {
+                            element.classList.add(token_1_1);
                         }
                     }
                 }
@@ -589,7 +617,70 @@ export function Base_ClassList_bind(callback) {
                     disposeSafe(enumerator_1);
                 }
                 applied.clear();
-                unionWith(applied, next);
+                unionWith(applied, next_1);
+            });
+        }
+    };
+}
+
+/**
+ * Reactive always-on classes: same diff, over a plain list of names.
+ */
+export function Base_ClassList_bindAll(callback) {
+    return (element) => {
+        if (Base_Recording_active()) {
+            Base_Recording_dynamic(true);
+        }
+        else {
+            const applied = new Set([]);
+            Signal_autorun(() => {
+                const next_1 = new Set([]);
+                const next = next_1;
+                let rest = callback();
+                while (!isEmpty(rest)) {
+                    const name = head(rest);
+                    if (name.indexOf(" ") < 0) {
+                        if (name.length > 0) {
+                            addToSet(name, next);
+                        }
+                    }
+                    else {
+                        const arr = split(name, [" "], undefined, 0);
+                        for (let idx = 0; idx <= (arr.length - 1); idx++) {
+                            const token_1 = item_1(idx, arr);
+                            if (token_1.length > 0) {
+                                addToSet(token_1, next);
+                            }
+                        }
+                    }
+                    rest = tail(rest);
+                }
+                let enumerator = getEnumerator(applied);
+                try {
+                    while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
+                        const token_2 = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]();
+                        if (!next_1.has(token_2)) {
+                            element.classList.remove(token_2);
+                        }
+                    }
+                }
+                finally {
+                    disposeSafe(enumerator);
+                }
+                let enumerator_1 = getEnumerator(next_1);
+                try {
+                    while (enumerator_1["System.Collections.IEnumerator.MoveNext"]()) {
+                        const token_1_1 = enumerator_1["System.Collections.Generic.IEnumerator`1.get_Current"]();
+                        if (!applied.has(token_1_1)) {
+                            element.classList.add(token_1_1);
+                        }
+                    }
+                }
+                finally {
+                    disposeSafe(enumerator_1);
+                }
+                applied.clear();
+                unionWith(applied, next_1);
             });
         }
     };

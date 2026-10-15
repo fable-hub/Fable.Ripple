@@ -1,6 +1,6 @@
 
 import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { Base_Recording_dynamic, Base_Recording_active, Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_bindStylePropertySignal, Base_bindStyleProperty, Base_styleProperty, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
+import { Base_Recording_dynamic, Base_Recording_active, Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_bindStylePropertySignal, Base_bindStyleProperty, Base_styleProperty, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bindAll, Base_ClassList_addAll, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
 import { join } from "../../fable_modules/fable-library-js.5.18.0/String.js";
 import { map } from "../../fable_modules/fable-library-js.5.18.0/List.js";
 import { Signal_autorun } from "../Fable.Ripple/Api.js";
@@ -65,6 +65,21 @@ export function attr_classList_Z30A5DE4(pairs) {
  */
 export function attr_classList_ZA225E0A(f) {
     return Base_ClassList_bind(f);
+}
+
+/**
+ * Always-on classes: add every name. E.g. `[ "btn"; "btn-primary" ]`.
+ */
+export function attr_classList_7F866359(names) {
+    return Base_ClassList_addAll(names);
+}
+
+/**
+ * Reactive always-on classes: re-evaluates the list whenever the signals it reads
+ * change, toggling only the names that actually changed.
+ */
+export function attr_classList_Z69D040CD(f) {
+    return Base_ClassList_bindAll(f);
 }
 
 /**
