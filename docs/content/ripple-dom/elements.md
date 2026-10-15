@@ -77,13 +77,14 @@ Html.mount "app" app |> ignore
 
 ## Classes
 
-Beyond `attr.className`{fsharp}, three helpers cover the common shapes:
+Beyond `attr.className`{fsharp}, these helpers cover the common shapes:
 
 - `attr.classes [ "card"; "wide" ]`{fsharp} - a list joined with spaces.
+- `attr.classList [ "card"; "wide" ]`{fsharp} - a list of names, all added. A function form re-evaluates it.
 - `attr.classList [ "card", true; "active", false ]`{fsharp} - names paired with conditions. A function form re-evaluates them.
 - `attr.toggleClass ("active", fun () -> isActive.Value)`{fsharp} - one name, one reactive condition.
 
-`className`{fsharp} and `classes`{fsharp} own the attribute and write it whole. `classList`{fsharp} and `toggleClass`{fsharp} add and remove only their own names, so a static base class and a reactive toggle sit on the same element:
+`className`{fsharp} and `classes`{fsharp} own the attribute and write it whole. `classList`{fsharp} and `toggleClass`{fsharp} add and remove only their own names, so a static base class and a reactive toggle sit on the same element. A function form removes a name only if that same binding added it:
 
 ```fsharp live preset=app
 open Fable.Ripple

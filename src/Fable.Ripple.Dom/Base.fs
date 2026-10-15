@@ -461,13 +461,29 @@ module Base =
 
                 rest <- List.tail rest
 
+        /// Run `action` for each token across `names`. A cons-cell walk (no list
+        /// enumerator) plus the single-token fast path, so the common case is alloc-free.
+        let inline private iterNames
+            (names: string list)
+            ([<InlineIfLambda>] action: string -> unit)
+            =
+            let mutable rest = names
+
+            while not (List.isEmpty rest) do
+                iterTokens (List.head rest) action
+                rest <- List.tail rest
+
         /// Static conditional classes: add the enabled tokens (composes with existing).
         let add (pairs: (string * bool) list) : DomItem =
             Apply(fun element -> iterEnabled pairs (fun token -> element.classList.add token))
 
-        /// Reactive conditional classes: diff the enabled token set against the one this
-        /// binding last applied, toggling only what changed - other tokens are untouched.
-        let bind (callback: unit -> (string * bool) list) : DomItem =
+        /// Static always-on classes: add every token (composes with existing).
+        let addAll (names: string list) : DomItem =
+            Apply(fun element -> iterNames names (fun token -> element.classList.add token))
+
+        /// Diff `collect`'s token set against the one this binding last applied, toggling
+        /// only what changed - tokens this binding never added are never touched.
+        let inline private bindSet ([<InlineIfLambda>] collect: HashSet<string> -> unit) : DomItem =
             Apply(fun element ->
                 if Recording.active then
                     Recording.dynamic <- true
@@ -476,7 +492,7 @@ module Base =
 
                     Signal.autorun (fun () ->
                         let next = HashSet<string>()
-                        iterEnabled (callback ()) (fun token -> next.Add token |> ignore)
+                        collect next
 
                         for token in applied do
                             if not (next.Contains token) then
@@ -491,6 +507,15 @@ module Base =
                     )
 
             )
+
+        /// Reactive conditional classes: diff the enabled token set against the one this
+        /// binding last applied, toggling only what changed - other tokens are untouched.
+        let bind (callback: unit -> (string * bool) list) : DomItem =
+            bindSet (fun next -> iterEnabled (callback ()) (fun token -> next.Add token |> ignore))
+
+        /// Reactive always-on classes: same diff, over a plain list of names.
+        let bindAll (callback: unit -> string list) : DomItem =
+            bindSet (fun next -> iterNames (callback ()) (fun token -> next.Add token |> ignore))
 
         /// Toggle a single class token by a static flag.
         let toggle (name: string) (enabled: bool) : DomItem =

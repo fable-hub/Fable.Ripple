@@ -83,6 +83,37 @@ let tests =
             )
 
             testComponent (
+                "classList from a name list adds its own tokens and removes only those",
+                "ClassListNames",
+                fun root ->
+                    promise {
+                        let chip = root.locator "#chip"
+                        do! assertLocator chip (haveClass "chip btn btn-ghost btn-sm")
+                        do! click (root.locator "#flag")
+                        do! assertLocator chip (haveClass "chip btn btn-ghost btn-sm is-flagged")
+                        do! click (root.locator "#size")
+                        do! assertLocator chip (haveClass "chip btn btn-ghost is-flagged btn-lg")
+                        do! click (root.locator "#flag")
+                        do! assertLocator chip (haveClass "chip btn btn-ghost btn-lg")
+                    }
+            )
+
+            testComponent (
+                "classList leaves a class added from outside alone",
+                "ClassListNames",
+                fun root ->
+                    promise {
+                        let chip = root.locator "#chip"
+                        do! click (root.locator "#outside")
+                        do! assertLocator chip (haveClass "chip btn btn-ghost btn-sm from-outside")
+                        do! click (root.locator "#size")
+                        do! assertLocator chip (haveClass "chip btn btn-ghost from-outside btn-lg")
+                        do! click (root.locator "#size")
+                        do! assertLocator chip (haveClass "chip btn btn-ghost from-outside btn-sm")
+                    }
+            )
+
+            testComponent (
                 "styleProperty sets custom properties and keeps the base style",
                 "StyleProperty",
                 fun root ->

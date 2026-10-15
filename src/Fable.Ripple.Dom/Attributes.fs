@@ -39,6 +39,13 @@ type attr =
     /// E.g. `attr.classList (fun () -> [ "active", isActive.Value ])`.
     static member classList(f: unit -> (string * bool) list) : DomItem = ClassList.bind f
 
+    /// Always-on classes: add every name. E.g. `[ "btn"; "btn-primary" ]`.
+    static member classList(names: string list) : DomItem = ClassList.addAll names
+
+    /// Reactive always-on classes: re-evaluates the list whenever the signals it reads
+    /// change, toggling only the names that actually changed.
+    static member classList(f: unit -> string list) : DomItem = ClassList.bindAll f
+
     /// Add or remove a single class token by a flag - composes with other class
     /// sources (like Sutil `toggleClass` / WebSharper `DynamicClass`).
     static member toggleClass(name: string, on: bool) : DomItem = ClassList.toggle name on

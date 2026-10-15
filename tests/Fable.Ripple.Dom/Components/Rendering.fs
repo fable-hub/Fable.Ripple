@@ -133,6 +133,56 @@ let private classList () : DomItem =
                 ]
         ]
 
+let private classListNames () : DomItem =
+    let large = Var.create false
+    let flagged = Var.create false
+
+    Html.div
+        [
+            Html.div
+                [
+                    attr.id "chip"
+                    attr.className "chip"
+                    attr.classList
+                        [
+                            "btn"
+                            "btn-ghost"
+                        ]
+                    attr.classList (fun () ->
+                        [
+                            if large.Value then
+                                "btn-lg"
+                            else
+                                "btn-sm"
+                        ]
+                    )
+                    attr.toggleClass ("is-flagged", (fun () -> flagged.Value))
+                    Html.text "chip"
+                ]
+            Html.button
+                [
+                    attr.id "size"
+                    on.click (fun _ -> large.Value <- not large.Value)
+                    Html.text "Size"
+                ]
+            Html.button
+                [
+                    attr.id "flag"
+                    on.click (fun _ -> flagged.Value <- not flagged.Value)
+                    Html.text "Flag"
+                ]
+            Html.button
+                [
+                    attr.id "outside"
+                    on.click (fun _ ->
+                        match document.getElementById "chip" with
+                        | Some chip -> chip.classList.add "from-outside"
+                        | None -> ()
+                    )
+                    Html.text "Outside"
+                ]
+        ]
+
 let private styleProperty () : DomItem =
     let height = Var.create 10
     let width = Var.create "20px"
@@ -408,6 +458,7 @@ let all: (string * (unit -> DomItem)) list =
         "ReactiveAttributes", reactiveAttributes
         "InnerHtml", innerHtml
         "ClassList", classList
+        "ClassListNames", classListNames
         "StyleProperty", styleProperty
         "EventBatching", eventBatching
         "Fragment", fragment
