@@ -14,7 +14,7 @@ type internal Scope() =
 
     /// The computeds and effects registered with this scope, unlinked from
     /// their sources on teardown.
-    member val Nodes = ResizeArray<ReactiveNode>() with get
+    member val First: ReactiveNode voption = ValueNone with get, set
 
     /// Callbacks from `Signal.onCleanup`, run before the nodes are unlinked.
     member val Cleanups: ResizeArray<unit -> unit> voption = ValueNone with get, set
@@ -72,15 +72,20 @@ type internal Scope() =
             cleanups.Clear()
         )
 
-        let nodes = this.Nodes
+        let mutable cursor = this.First
 
-        for i in 0 .. nodes.Count - 1 do
-            nodes.[i].Disposed <- true
+        while cursor.IsSome do
+            let node = cursor.Value
+            node.Disposed <- true
+            cursor <- node.NextOwned
+
+        cursor <- this.First
+        this.First <- ValueNone
 
         // One count per edge: a node that read a source twice is listed twice in
         // its observers.
-        for i in 0 .. nodes.Count - 1 do
-            let node = nodes.[i]
+        while cursor.IsSome do
+            let node = cursor.Value
 
             Graph.iterSourcesFrom
                 node
@@ -95,13 +100,12 @@ type internal Scope() =
             node.State <- NodeState.Clean
             node.Queued <- false
             // The node stays referenced from its sources until the sweep.
-            node.EffectFn <- ValueNone
-            node.Recompute <- Defaults.noRecompute
+            node.Fn <- null
+            cursor <- node.NextOwned
+            node.NextOwned <- ValueNone
 
-        nodes.Clear()
-
-    /// Tear the scope down. Idempotent; a disposed child stays in its parent's
-    /// list until the next sweep, where `Disposed` is what marks it dead.
+    // Tear the scope down. Idempotent; a disposed child stays in its parent's
+    // list until the next sweep, where `Disposed` is what marks it dead.
     interface System.IDisposable with
         member this.Dispose() =
             if not this.Disposed then
@@ -121,7 +125,11 @@ module internal Scope =
     /// Register a node with the current scope, if any, so it is unlinked when
     /// the scope is disposed.
     let register (node: ReactiveNode) =
-        currentScope |> ValueOption.iter (fun s -> s.Nodes.Add node)
+        match currentScope with
+        | ValueSome s ->
+            node.NextOwned <- s.First
+            s.First <- ValueSome node
+        | ValueNone -> ()
 
     /// Register a cleanup callback with the current scope, if any.
     let onCleanup (fn: unit -> unit) =
