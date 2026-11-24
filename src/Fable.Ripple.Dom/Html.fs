@@ -40,8 +40,21 @@ type Html =
 
         Child(t :> Node)
 
+    // The DOM converts the number: a conversion in JS fills V8's number-to-string cache.
+    static member text(n: int) : DomItem = Html.text (unbox<string> n)
+
+    static member text(f: unit -> int) : DomItem = Html.text (unbox<unit -> string> f)
+
+    static member text(n: float) : DomItem = Html.text (unbox<string> n)
+
+    static member text(f: unit -> float) : DomItem = Html.text (unbox<unit -> string> f)
+
     /// Reactive text from a string signal.
     static member text(s: Signal<string>) : DomItem = Html.text (fun () -> s.Value)
+
+    static member text(s: Signal<int>) : DomItem = Html.text (fun () -> s.Value)
+
+    static member text(s: Signal<float>) : DomItem = Html.text (fun () -> s.Value)
 
     /// Reactive text from any signal source - a `Var` or a derived `Signal`, of any
     /// type (stringified). Forwards to the thunk overload above, keeping the
