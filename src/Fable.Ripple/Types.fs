@@ -39,7 +39,7 @@ type Var<'T> internal (initial: 'T, compute: (unit -> 'T) voption, equals: 'T ->
             Tracking.updateIfNecessary this
             value
         and set (v: 'T) =
-            if this.Flags &&& NodeFlags.IsComputed <> 0 then
+            if NodeFlags.has NodeFlags.IsComputed this.Flags then
                 invalidOp "Cannot write to a computed signal."
 
             if not (equals value v) then

@@ -11,6 +11,7 @@
         <Compile Include="../../src/Fable.UrlParser/Base.fs" />
         <Compile Include="../../src/Fable.UrlParser/Parser.fs" />
         <Compile Include="../../src/Fable.UrlParser/UrlCodec.fs" />
+        <Compile Include="../../src/Fable.Ripple/Internal/KeyMap.fs" />
         <Compile Include="../../src/Fable.Ripple/ReactiveNode.fs" />
         <Compile Include="../../src/Fable.Ripple/Internal/Graph.fs" />
         <Compile Include="../../src/Fable.Ripple/Internal/Tracking.fs" />
