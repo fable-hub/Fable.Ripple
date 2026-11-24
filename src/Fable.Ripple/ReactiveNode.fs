@@ -42,6 +42,30 @@ module internal NodeFlags =
     [<Literal>]
     let IsComputed = 64
 
+    [<Literal>]
+    let External = 128
+
+    /// Bits 8 to 29 count the node's evaluations and wrap to 0.
+    [<Literal>]
+    let Run = 256
+
+    [<Literal>]
+    let FlagMask = 255
+
+    /// Bits 30 and 31 stay clear so that V8 keeps the field a small integer.
+    [<Literal>]
+    let RunMask = 0x3FFFFF00
+
+    let inline has (flag: int) (flags: int) = flags &&& flag <> 0
+
+    let inline add (flag: int) (flags: int) = flags ||| flag
+
+    /// The evaluation count, as stored in the flags. Changes on every run.
+    let inline runStamp (flags: int) = flags &&& RunMask
+
+    let inline countRun (flags: int) =
+        (flags &&& FlagMask) ||| ((flags + Run) &&& RunMask)
+
 /// Re-evaluation hook of a computed or an effect.
 type internal IRecompute =
     /// Re-evaluate and return true if the value changed.
