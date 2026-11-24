@@ -4,9 +4,9 @@
     "net10.0": {
       "FSharp.Core": {
         "type": "Direct",
-        "requested": "[10.1.301, )",
-        "resolved": "10.1.301",
-        "contentHash": "excLf2zM/qUB3WhRUfI0xvOOaPwcRAEdYT/BXe9eiTKySnWVuIKMQTf5+6ETy5nsb1dpLp1s2j2yAM/XcRgFMg=="
+        "requested": "[11.0.101, )",
+        "resolved": "11.0.101",
+        "contentHash": "XL1wfb0gujXAtnJfO7rYfxKgwufCiT8aOKqGoqKB83oxRAZ9+yiNWXinHO4x9StYuunTl/AH8eERc0hv7UXJVQ=="
       },
       "Scriptorium.Hedgehog": {
         "type": "Direct",
@@ -82,15 +82,15 @@
       "fable.ripple": {
         "type": "Project",
         "dependencies": {
-          "FSharp.Core": "[10.1.301, )",
-          "Fable.Core": "[5.2.0, )"
+          "FSharp.Core": "[11.0.101, )",
+          "Fable.Core": "[5.6.1, )"
         }
       },
       "Fable.Core": {
         "type": "CentralTransitive",
-        "requested": "[5.2.0, )",
-        "resolved": "5.2.0",
-        "contentHash": "3+HVoyYMjPGeKJEhMzRti0coDS6AkLVOWXmGwSvqokeTuwdZLyiKMoNgQrE6ZeJ0cSy9qHBB4VBpw5RAfb6zmQ==",
+        "requested": "[5.6.1, )",
+        "resolved": "5.6.1",
+        "contentHash": "c/lKM8ptY8havLmPWU4OuZcweTcwFnhqYHdWUXqDL0B9KURABQMpzfCjCsc+bJhJFTSw58ABT4o1UDODLSPBAA==",
         "dependencies": {
           "FSharp.Core": "4.7.2"
         }

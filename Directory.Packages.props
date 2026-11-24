@@ -9,13 +9,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="Fable.Core" Version="5.2.0" />
+    <PackageVersion Include="Fable.Core" Version="5.6.1" />
     <PackageVersion Include="Fable.Form" Version="3.0.0" />
     <PackageVersion Include="Fable.Form.Simple" Version="5.0.1" />
     <PackageVersion Include="Fable.Form.Simple.Fields.Html" Version="1.0.1" />
     <PackageVersion Include="Fable.Elmish.UrlParser" Version="1.0.2" />
     <PackageVersion Include="Fable.Promise" Version="3.2.1" />
-    <PackageVersion Include="FSharp.Core" Version="10.1.301" />
+    <PackageVersion Include="FSharp.Core" Version="11.0.101" />
     <PackageVersion Include="FSharp.Data.Adaptive" Version="1.2.26" />
     <PackageVersion Include="Glutinum.Types" Version="1.0.0-beta.10" />
     <PackageVersion Include="Glutinum.Web" Version="1.0.0-beta.11" />
