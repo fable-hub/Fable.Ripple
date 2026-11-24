@@ -452,9 +452,57 @@ let private numericTemplate () : DomItem =
                 ]
         ]
 
+let private numericText () : DomItem =
+    let count = Var.create 1
+    let ratio = Var.create 0.5
+
+    Html.div
+        [
+            Html.output
+                [
+                    attr.id "static"
+                    Html.text 42
+                    Html.text " "
+                    Html.text 2.5
+                ]
+            Html.output
+                [
+                    attr.id "thunk"
+                    Html.text (fun () -> count.Value * 10)
+                    Html.text " "
+                    Html.text (fun () -> ratio.Value * 2.0)
+                ]
+            Html.output
+                [
+                    attr.id "signal"
+                    Html.text count
+                    Html.text " "
+                    Html.text ratio
+                ]
+            Html.div
+                [
+                    attr.id "rows"
+                    Html.template (
+                        Signal.map (fun (n: int) -> Array.init n (fun i -> i + 1)) count,
+                        id,
+                        fun (row: Signal<int>) -> Html.span [ Html.text (fun () -> row.Value) ]
+                    )
+                ]
+            Html.button
+                [
+                    attr.id "bump"
+                    on.click (fun _ ->
+                        count.Value <- count.Value + 1
+                        ratio.Value <- 1.25
+                    )
+                    Html.text "bump"
+                ]
+        ]
+
 let all: (string * (unit -> DomItem)) list =
     [
         "ReactiveText", reactiveText
+        "NumericText", numericText
         "ReactiveAttributes", reactiveAttributes
         "InnerHtml", innerHtml
         "ClassList", classList

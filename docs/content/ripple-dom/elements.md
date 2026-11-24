@@ -17,7 +17,7 @@ Everything on this page follows one rule: a value is static, a function is react
 
 ## Text
 
-Text-bearing elements are overloaded. A `string`{fsharp} is static. A `Var`{fsharp} or `Signal`{fsharp} passed directly updates with it. `Html.text`{fsharp} takes a function for text computed from several signals:
+Text-bearing elements are overloaded. A `string`{fsharp} is static. A `Var`{fsharp} or `Signal`{fsharp} passed directly updates with it. `Html.text`{fsharp} takes a function for text computed from several signals. It also takes an `int`{fsharp} or a `float`{fsharp}, a function that returns one, or a signal of one:
 
 ```fsharp live preset=app
 open Fable.Ripple
@@ -36,6 +36,7 @@ let app () =
 
             Html.p "A static line."
             Html.p [ Html.text (fun () -> $"A computed line: count is %d{count.Value}.") ]
+            Html.p [ Html.text (fun () -> count.Value * 2) ]
             Html.p count
         ]
 
