@@ -442,7 +442,14 @@ module Base =
                     if enabled then
                         element.classList.add token
                     else
-                        element.classList.remove token
+                        let current: string = emitJsExpr element "$0.getAttribute('class')"
+
+                        if
+                            not (isNull current)
+                            && current.IndexOf token >= 0
+                            && element.classList.contains token
+                        then
+                            element.classList.remove token
                 )
 
         /// Run `action` for each enabled token across `pairs`. A cons-cell walk (no list
