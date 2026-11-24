@@ -159,6 +159,18 @@ module Dom =
 
                 ok
 
+        let isSameBetween (newKeys: 'k[]) (first: int) (last: int) =
+            let mutable ok = true
+            let mutable i = first
+
+            while ok && i <= last do
+                if not (obj.Equals(order.[i], newKeys.[i])) then
+                    ok <- false
+
+                i <- i + 1
+
+            ok
+
         // Are the new keys disjoint from the current ones? Builds the key index
         // (reused by the diff if we fall through). Early-exits on the first shared
         // key, so a reorder/edit - which shares its ends - pays almost nothing.
@@ -365,7 +377,24 @@ module Dom =
                 // are disjoint, so the diff would remove every old row and create
                 // every new one. Batch it as clear + one DocumentFragment (like the
                 // append path) instead of 2N removeChild/insertBefore calls.
-                if start = 0 && endNew = n - 1 && isDisjoint newKeys then
+                if
+                    endOld = endNew
+                    && start < endNew
+                    && obj.Equals(order.[start], newKeys.[endNew])
+                    && obj.Equals(order.[endNew], newKeys.[start])
+                    && isSameBetween newKeys (start + 1) (endNew - 1)
+                then
+                    let a = rows.[start]
+                    let b = rows.[endNew]
+                    let afterB: Node option = unbox b.Node.nextSibling
+                    parent.insertBefore (b.Node, Some(a.Node :> Node)) |> ignore
+                    parent.insertBefore (a.Node, afterB) |> ignore
+                    rows.[start] <- b
+                    rows.[endNew] <- a
+                    b.Index <- start
+                    a.Index <- endNew
+                    order <- newKeys
+                else if start = 0 && endNew = n - 1 && isDisjoint newKeys then
                     for i in 0 .. rows.Length - 1 do
                         rows.[i].Dispose.Dispose()
 
