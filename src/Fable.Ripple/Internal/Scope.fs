@@ -77,6 +77,10 @@ type internal Scope() =
         while cursor.IsSome do
             let node = cursor.Value
             node.Disposed <- true
+
+            if NodeFlags.has NodeFlags.External node.Flags then
+                Graph.noteDeadReader ()
+
             cursor <- node.NextOwned
 
         cursor <- this.First
@@ -125,11 +129,11 @@ module internal Scope =
     /// Register a node with the current scope, if any, so it is unlinked when
     /// the scope is disposed.
     let register (node: ReactiveNode) =
-        match currentScope with
-        | ValueSome s ->
+        currentScope
+        |> ValueOption.iter (fun s ->
             node.NextOwned <- s.First
             s.First <- ValueSome node
-        | ValueNone -> ()
+        )
 
     /// Register a cleanup callback with the current scope, if any.
     let onCleanup (fn: unit -> unit) =

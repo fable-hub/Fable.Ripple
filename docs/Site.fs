@@ -127,6 +127,7 @@ let theme =
                     Menu.page "ripple/effects.md"
                     Menu.page "ripple/batching.md"
                     Menu.page "ripple/cutoff.md"
+                    Menu.page "ripple/selector.md"
                 ]
         ]
     |> Theme.menu
