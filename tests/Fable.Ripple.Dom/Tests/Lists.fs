@@ -52,6 +52,28 @@ let tests =
             )
 
             testComponent (
+                "reordering matches structurally equal keys",
+                "TupleKeyedList",
+                fun root ->
+                    promise {
+                        do! fill (root.locator "#list > li[data-id='2'] input", "kept")
+                        do! click (root.locator "#reverse")
+
+                        do!
+                            assertLocator
+                                (root.locator "#list > li:nth-child(1)")
+                                (haveAttribute "data-id" "3")
+
+                        do!
+                            assertLocator
+                                (root.locator "#list > li[data-id='2'] input")
+                                (haveValue "kept")
+
+                        do! assertLocator (root.locator "#builds") (haveText "3")
+                    }
+            )
+
+            testComponent (
                 "appending builds only the new item",
                 "KeyedList",
                 fun root ->
