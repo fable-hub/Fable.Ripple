@@ -108,7 +108,7 @@ module Dom =
         // never looks anything up, so the index is built on demand the first time a
         // real diff runs (one Dictionary insert per row is ~4% of a mount) and kept
         // current from then on.
-        let byKey = Dictionary<'k, Row>(HashIdentity.Structural)
+        let byKey = Fable.Ripple.Internal.KeyMap<'k, Row>()
         let mutable indexed = false
         let mutable order: 'k[] = [||]
         // Rows parallel to `order`, so the diff can reach a row by index instead
@@ -138,7 +138,7 @@ module Dom =
         let reindex () =
             if not indexed then
                 for i in 0 .. order.Length - 1 do
-                    byKey.[order.[i]] <- rows.[i]
+                    byKey.Set(order.[i], rows.[i])
 
                 indexed <- true
 
@@ -168,7 +168,7 @@ module Dom =
             let mutable i = 0
 
             while dj && i < newKeys.Length do
-                if byKey.ContainsKey newKeys.[i] then
+                if byKey.Has newKeys.[i] then
                     dj <- false
 
                 i <- i + 1
@@ -240,15 +240,15 @@ module Dom =
                         // confined to the ends, never reaches here at all.
                         reindex ()
 
-                        match byKey.TryGetValue k with
-                        | true, e ->
+                        match byKey.TryGet k with
+                        | ValueSome e ->
                             e.Seen <- generation
                             newRows.[i] <- e
                             srcIdx.[i - start] <- e.Index
-                        | _ ->
+                        | ValueNone ->
                             let e = make items.[i] i
                             e.Seen <- generation
-                            byKey.[k] <- e
+                            byKey.Set(k, e)
                             newRows.[i] <- e
                             srcIdx.[i - start] <- -1
 
@@ -264,7 +264,7 @@ module Dom =
 
                         // Nothing to unindex if the index was never built.
                         if indexed then
-                            byKey.Remove order.[i] |> ignore
+                            byKey.Delete order.[i]
 
                 // Rows on the longest increasing subsequence of old positions are
                 // already correctly ordered relative to each other, so only the rest
@@ -333,7 +333,7 @@ module Dom =
                         // Only keep the index current if one already exists; an
                         // append-only mount never builds it at all.
                         if indexed then
-                            byKey.[newKeys.[i]] <- e
+                            byKey.Set(newKeys.[i], e)
 
                         newRows.[i] <- e
                         frag.appendChild e.Node |> ignore
