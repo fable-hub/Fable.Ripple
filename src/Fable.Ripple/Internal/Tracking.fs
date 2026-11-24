@@ -84,6 +84,7 @@ module internal Tracking =
         currentGets <- ValueNone
         currentGetsIndex <- 0
         Context.current <- node.Context
+        node.Flags <- NodeFlags.countRun node.Flags
         let startCount = Graph.sourceCount node
         let mutable changed = false
         let mutable completed = false
@@ -131,6 +132,9 @@ module internal Tracking =
                     if int o.State < int NodeState.Dirty then
                         o.State <- NodeState.Dirty
                 )
+
+    /// The node whose reads are being tracked, if any.
+    let observer () : ReactiveNode voption = current
 
     let untracked (fn: unit -> 'a) =
         let prev = current

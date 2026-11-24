@@ -192,6 +192,24 @@ module internal Graph =
     let private sweepQueue = ResizeArray<ReactiveNode>()
     let mutable private sweepHolds = 0
 
+    let readerLists = ResizeArray<int -> unit>()
+    let mutable private deadReaders = 0
+    let mutable private sweptReaders = 0
+
+    let noteDeadReader () = deadReaders <- deadReaders + 1
+
+    let deadReaderCount () = deadReaders
+
+    [<Fable.Core.Emit("$0.indexOf($1)")>]
+    let private indexOfRef (a: ResizeArray<int -> unit>) (x: int -> unit) : int =
+        Fable.Core.Util.jsNative
+
+    let removeReaderList (sweep: int -> unit) =
+        let i = indexOfRef readerLists sweep
+
+        if i >= 0 then
+            readerLists.RemoveAt i
+
     let noteDeadObserver (source: ReactiveNode) =
         source.DeadObservers <- source.DeadObservers + 1
 
@@ -214,6 +232,12 @@ module internal Graph =
 
             sweepQueue.Clear()
 
+        if sweepHolds = 0 && deadReaders <> sweptReaders then
+            sweptReaders <- deadReaders
+
+            for i in 0 .. readerLists.Count - 1 do
+                readerLists.[i] deadReaders
+
     /// Unlink `node` from each of its sources at or after `fromIndex`.
     let unlinkSourcesTail (node: ReactiveNode) (fromIndex: int) =
         iterSourcesFrom node fromIndex (fun s -> removeObserver s node)
@@ -225,3 +249,7 @@ module internal Graph =
         node.RestSources |> ValueOption.iter (fun a -> a.Clear())
         node.State <- NodeState.Clean
         node.Queued <- false
+        node.Disposed <- true
+
+        if NodeFlags.has NodeFlags.External node.Flags then
+            noteDeadReader ()

@@ -55,6 +55,9 @@ module internal Scheduler =
                 flushing <- false
                 Graph.releaseSweeps ()
 
+    /// Mark `node` itself stale, as if one of its sources changed.
+    let markDirty (node: ReactiveNode) = stale node NodeState.Dirty
+
     /// A source's value changed: mark observers and flush unless batching.
     let notifyChange (source: ReactiveNode) =
         Graph.iterObservers source (fun o -> stale o NodeState.Dirty)
