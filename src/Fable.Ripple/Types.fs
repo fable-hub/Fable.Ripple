@@ -17,36 +17,18 @@ type Signal<'T> =
 /// recompute function but handed back read-only as a `Signal<'T>`. ONE runtime
 /// class backs both, so every read stays monomorphic (no dispatch, no hidden-class
 /// polymorphism). Reading `.Value` inside a computation registers a dependency.
-type Var<'T> internal (initial: 'T, compute: (unit -> 'T) voption, equals: 'T -> 'T -> bool) as this
-    =
+type Var<'T> internal (initial: 'T, compute: (unit -> 'T) voption, equals: 'T -> 'T -> bool) =
     inherit
         ReactiveNode(
             (match compute with
-             | ValueSome _ -> NodeState.Dirty
-             | ValueNone -> NodeState.Clean),
-            false
+             | ValueSome _ -> int NodeState.Dirty ||| NodeFlags.IsComputed
+             | ValueNone -> int NodeState.Clean),
+            (match compute with
+             | ValueSome fn -> box fn
+             | ValueNone -> null)
         )
 
     let mutable value = initial
-
-    // Only a computed needs a `Recompute` hook; a source's is never called.
-    do
-        match compute with
-        | ValueSome fn ->
-            this.Recompute <-
-                fun () ->
-                    let nv = fn ()
-
-                    if equals value nv then
-                        false
-                    else
-                        value <- nv
-                        true
-        | ValueNone -> ()
-
-    do
-        if compute.IsSome then
-            Scope.register (this :> ReactiveNode)
 
     /// The current value. Reading tracks a dependency and pulls the signal up to
     /// date; setting notifies observers when the value differs. A computed is only
@@ -57,7 +39,7 @@ type Var<'T> internal (initial: 'T, compute: (unit -> 'T) voption, equals: 'T ->
             Tracking.updateIfNecessary this
             value
         and set (v: 'T) =
-            if compute.IsSome then
+            if this.Flags &&& NodeFlags.IsComputed <> 0 then
                 invalidOp "Cannot write to a computed signal."
 
             if not (equals value v) then
@@ -89,13 +71,30 @@ type Var<'T> internal (initial: 'T, compute: (unit -> 'T) voption, equals: 'T ->
         member this.Value = this.Value
         member this.Peek() = this.Peek()
 
+    interface IRecompute with
+        member this.Recompute() =
+            if isNull this.Fn then
+                false
+            else
+                let nv = (unbox<unit -> 'T> this.Fn) ()
+
+                if equals value nv then
+                    false
+                else
+                    value <- nv
+                    true
+
 /// Side-effecting node: re-runs `fn` (re-tracking its reads) whenever a signal it
 /// read changes. Backs `Signal.effect` / `Signal.subscribe`.
-type internal Effect(fn: unit -> unit) as this =
-    inherit ReactiveNode(NodeState.Dirty, true)
+type internal Effect(fn: unit -> unit) =
+    inherit ReactiveNode(int NodeState.Dirty ||| NodeFlags.IsEffect, box fn)
 
-    do this.EffectFn <- ValueSome fn
-    do Scope.register (this :> ReactiveNode)
+    interface IRecompute with
+        member this.Recompute() =
+            if not (isNull this.Fn) then
+                (unbox<unit -> unit> this.Fn) ()
+
+            false
 
     interface System.IDisposable with
         member this.Dispose() = Graph.dispose this

@@ -11,12 +11,6 @@ type internal NodeState =
     /// A direct dependency changed
     | Dirty = 2
 
-/// Shared defaults, so a field with a function default costs a reference copy per
-/// node rather than a fresh closure.
-module internal Defaults =
-
-    let noRecompute: unit -> bool = fun () -> false
-
 /// An ambient value captured by every node at creation and restored around its
 /// re-evaluation, so a computation built for one list row keeps seeing that
 /// row. `null` outside any context.
@@ -28,29 +22,79 @@ module internal Context =
     // is after the mutation; going through a function pins the read.
     let get () : obj = current
 
-/// Non-generic graph node: dependency edges, marking state, and the type-erased
-/// re-evaluation hook.
-type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
+module internal NodeFlags =
+
+    [<Literal>]
+    let StateMask = 3
+
+    [<Literal>]
+    let IsEffect = 4
+
+    [<Literal>]
+    let Queued = 8
+
+    [<Literal>]
+    let Disposed = 16
+
+    [<Literal>]
+    let Affected = 32
+
+    [<Literal>]
+    let IsComputed = 64
+
+/// Re-evaluation hook of a computed or an effect.
+type internal IRecompute =
+    /// Re-evaluate and return true if the value changed.
+    abstract Recompute: unit -> bool
+
+/// Non-generic graph node: dependency edges and marking state.
+type ReactiveNode internal (flags: int, fn: obj) =
+
+    member val internal Flags = flags with get, set
+
     /// How stale this node is. Sources start `Clean`, computeds and effects
     /// `Dirty` (nothing has evaluated them yet).
-    member val internal State = initialState with get, set
+    member internal this.State
+        with get (): NodeState = enum<NodeState> (this.Flags &&& NodeFlags.StateMask)
+        and set (v: NodeState) = this.Flags <- (this.Flags &&& ~~~NodeFlags.StateMask) ||| int v
 
     /// True for effects, which the scheduler queues and re-runs on flush.
     /// Computeds and sources are pulled on read instead, never queued.
-    member val internal IsEffect = isEffect with get
+    member internal this.IsEffect = this.Flags &&& NodeFlags.IsEffect <> 0
 
     /// Already sitting in the scheduler's pending queue, so repeated staleness
     /// marking in one propagation pass enqueues it only once.
-    member val internal Queued = false with get, set
+    member internal this.Queued
+        with get () = this.Flags &&& NodeFlags.Queued <> 0
+        and set (v: bool) =
+            this.Flags <-
+                if v then
+                    this.Flags ||| NodeFlags.Queued
+                else
+                    this.Flags &&& ~~~NodeFlags.Queued
 
     /// Set on every node of a scope at the start of teardown, so a shared
     /// source's observer list can be compacted in one pass instead of one
     /// removal per node. A disposed node may linger in a live source's observer
     /// list until that list is swept; `Graph.iterObservers` skips it.
-    member val internal Disposed = false with get, set
+    member internal this.Disposed
+        with get () = this.Flags &&& NodeFlags.Disposed <> 0
+        and set (v: bool) =
+            this.Flags <-
+                if v then
+                    this.Flags ||| NodeFlags.Disposed
+                else
+                    this.Flags &&& ~~~NodeFlags.Disposed
 
     /// Set while this node is in `Graph.sweepQueue`.
-    member val internal Affected = false with get, set
+    member internal this.Affected
+        with get () = this.Flags &&& NodeFlags.Affected <> 0
+        and set (v: bool) =
+            this.Flags <-
+                if v then
+                    this.Flags ||| NodeFlags.Affected
+                else
+                    this.Flags &&& ~~~NodeFlags.Affected
 
     /// The `Context.current` this node was created under.
     member val internal Context: obj = Context.current with get, set
@@ -78,11 +122,9 @@ type ReactiveNode internal (initialState: NodeState, isEffect: bool) =
     /// Observers at logical index 1.. (allocated only on a second observer).
     member val internal RestObservers: ResizeArray<ReactiveNode> voption = ValueNone with get, set
 
-    /// A computed's recompute hook: re-evaluate and return true if the value
-    /// changed. Sources and effects leave the shared no-op default - a source is
-    /// never evaluated, and an effect runs through `EffectFn` instead.
-    member val internal Recompute: unit -> bool = Defaults.noRecompute with get, set
+    /// A computed's compute function or an effect's body; `null` on a source and
+    /// once the node is disposed.
+    member val internal Fn: obj = fn with get, set
 
-    /// An effect's body, stored directly so an effect needs no `Recompute`
-    /// wrapper closure. `ValueSome` only on effects.
-    member val internal EffectFn: (unit -> unit) voption = ValueNone with get, set
+    /// The next node registered with the same scope.
+    member val internal NextOwned: ReactiveNode voption = ValueNone with get, set
