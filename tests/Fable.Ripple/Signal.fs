@@ -1005,5 +1005,308 @@ let tests =
                     assertThat r.Value (isEqualTo 321)
             )
 
+            (*
+                Selector
+            *)
+
+            test (
+                "selector re-runs only the readers of the previous and the next key",
+                fun _ ->
+                    let selected = Var.create 1
+                    let isSelected = Signal.selector selected
+                    let runs = Array.zeroCreate 5
+                    let states = Array.zeroCreate 5
+
+                    for i in 0..4 do
+                        Signal.autorun (fun () ->
+                            runs.[i] <- runs.[i] + 1
+                            states.[i] <- isSelected i
+                        )
+
+                    assertThat
+                        (List.ofArray states)
+                        (isEqualTo
+                            [
+                                false
+                                true
+                                false
+                                false
+                                false
+                            ])
+
+                    selected.Value <- 3
+
+                    assertThat
+                        (List.ofArray states)
+                        (isEqualTo
+                            [
+                                false
+                                false
+                                false
+                                true
+                                false
+                            ])
+
+                    assertThat
+                        (List.ofArray runs)
+                        (isEqualTo
+                            [
+                                1
+                                2
+                                1
+                                2
+                                1
+                            ])
+
+                    selected.Value <- 3
+                    selected.Value <- 4
+
+                    assertThat
+                        (List.ofArray states)
+                        (isEqualTo
+                            [
+                                false
+                                false
+                                false
+                                false
+                                true
+                            ])
+
+                    assertThat
+                        (List.ofArray runs)
+                        (isEqualTo
+                            [
+                                1
+                                2
+                                1
+                                3
+                                2
+                            ])
+            )
+
+            test (
+                "selector drops the readers of disposed scopes",
+                fun _ ->
+                    let selected = Var.create 0
+                    let isSelected = Signal.selector selected
+                    let runs = Array.zeroCreate 200
+
+                    let owners =
+                        Array.init
+                            200
+                            (fun i ->
+                                Signal.root (fun () ->
+                                    Signal.autorun (fun () ->
+                                        isSelected i |> ignore
+                                        runs.[i] <- runs.[i] + 1
+                                    )
+                                )
+                                |> snd
+                            )
+
+                    for i in 0..198 do
+                        owners.[i].Dispose()
+
+                    for i in 0..198 do
+                        selected.Value <- i
+
+                    selected.Value <- 199
+                    assertThat (Array.sum runs) (isEqualTo 201)
+                    assertThat runs.[199] (isEqualTo 2)
+            )
+
+            test (
+                "selector keeps notifying live readers across many disposed rows",
+                fun _ ->
+                    let selected = Var.create 0
+                    let isSelected = Signal.selector selected
+                    let mutable live = false
+
+                    Signal.autorun (fun () -> live <- isSelected -1)
+
+                    for round in 1..50 do
+                        let _, owner =
+                            Signal.root (fun () ->
+                                for i in 1..100 do
+                                    Signal.autorun (fun () ->
+                                        isSelected (round * 1000 + i) |> ignore
+                                    )
+                            )
+
+                        owner.Dispose()
+
+                    selected.Value <- -1
+                    assertThat live (isEqualTo true)
+                    selected.Value <- 0
+                    assertThat live (isEqualTo false)
+            )
+
+            test (
+                "selector keeps the selection after a whole list of readers is disposed and rebuilt",
+                fun _ ->
+                    let selected = Var.create 0
+                    let isSelected = Signal.selector selected
+
+                    let build () =
+                        let runs = Array.zeroCreate 1000
+
+                        let _, owner =
+                            Signal.root (fun () ->
+                                for i in 0..999 do
+                                    Signal.autorun (fun () ->
+                                        isSelected i |> ignore
+                                        runs.[i] <- runs.[i] + 1
+                                    )
+                            )
+
+                        runs, owner
+
+                    let _, first = build ()
+                    selected.Value <- 5
+                    Signal.batch (fun () -> first.Dispose())
+
+                    let runs, _ = build ()
+                    selected.Value <- 7
+                    assertThat runs.[5] (isEqualTo 2)
+                    assertThat runs.[7] (isEqualTo 2)
+                    assertThat (Array.sum runs) (isEqualTo 1002)
+            )
+
+            test (
+                "disposing the scope that owns a selector leaves other selectors working",
+                fun _ ->
+                    let a = Var.create 0
+                    let b = Var.create 0
+                    let _, ownerA = Signal.root (fun () -> Signal.selector a |> ignore)
+                    let isB = Signal.selector b
+                    let mutable hits = 0
+
+                    let _, rows =
+                        Signal.root (fun () ->
+                            for i in 0..99 do
+                                Signal.autorun (fun () ->
+                                    if isB i then
+                                        hits <- hits + 1
+                                )
+                        )
+
+                    ownerA.Dispose()
+                    ownerA.Dispose()
+                    rows.Dispose()
+
+                    Signal.autorun (fun () ->
+                        if isB 3 then
+                            hits <- hits + 1
+                    )
+
+                    b.Value <- 3
+                    assertThat hits (isEqualTo 2)
+            )
+
+            test (
+                "selector does not re-run an effect disposed through its handle",
+                fun _ ->
+                    let selected = Var.create 0
+                    let isSelected = Signal.selector selected
+                    let mutable runs = 0
+
+                    let sub =
+                        Signal.effect (fun () ->
+                            isSelected 1 |> ignore
+                            runs <- runs + 1
+                        )
+
+                    sub.Dispose()
+                    selected.Value <- 1
+                    assertThat runs (isEqualTo 1)
+            )
+
+            test (
+                "selector compares tuple keys structurally",
+                fun _ ->
+                    let selected = Var.create (1, "a")
+                    let isSelected = Signal.selector selected
+                    let mutable a = false
+                    let mutable b = false
+                    let mutable bRuns = 0
+
+                    Signal.autorun (fun () -> a <- isSelected (1, "a"))
+
+                    Signal.autorun (fun () ->
+                        bRuns <- bRuns + 1
+                        b <- isSelected (2, "b")
+                    )
+
+                    assertThat (a, b) (isEqualTo (true, false))
+                    selected.Value <- (2, "b")
+                    assertThat (a, b) (isEqualTo (false, true))
+                    selected.Value <- (2, "b")
+                    assertThat bRuns (isEqualTo 2)
+            )
+
+            test (
+                "selector read outside tracking returns the current value",
+                fun _ ->
+                    let selected = Var.create 1
+                    let isSelected = Signal.selector selected
+                    assertThat (isSelected 1, isSelected 2) (isEqualTo (true, false))
+                    selected.Value <- 2
+                    assertThat (isSelected 1, isSelected 2) (isEqualTo (false, true))
+            )
+
+            test (
+                "selector inside a batch notifies the first and last keys once",
+                fun _ ->
+                    let selected = Var.create 1
+                    let isSelected = Signal.selector selected
+                    let runs = Array.zeroCreate 4
+                    let mutable inside = false
+
+                    for i in 0..3 do
+                        Signal.autorun (fun () ->
+                            isSelected i |> ignore
+                            runs.[i] <- runs.[i] + 1
+                        )
+
+                    Signal.batch (fun () ->
+                        selected.Value <- 2
+                        selected.Value <- 3
+                        inside <- isSelected 3
+                    )
+
+                    assertThat inside (isEqualTo true)
+
+                    assertThat
+                        (List.ofArray runs)
+                        (isEqualTo
+                            [
+                                1
+                                2
+                                1
+                                2
+                            ])
+            )
+
+            test (
+                "selector feeds a computed",
+                fun _ ->
+                    let selected = Var.create 0
+                    let isSelected = Signal.selector selected
+
+                    let label =
+                        Signal.computed (fun () ->
+                            if isSelected 5 then
+                                "on"
+                            else
+                                "off"
+                        )
+
+                    assertThat label.Value (isEqualTo "off")
+                    selected.Value <- 5
+                    assertThat label.Value (isEqualTo "on")
+                    selected.Value <- 6
+                    assertThat label.Value (isEqualTo "off")
+            )
+
         ]
     )
