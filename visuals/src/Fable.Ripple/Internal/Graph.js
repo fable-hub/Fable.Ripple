@@ -1,5 +1,5 @@
 
-import { ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_Affected_Z1FBCCD16, ReactiveNode__get_Affected, ReactiveNode__get_Disposed, ReactiveNode__set_DeadObservers_Z524259A4, ReactiveNode__set_FirstObserver_Z46457FEC, ReactiveNode__set_RestObservers_6EF2C44D, ReactiveNode__get_DeadObservers, ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__get_RestSources, ReactiveNode__get_FirstSource } from "../ReactiveNode.js";
+import { ReactiveNode__get_Flags, ReactiveNode__set_Disposed_Z1FBCCD16, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_Affected_Z1FBCCD16, ReactiveNode__get_Affected, ReactiveNode__get_Disposed, ReactiveNode__set_DeadObservers_Z524259A4, ReactiveNode__set_FirstObserver_Z46457FEC, ReactiveNode__set_RestObservers_6EF2C44D, ReactiveNode__get_DeadObservers, ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__get_RestSources, ReactiveNode__get_FirstSource } from "../ReactiveNode.js";
 import { value } from "../../../fable_modules/fable-library-js.5.28.0/Option.js";
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
@@ -236,6 +236,27 @@ const sweepQueue = [];
 
 let sweepHolds = 0;
 
+export const readerLists = [];
+
+let deadReaders = 0;
+
+let sweptReaders = 0;
+
+export function noteDeadReader() {
+    deadReaders = ((deadReaders + 1) | 0);
+}
+
+export function deadReaderCount() {
+    return deadReaders | 0;
+}
+
+export function removeReaderList(sweep) {
+    const i = (readerLists.indexOf(sweep)) | 0;
+    if (i >= 0) {
+        readerLists.splice(i, 1);
+    }
+}
+
 export function noteDeadObserver(source) {
     ReactiveNode__set_DeadObservers_Z524259A4(source, (ReactiveNode__get_DeadObservers(source) + 1) | 0);
     if (!ReactiveNode__get_Affected(source)) {
@@ -263,6 +284,12 @@ export function releaseSweeps() {
             sweepDeadObservers(source);
         }
         clear(sweepQueue);
+    }
+    if ((sweepHolds === 0) && (deadReaders !== sweptReaders)) {
+        sweptReaders = (deadReaders | 0);
+        for (let i_1 = 0, limit_1 = ((readerLists.length - 1) | 0); i_1 <= limit_1; i_1++) {
+            (readerLists[i_1] ?? item(i_1, readerLists))(deadReaders);
+        }
     }
 }
 
@@ -314,5 +341,9 @@ export function dispose(node) {
     }
     ReactiveNode__set_State_Z12CE0414(node, 0);
     ReactiveNode__set_Queued_Z1FBCCD16(node, false);
+    ReactiveNode__set_Disposed_Z1FBCCD16(node, true);
+    if ((ReactiveNode__get_Flags(node) & 128) !== 0) {
+        noteDeadReader();
+    }
 }
 

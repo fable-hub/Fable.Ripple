@@ -1,13 +1,12 @@
 
 import { Signal_onCleanup, Signal_effect, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
-import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
+import { Record } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
 import { record_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
-import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
-import { Dictionary } from "../../fable_modules/fable-library-js.5.28.0/MutableMap.js";
-import { HashIdentity_Structural } from "../../fable_modules/fable-library-js.5.28.0/FSharp.Collections.js";
-import { defaultOf, equals, disposeSafe } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { fill, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
+import { KeyMap$2__Delete_2B595, KeyMap$2__Clear, KeyMap$2__Set_5BDDA1, KeyMap$2_$ctor } from "../Fable.Ripple/Internal/KeyMap.js";
+import { equals, disposeSafe } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { min } from "../../fable_modules/fable-library-js.5.28.0/Double.js";
-import { tryGetValue } from "../../fable_modules/fable-library-js.5.28.0/MapUtil.js";
+import { KeyMap$2__Get_2B595 } from "../Fable.Ripple/Internal/KeyMap.js";
 
 export function el(tag) {
     return document.createElement(tag);
@@ -95,7 +94,7 @@ function markLis(src, keep) {
  * when the row leaves or the enclosing scope tears down.
  */
 export function keyedEach(parent, anchor, getItems, keyOf, render) {
-    const byKey = new Dictionary([], HashIdentity_Structural());
+    const byKey = KeyMap$2_$ctor();
     let indexed = false;
     let order = [];
     let rows = [];
@@ -107,7 +106,7 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
     const reindex = () => {
         if (!indexed) {
             for (let i = 0; i <= ((order.length - 1) | 0); i++) {
-                byKey.set(order[i] ?? item_1(i, order), rows[i] ?? item_1(i, rows));
+                KeyMap$2__Set_5BDDA1(byKey, order[i] ?? item_1(i, order), rows[i] ?? item_1(i, rows));
             }
             indexed = true;
         }
@@ -123,29 +122,32 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
             }
         }
         else {
-            for (let i_3 = 0; i_3 <= ((rows.length - 1) | 0); i_3++) {
-                parent.removeChild((rows[i_3] ?? item_1(i_3, rows)).Node);
+            for (let i_4 = 0; i_4 <= ((rows.length - 1) | 0); i_4++) {
+                parent.removeChild((rows[i_4] ?? item_1(i_4, rows)).Node);
             }
         }
     };
     const sub = Signal_effect(() => {
-        let newKeys, ok, i_1, newKeys_1, dj, i_2;
+        let newKeys, ok, i_1, newKeys_1, last, ok_1, i_2, newKeys_2, dj, i_3;
         const items = getItems();
         const n = items.length | 0;
-        const newKeys_2 = map(keyOf, items);
+        const newKeys_3 = new Array(n);
+        for (let i_5 = 0; i_5 <= ((n - 1) | 0); i_5++) {
+            newKeys_3[i_5] = keyOf(items[i_5] ?? item_1(i_5, items));
+        }
         if (n === 0) {
             if (order.length > 0) {
-                for (let i_9 = 0; i_9 <= ((rows.length - 1) | 0); i_9++) {
-                    disposeSafe((rows[i_9] ?? item_1(i_9, rows)).Dispose);
+                for (let i_11 = 0; i_11 <= ((rows.length - 1) | 0); i_11++) {
+                    disposeSafe((rows[i_11] ?? item_1(i_11, rows)).Dispose);
                 }
                 removeAllRowNodes();
-                byKey.clear();
+                KeyMap$2__Clear(byKey);
                 indexed = false;
                 order = [];
                 rows = [];
             }
         }
-        else if ((newKeys = newKeys_2, (order.length > newKeys.length) ? false : ((ok = true, (i_1 = 0, ((() => {
+        else if ((newKeys = newKeys_3, (order.length > newKeys.length) ? false : ((ok = true, (i_1 = 0, ((() => {
             while (ok && (i_1 < order.length)) {
                 if (!equals(order[i_1] ?? item_1(i_1, order), newKeys[i_1] ?? item_1(i_1, newKeys))) {
                     ok = false;
@@ -156,66 +158,85 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
             if (n > order.length) {
                 const frag = document.createDocumentFragment();
                 const newRows_1 = fill(new Array(n), 0, n, null);
-                for (let i_10 = 0; i_10 <= ((order.length - 1) | 0); i_10++) {
-                    setItem(newRows_1, i_10, rows[i_10] ?? item_1(i_10, rows));
+                for (let i_12 = 0; i_12 <= ((order.length - 1) | 0); i_12++) {
+                    setItem(newRows_1, i_12, rows[i_12] ?? item_1(i_12, rows));
                 }
-                for (let i_11 = order.length; i_11 <= ((n - 1) | 0); i_11++) {
-                    const e_4 = make(items[i_11] ?? item_1(i_11, items), i_11);
+                for (let i_13 = order.length; i_13 <= ((n - 1) | 0); i_13++) {
+                    const e_4 = make(items[i_13] ?? item_1(i_13, items), i_13);
                     if (indexed) {
-                        byKey.set(newKeys_2[i_11] ?? item_1(i_11, newKeys_2), e_4);
+                        KeyMap$2__Set_5BDDA1(byKey, newKeys_3[i_13] ?? item_1(i_13, newKeys_3), e_4);
                     }
-                    setItem(newRows_1, i_11, e_4);
+                    setItem(newRows_1, i_13, e_4);
                     frag.appendChild(e_4.Node);
                 }
                 parent.insertBefore(frag, anchor);
                 rows = newRows_1;
             }
-            order = newKeys_2;
+            order = newKeys_3;
         }
         else {
             let start_1 = 0;
             const lim = min(order.length, n) | 0;
-            while ((start_1 < lim) && equals(order[start_1] ?? item_1(start_1, order), newKeys_2[start_1] ?? item_1(start_1, newKeys_2))) {
+            while ((start_1 < lim) && equals(order[start_1] ?? item_1(start_1, order), newKeys_3[start_1] ?? item_1(start_1, newKeys_3))) {
                 start_1 = ((start_1 + 1) | 0);
             }
             let endOld_1 = (order.length - 1) | 0;
             let endNew_1 = (n - 1) | 0;
-            while (((endOld_1 >= start_1) && (endNew_1 >= start_1)) && equals(order[endOld_1] ?? item_1(endOld_1, order), newKeys_2[endNew_1] ?? item_1(endNew_1, newKeys_2))) {
+            while (((endOld_1 >= start_1) && (endNew_1 >= start_1)) && equals(order[endOld_1] ?? item_1(endOld_1, order), newKeys_3[endNew_1] ?? item_1(endNew_1, newKeys_3))) {
                 endOld_1 = ((endOld_1 - 1) | 0);
                 endNew_1 = ((endNew_1 - 1) | 0);
             }
-            if (((start_1 === 0) && (endNew_1 === ((n - 1) | 0))) && ((newKeys_1 = newKeys_2, (reindex(), (dj = true, (i_2 = 0, ((() => {
-                while (dj && (i_2 < newKeys_1.length)) {
-                    if (byKey.has(newKeys_1[i_2] ?? item_1(i_2, newKeys_1))) {
-                        dj = false;
+            if (((((endOld_1 === endNew_1) && (start_1 < endNew_1)) && equals(order[start_1] ?? item_1(start_1, order), newKeys_3[endNew_1] ?? item_1(endNew_1, newKeys_3))) && equals(order[endNew_1] ?? item_1(endNew_1, order), newKeys_3[start_1] ?? item_1(start_1, newKeys_3))) && ((newKeys_1 = newKeys_3, (last = ((endNew_1 - 1) | 0), (ok_1 = true, (i_2 = ((start_1 + 1) | 0), ((() => {
+                while (ok_1 && (i_2 <= last)) {
+                    if (!equals(order[i_2] ?? item_1(i_2, order), newKeys_1[i_2] ?? item_1(i_2, newKeys_1))) {
+                        ok_1 = false;
                     }
                     i_2 = ((i_2 + 1) | 0);
                 }
+            })(), ok_1))))))) {
+                const a = rows[start_1] ?? item_1(start_1, rows);
+                const b = rows[endNew_1] ?? item_1(endNew_1, rows);
+                const afterB = b.Node.nextSibling;
+                parent.insertBefore(b.Node, a.Node);
+                parent.insertBefore(a.Node, afterB);
+                setItem(rows, start_1, b);
+                setItem(rows, endNew_1, a);
+                b.Index = (start_1 | 0);
+                a.Index = (endNew_1 | 0);
+                order = newKeys_3;
+            }
+            else if (((start_1 === 0) && (endNew_1 === ((n - 1) | 0))) && ((newKeys_2 = newKeys_3, (reindex(), (dj = true, (i_3 = 0, ((() => {
+                while (dj && (i_3 < newKeys_2.length)) {
+                    if (!(KeyMap$2__Get_2B595(byKey, newKeys_2[i_3] ?? item_1(i_3, newKeys_2)) == null)) {
+                        dj = false;
+                    }
+                    i_3 = ((i_3 + 1) | 0);
+                }
             })(), dj))))))) {
-                for (let i_12 = 0; i_12 <= ((rows.length - 1) | 0); i_12++) {
-                    disposeSafe((rows[i_12] ?? item_1(i_12, rows)).Dispose);
+                for (let i_14 = 0; i_14 <= ((rows.length - 1) | 0); i_14++) {
+                    disposeSafe((rows[i_14] ?? item_1(i_14, rows)).Dispose);
                 }
                 removeAllRowNodes();
                 const frag_1 = document.createDocumentFragment();
                 const newRows_2 = fill(new Array(n), 0, n, null);
-                for (let i_13 = 0; i_13 <= ((n - 1) | 0); i_13++) {
-                    const e_5 = make(items[i_13] ?? item_1(i_13, items), i_13);
-                    setItem(newRows_2, i_13, e_5);
+                for (let i_15 = 0; i_15 <= ((n - 1) | 0); i_15++) {
+                    const e_5 = make(items[i_15] ?? item_1(i_15, items), i_15);
+                    setItem(newRows_2, i_15, e_5);
                     frag_1.appendChild(e_5.Node);
                 }
                 parent.insertBefore(frag_1, anchor);
-                byKey.clear();
+                KeyMap$2__Clear(byKey);
                 indexed = false;
                 rows = newRows_2;
-                order = newKeys_2;
+                order = newKeys_3;
             }
             else {
                 const start = start_1 | 0;
                 const endOld = endOld_1 | 0;
                 const endNew = endNew_1 | 0;
                 const newRows = fill(new Array(n), 0, n, null);
-                for (let i_4 = 0; i_4 <= ((start - 1) | 0); i_4++) {
-                    setItem(newRows, i_4, rows[i_4] ?? item_1(i_4, rows));
+                for (let i_6 = 0; i_6 <= ((start - 1) | 0); i_6++) {
+                    setItem(newRows, i_6, rows[i_6] ?? item_1(i_6, rows));
                 }
                 let oi = (order.length - 1) | 0;
                 let ni = (n - 1) | 0;
@@ -227,41 +248,39 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
                 generation = ((generation + 1) | 0);
                 const count = ((endNew - start) + 1) | 0;
                 const srcIdx = (count > 0) ? (new Int32Array(count)) : (new Int32Array([]));
-                for (let i_5 = start; i_5 <= endNew; i_5++) {
-                    const k = newKeys_2[i_5] ?? item_1(i_5, newKeys_2);
-                    if ((i_5 <= endOld) && equals(order[i_5] ?? item_1(i_5, order), k)) {
-                        const e = rows[i_5] ?? item_1(i_5, rows);
+                for (let i_7 = start; i_7 <= endNew; i_7++) {
+                    const k_1 = newKeys_3[i_7] ?? item_1(i_7, newKeys_3);
+                    if ((i_7 <= endOld) && equals(order[i_7] ?? item_1(i_7, order), k_1)) {
+                        const e = rows[i_7] ?? item_1(i_7, rows);
                         e.Seen = (generation | 0);
-                        setItem(newRows, i_5, e);
-                        setItem(srcIdx, (i_5 - start) | 0, i_5 | 0);
+                        setItem(newRows, i_7, e);
+                        setItem(srcIdx, (i_7 - start) | 0, i_7 | 0);
                     }
                     else {
                         reindex();
-                        let matchValue;
-                        const cell = new FSharpRef(defaultOf());
-                        matchValue = [tryGetValue(byKey, k, cell), cell.contents];
-                        if (matchValue[0]) {
-                            const e_1 = matchValue[1];
-                            e_1.Seen = (generation | 0);
-                            setItem(newRows, i_5, e_1);
-                            setItem(srcIdx, (i_5 - start) | 0, e_1.Index | 0);
+                        const matchValue = KeyMap$2__Get_2B595(byKey, k_1);
+                        if (matchValue == null) {
+                            const e_2 = make(items[i_7] ?? item_1(i_7, items), i_7);
+                            e_2.Seen = (generation | 0);
+                            KeyMap$2__Set_5BDDA1(byKey, k_1, e_2);
+                            setItem(newRows, i_7, e_2);
+                            setItem(srcIdx, (i_7 - start) | 0, -1);
                         }
                         else {
-                            const e_2 = make(items[i_5] ?? item_1(i_5, items), i_5);
-                            e_2.Seen = (generation | 0);
-                            byKey.set(k, e_2);
-                            setItem(newRows, i_5, e_2);
-                            setItem(srcIdx, (i_5 - start) | 0, -1);
+                            const e_1 = matchValue;
+                            e_1.Seen = (generation | 0);
+                            setItem(newRows, i_7, e_1);
+                            setItem(srcIdx, (i_7 - start) | 0, e_1.Index | 0);
                         }
                     }
                 }
-                for (let i_6 = start; i_6 <= endOld; i_6++) {
-                    const e_3 = rows[i_6] ?? item_1(i_6, rows);
+                for (let i_8 = start; i_8 <= endOld; i_8++) {
+                    const e_3 = rows[i_8] ?? item_1(i_8, rows);
                     if (e_3.Seen !== generation) {
                         disposeSafe(e_3.Dispose);
                         parent.removeChild(e_3.Node);
                         if (indexed) {
-                            byKey.delete(order[i_6] ?? item_1(i_6, order));
+                            KeyMap$2__Delete_2B595(byKey, order[i_8] ?? item_1(i_8, order));
                         }
                     }
                 }
@@ -270,28 +289,28 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
                     markLis(srcIdx, keep);
                 }
                 let nextSibling = (((endNew + 1) | 0) < n) ? item_1((endNew + 1) | 0, newRows).Node : anchor;
-                for (let i_7 = endNew; i_7 >= start; i_7--) {
-                    const node_1 = (newRows[i_7] ?? item_1(i_7, newRows)).Node;
-                    if (!item_1((i_7 - start) | 0, keep)) {
+                for (let i_9 = endNew; i_9 >= start; i_9--) {
+                    const node_1 = (newRows[i_9] ?? item_1(i_9, newRows)).Node;
+                    if (!item_1((i_9 - start) | 0, keep)) {
                         parent.insertBefore(node_1, nextSibling);
                     }
                     nextSibling = node_1;
                 }
-                order = newKeys_2;
+                order = newKeys_3;
                 rows = newRows;
-                for (let i_8 = start; i_8 <= ((n - 1) | 0); i_8++) {
-                    (newRows[i_8] ?? item_1(i_8, newRows)).Index = (i_8 | 0);
+                for (let i_10 = start; i_10 <= ((n - 1) | 0); i_10++) {
+                    (newRows[i_10] ?? item_1(i_10, newRows)).Index = (i_10 | 0);
                 }
             }
         }
     });
     const disposeAll = () => {
         disposeSafe(sub);
-        for (let i_14 = 0; i_14 <= ((rows.length - 1) | 0); i_14++) {
-            disposeSafe((rows[i_14] ?? item_1(i_14, rows)).Dispose);
-            parent.removeChild((rows[i_14] ?? item_1(i_14, rows)).Node);
+        for (let i_16 = 0; i_16 <= ((rows.length - 1) | 0); i_16++) {
+            disposeSafe((rows[i_16] ?? item_1(i_16, rows)).Dispose);
+            parent.removeChild((rows[i_16] ?? item_1(i_16, rows)).Node);
         }
-        byKey.clear();
+        KeyMap$2__Clear(byKey);
         indexed = false;
         order = [];
         rows = [];

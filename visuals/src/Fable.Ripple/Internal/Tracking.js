@@ -1,7 +1,7 @@
 
 import { item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
-import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceCount, sourceAt } from "./Graph.js";
-import { ReactiveNode_$ctor_73324B86, ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
+import { truncateSources, unlinkSourcesTail, addObserver, addSource, sourceCount, sourceAt } from "./Graph.js";
+import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Flags, ReactiveNode__set_Flags_Z524259A4, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 
 let current = undefined;
 
@@ -45,7 +45,12 @@ export function track(node) {
         }
         else if ((currentGetsIndex > 0) && (sourceAt(cur, (currentGetsIndex - 1) | 0) === node)) {
         }
-        else if ((currentGetsIndex < sourceCount(cur)) && (sourceAt(cur, currentGetsIndex) === node)) {
+        else if (currentGetsIndex === sourceCount(cur)) {
+            addSource(cur, node);
+            addObserver(node, cur);
+            currentGetsIndex = ((currentGetsIndex + 1) | 0);
+        }
+        else if (sourceAt(cur, currentGetsIndex) === node) {
             currentGetsIndex = ((currentGetsIndex + 1) | 0);
         }
         else {
@@ -75,7 +80,7 @@ export function updateIfNecessary(node) {
 }
 
 function recompute(node) {
-    let matchValue;
+    let flags;
     const prevCurrent = current;
     const prevGets = currentGets;
     const prevIndex = currentGetsIndex | 0;
@@ -84,9 +89,12 @@ function recompute(node) {
     currentGets = undefined;
     currentGetsIndex = 0;
     Context_current(ReactiveNode__get_Context(node));
+    ReactiveNode__set_Flags_Z524259A4(node, (flags = (ReactiveNode__get_Flags(node) | 0), (flags & 255) | ((flags + 256) & 1073741568)));
+    const startCount = sourceCount(node) | 0;
     let changed = false;
+    let completed = false;
     try {
-        changed = ((matchValue = ReactiveNode__get_EffectFn(node), (matchValue == null) ? ReactiveNode__get_Recompute(node)() : ((matchValue(), false))));
+        changed = node.Recompute();
         if (currentGets == null) {
             if (sourceCount(node) > currentGetsIndex) {
                 unlinkSourcesTail(node, currentGetsIndex);
@@ -103,8 +111,13 @@ function recompute(node) {
                 addObserver(s, node);
             }
         }
+        completed = true;
     }
     finally {
+        if (!completed && (sourceCount(node) > startCount)) {
+            unlinkSourcesTail(node, startCount);
+            truncateSources(node, startCount);
+        }
         current = prevCurrent;
         currentGets = prevGets;
         currentGetsIndex = (prevIndex | 0);
@@ -138,29 +151,11 @@ function recompute(node) {
     }
 }
 
-const probeNode = ReactiveNode_$ctor_73324B86(0, true);
-
 /**
- * Run `fn` once as if it were an effect, and return the sources it read
- * (deduplicated, in read order) without linking them. `ValueNone` when it
- * read nothing.
+ * The node whose reads are being tracked, if any.
  */
-export function probe(fn) {
-    const prevCurrent = current;
-    const prevGets = currentGets;
-    const prevIndex = currentGetsIndex | 0;
-    current = probeNode;
-    currentGets = undefined;
-    currentGetsIndex = 0;
-    try {
-        fn();
-        return currentGets;
-    }
-    finally {
-        current = prevCurrent;
-        currentGets = prevGets;
-        currentGetsIndex = (prevIndex | 0);
-    }
+export function observer() {
+    return current;
 }
 
 export function untracked(fn) {

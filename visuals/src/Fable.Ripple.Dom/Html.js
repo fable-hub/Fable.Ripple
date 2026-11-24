@@ -52,11 +52,35 @@ export function Html_text_5106B011(f) {
     return t;
 }
 
+export function Html_text_Z524259A4(n) {
+    return Html_text_Z721C83C5(n);
+}
+
+export function Html_text_Z724FA04A(f) {
+    return Html_text_5106B011(f);
+}
+
+export function Html_text_5E38073B(n) {
+    return Html_text_Z721C83C5(n);
+}
+
+export function Html_text_2B8B0091(f) {
+    return Html_text_5106B011(f);
+}
+
 /**
  * Reactive text from a string signal.
  */
 export function Html_text_Z108492D4(s) {
     return Html_text_5106B011(() => s.Value);
+}
+
+export function Html_text_4C2DD76B(s) {
+    return Html_text_Z724FA04A(() => (s.Value | 0));
+}
+
+export function Html_text_Z3A16B354(s) {
+    return Html_text_2B8B0091(() => s.Value);
 }
 
 export function Html_header_Z714D7FBE(items) {

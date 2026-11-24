@@ -1,8 +1,6 @@
 
+import { ReactiveNode__get_Flags, ReactiveNode_$reflection, ReactiveNode, ReactiveNode__get_Fn } from "./ReactiveNode.js";
 import { defaultOf } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
-import { FSharpRef } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
-import { ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode_$reflection, ReactiveNode, ReactiveNode__set_Recompute_233A5940 } from "./ReactiveNode.js";
-import { ScopeModule_register } from "./Internal/Scope.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { updateIfNecessary, track } from "./Internal/Tracking.js";
 import { Operators_InvalidOp } from "../../fable_modules/fable-library-js.5.28.0/FSharp.Core.js";
@@ -18,32 +16,9 @@ import { dispose } from "./Internal/Graph.js";
  */
 export class Var$1 extends ReactiveNode {
     constructor(initial, compute, equals) {
-        super((compute == null) ? 0 : 2, false);
-        const this$ = new FSharpRef(defaultOf());
-        this.compute = compute;
+        super((compute == null) ? 0 : (2 | 64), (compute == null) ? defaultOf() : compute);
         this.equals = equals;
-        this$.contents = this;
         this.value = initial;
-        this["init@20"] = 1;
-        const matchValue = this.compute;
-        if (matchValue == null) {
-        }
-        else {
-            const fn = matchValue;
-            ReactiveNode__set_Recompute_233A5940(this$.contents, () => {
-                const nv = fn();
-                if (this.equals(this.value, nv)) {
-                    return false;
-                }
-                else {
-                    this.value = nv;
-                    return true;
-                }
-            });
-        }
-        if (this.compute != null) {
-            ScopeModule_register(this$.contents);
-        }
     }
     get Value() {
         const this$ = this;
@@ -52,6 +27,22 @@ export class Var$1 extends ReactiveNode {
     Peek() {
         const this$ = this;
         return Var$1__Peek(this$);
+    }
+    Recompute() {
+        const this$ = this;
+        if (ReactiveNode__get_Fn(this$) == null) {
+            return false;
+        }
+        else {
+            const nv = ReactiveNode__get_Fn(this$)();
+            if (this$.equals(this$.value, nv)) {
+                return false;
+            }
+            else {
+                this$.value = nv;
+                return true;
+            }
+        }
     }
 }
 
@@ -80,7 +71,7 @@ export function Var$1__get_Value(this$) {
  * handed out as a read-only `Signal<'T>`; writing one through a downcast throws.
  */
 export function Var$1__set_Value_2B595(this$, v) {
-    if (this$.compute != null) {
+    if ((ReactiveNode__get_Flags(this$) & 64) !== 0) {
         throw Operators_InvalidOp("Cannot write to a computed signal.");
     }
     if (!this$.equals(this$.value, v)) {
@@ -119,12 +110,14 @@ export function Var$1__get_Signal(this$) {
  */
 export class Effect extends ReactiveNode {
     constructor(fn) {
-        super(2, true);
-        const this$ = new FSharpRef(defaultOf());
-        this$.contents = this;
-        this["init@94-1"] = 1;
-        ReactiveNode__set_EffectFn_A3DF6A2(this$.contents, fn);
-        ScopeModule_register(this$.contents);
+        super(2 | 4, fn);
+    }
+    Recompute() {
+        const this$ = this;
+        if (!(ReactiveNode__get_Fn(this$) == null)) {
+            ReactiveNode__get_Fn(this$)();
+        }
+        return false;
     }
     Dispose() {
         const this$ = this;

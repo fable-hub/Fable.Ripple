@@ -1,12 +1,13 @@
 
 import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
-import { untracked, updateIfNecessary, probe } from "./Internal/Tracking.js";
-import { Context_get, Context_current, ReactiveNode__set_State_Z12CE0414 } from "./ReactiveNode.js";
-import { item } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
-import { observerCount, addObserver, addSource } from "./Internal/Graph.js";
-import { batch } from "./Internal/Scheduler.js";
-import { ScopeModule_onCleanup, ScopeModule_root } from "./Internal/Scope.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
+import { Context_get, Context_current, ReactiveNode__set_Flags_Z524259A4, ReactiveNode__get_Flags } from "./ReactiveNode.js";
+import { max } from "../../fable_modules/fable-library-js.5.28.0/Double.js";
+import { removeReaderList, readerLists, observerCount, sourceCount, deadReaderCount } from "./Internal/Graph.js";
+import { batch, markDirty } from "./Internal/Scheduler.js";
+import { untracked, updateIfNecessary, observer } from "./Internal/Tracking.js";
+import { ScopeModule_onCleanup, ScopeModule_root, ScopeModule_register } from "./Internal/Scope.js";
 
 function Var_defaultEquals(a, b) {
     return equals_1(a, b);
@@ -27,6 +28,122 @@ export function Var_create(initial) {
     return Var_createWith(Var_defaultEquals, initial);
 }
 
+/**
+ * Readers of a `Signal.selector`, as flat `reader, key, run` triples.
+ */
+export class Selector$1 {
+    constructor(source) {
+        this.source = source;
+        this.entries = [];
+        this.limit = 96;
+        this.current = this.source.Peek();
+        this.deadAtCompact = 0;
+    }
+}
+
+export function Selector$1_$reflection(gen0) {
+    return class_type("Fable.Ripple.Selector`1", [gen0], Selector$1);
+}
+
+export function Selector$1_$ctor_Z66562DBE(source) {
+    return new Selector$1(source);
+}
+
+function Selector$1__Live_Z524259A4(_, i) {
+    const flags = ReactiveNode__get_Flags(_.entries[i]) | 0;
+    if (!((flags & 16) !== 0)) {
+        return (flags & 1073741568) === (_.entries[((i + 2) | 0)]);
+    }
+    else {
+        return false;
+    }
+}
+
+function Selector$1__Compact(this$) {
+    const count = this$.entries.length | 0;
+    let i = 0;
+    let w = 0;
+    while (i < count) {
+        if (Selector$1__Live_Z524259A4(this$, i)) {
+            if (i !== w) {
+                this$.entries[w] = (this$.entries[i]);
+                this$.entries[((w + 1) | 0)] = (this$.entries[((i + 1) | 0)]);
+                this$.entries[((w + 2) | 0)] = (this$.entries[((i + 2) | 0)]);
+            }
+            w = ((w + 3) | 0);
+        }
+        i = ((i + 3) | 0);
+    }
+    this$.entries.length = w;
+    this$.limit = (max(96, Math.imul(2, w)) | 0);
+    this$.deadAtCompact = (deadReaderCount() | 0);
+}
+
+function Selector$1__Notify_Z524259A4(this$, i) {
+    if (Selector$1__Live_Z524259A4(this$, i)) {
+        markDirty(this$.entries[i]);
+    }
+}
+
+export function Selector$1__Update(this$) {
+    let a, b;
+    const next = this$.source.Value;
+    const prev = this$.current;
+    if (!((a = prev, (b = next, (a === b) ? true : (((typeof a) === "object") && equals_1(a, b)))))) {
+        this$.current = next;
+        const count = this$.entries.length | 0;
+        let i = 0;
+        if (((typeof prev) !== "object") && ((typeof next) !== "object")) {
+            while (i < count) {
+                const k = this$.entries[((i + 1) | 0)];
+                if ((k === prev) ? true : (k === next)) {
+                    Selector$1__Notify_Z524259A4(this$, i);
+                }
+                i = ((i + 3) | 0);
+            }
+        }
+        else {
+            while (i < count) {
+                let a_1, b_1, a_2, b_2;
+                const k_1 = this$.entries[((i + 1) | 0)];
+                if (((a_1 = k_1, (b_1 = prev, (a_1 === b_1) ? true : (((typeof a_1) === "object") && equals_1(a_1, b_1))))) ? true : ((a_2 = k_1, (b_2 = next, (a_2 === b_2) ? true : (((typeof a_2) === "object") && equals_1(a_2, b_2)))))) {
+                    Selector$1__Notify_Z524259A4(this$, i);
+                }
+                i = ((i + 3) | 0);
+            }
+        }
+    }
+}
+
+export function Selector$1__Sweep_Z524259A4(this$, deadReaders) {
+    if (Math.imul(6, deadReaders - this$.deadAtCompact) >= this$.entries.length) {
+        Selector$1__Compact(this$);
+    }
+}
+
+export function Selector$1__Read_2B595(this$, key) {
+    const option = observer();
+    if (option != null) {
+        const o = option;
+        ReactiveNode__set_Flags_Z524259A4(o, ReactiveNode__get_Flags(o) | 128);
+        this$.entries.push(o, key, (ReactiveNode__get_Flags(o) & 1073741568));
+        if (this$.entries.length >= this$.limit) {
+            Selector$1__Compact(this$);
+        }
+    }
+    const a = key;
+    const b = this$.source.Peek();
+    if (a === b) {
+        return true;
+    }
+    else if ((typeof a) === "object") {
+        return equals_1(a, b);
+    }
+    else {
+        return false;
+    }
+}
+
 function Signal_defaultEquals(a, b) {
     return equals_1(a, b);
 }
@@ -42,14 +159,18 @@ export function Signal_referenceEquals(a, b) {
  * A signal that never changes.
  */
 export function Signal_constant(value) {
-    return Var$1_$ctor_Z4606F8CC(value, () => value, Signal_defaultEquals);
+    const v = Var$1_$ctor_Z4606F8CC(value, () => value, Signal_defaultEquals);
+    ScopeModule_register(v);
+    return v;
 }
 
 /**
  * Create a cached derived signal with a custom cutoff equality.
  */
 export function Signal_computedWith(equals, f) {
-    return Var$1_$ctor_Z4606F8CC(defaultOf(), f, equals);
+    const v = Var$1_$ctor_Z4606F8CC(defaultOf(), f, equals);
+    ScopeModule_register(v);
+    return v;
 }
 
 /**
@@ -107,16 +228,10 @@ export function Signal_bind(f, a) {
  * A body that reads no signal on its first run is not kept.
  */
 export function Signal_autorun(fn) {
-    const matchValue = probe(fn);
-    if (matchValue != null) {
-        const sources = matchValue;
-        const eff = Effect_$ctor_3A5B6456(fn);
-        ReactiveNode__set_State_Z12CE0414(eff, 0);
-        for (let i = 0, limit = ((sources.length - 1) | 0); i <= limit; i++) {
-            const s = sources[i] ?? item(i, sources);
-            addSource(eff, s);
-            addObserver(s, eff);
-        }
+    const eff = Effect_$ctor_3A5B6456(fn);
+    updateIfNecessary(eff);
+    if ((sourceCount(eff) > 0) ? true : ((ReactiveNode__get_Flags(eff) & 128) !== 0)) {
+        ScopeModule_register(eff);
     }
 }
 
@@ -125,6 +240,7 @@ export function Signal_autorun(fn) {
  */
 export function Signal_effect(fn) {
     const eff = Effect_$ctor_3A5B6456(fn);
+    ScopeModule_register(eff);
     updateIfNecessary(eff);
     return eff;
 }
@@ -201,5 +317,24 @@ export function Signal_withContext(value, fn) {
  */
 export function Signal_observerCount(s) {
     return observerCount(s) | 0;
+}
+
+/**
+ * `isSelected key` is true while `source` equals `key`. When `source`
+ * changes, only the readers of the previous and the new key re-run.
+ */
+export function Signal_selector(source) {
+    const s = Selector$1_$ctor_Z66562DBE(source);
+    Signal_effect(() => {
+        Selector$1__Update(s);
+    });
+    const sweep = (deadReaders) => {
+        Selector$1__Sweep_Z524259A4(s, deadReaders);
+    };
+    void (readerLists.push(sweep));
+    ScopeModule_onCleanup(() => {
+        removeReaderList(sweep);
+    });
+    return (key) => Selector$1__Read_2B595(s, key);
 }
 

@@ -69,6 +69,13 @@ export function flush() {
 }
 
 /**
+ * Mark `node` itself stale, as if one of its sources changed.
+ */
+export function markDirty(node) {
+    stale(node, 2);
+}
+
+/**
  * A source's value changed: mark observers and flush unless batching.
  */
 export function notifyChange(source) {

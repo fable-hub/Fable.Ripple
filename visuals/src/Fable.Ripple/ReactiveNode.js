@@ -2,10 +2,6 @@
 import { defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 
-export function Defaults_noRecompute() {
-    return false;
-}
-
 export let Context_current = createAtom(defaultOf());
 
 export function Context_get() {
@@ -13,24 +9,19 @@ export function Context_get() {
 }
 
 /**
- * Non-generic graph node: dependency edges, marking state, and the type-erased
- * re-evaluation hook.
+ * Non-generic graph node: dependency edges and marking state.
  */
 export class ReactiveNode {
-    constructor(initialState, isEffect) {
-        this["State@"] = initialState;
-        this["IsEffect@"] = isEffect;
-        this["Queued@"] = false;
-        this["Disposed@"] = false;
-        this["Affected@"] = false;
+    constructor(flags, fn) {
+        this["Flags@"] = (flags | 0);
         this["Context@"] = Context_current();
         this["DeadObservers@"] = 0;
         this["FirstSource@"] = undefined;
         this["RestSources@"] = undefined;
         this["FirstObserver@"] = undefined;
         this["RestObservers@"] = undefined;
-        this["Recompute@"] = (Defaults_noRecompute);
-        this["EffectFn@"] = undefined;
+        this["Fn@"] = fn;
+        this["NextOwned@"] = undefined;
     }
 }
 
@@ -38,48 +29,56 @@ export function ReactiveNode_$reflection() {
     return class_type("Fable.Ripple.ReactiveNode", undefined, ReactiveNode);
 }
 
-export function ReactiveNode_$ctor_73324B86(initialState, isEffect) {
-    return new ReactiveNode(initialState, isEffect);
+export function ReactiveNode_$ctor_2B1292C7(flags, fn) {
+    return new ReactiveNode(flags, fn);
+}
+
+export function ReactiveNode__get_Flags(__) {
+    return __["Flags@"] | 0;
+}
+
+export function ReactiveNode__set_Flags_Z524259A4(__, v) {
+    __["Flags@"] = (v | 0);
 }
 
 /**
  * How stale this node is. Sources start `Clean`, computeds and effects
  * `Dirty` (nothing has evaluated them yet).
  */
-export function ReactiveNode__get_State(__) {
-    return __["State@"];
+export function ReactiveNode__get_State(this$) {
+    return ReactiveNode__get_Flags(this$) & 3;
 }
 
 /**
  * How stale this node is. Sources start `Clean`, computeds and effects
  * `Dirty` (nothing has evaluated them yet).
  */
-export function ReactiveNode__set_State_Z12CE0414(__, v) {
-    __["State@"] = v;
+export function ReactiveNode__set_State_Z12CE0414(this$, v) {
+    ReactiveNode__set_Flags_Z524259A4(this$, (ReactiveNode__get_Flags(this$) & ~3) | v);
 }
 
 /**
  * True for effects, which the scheduler queues and re-runs on flush.
  * Computeds and sources are pulled on read instead, never queued.
  */
-export function ReactiveNode__get_IsEffect(__) {
-    return __["IsEffect@"];
+export function ReactiveNode__get_IsEffect(this$) {
+    return (ReactiveNode__get_Flags(this$) & 4) !== 0;
 }
 
 /**
  * Already sitting in the scheduler's pending queue, so repeated staleness
  * marking in one propagation pass enqueues it only once.
  */
-export function ReactiveNode__get_Queued(__) {
-    return __["Queued@"];
+export function ReactiveNode__get_Queued(this$) {
+    return (ReactiveNode__get_Flags(this$) & 8) !== 0;
 }
 
 /**
  * Already sitting in the scheduler's pending queue, so repeated staleness
  * marking in one propagation pass enqueues it only once.
  */
-export function ReactiveNode__set_Queued_Z1FBCCD16(__, v) {
-    __["Queued@"] = v;
+export function ReactiveNode__set_Queued_Z1FBCCD16(this$, v) {
+    ReactiveNode__set_Flags_Z524259A4(this$, v ? (ReactiveNode__get_Flags(this$) | 8) : (ReactiveNode__get_Flags(this$) & ~8));
 }
 
 /**
@@ -88,8 +87,8 @@ export function ReactiveNode__set_Queued_Z1FBCCD16(__, v) {
  * removal per node. A disposed node may linger in a live source's observer
  * list until that list is swept; `Graph.iterObservers` skips it.
  */
-export function ReactiveNode__get_Disposed(__) {
-    return __["Disposed@"];
+export function ReactiveNode__get_Disposed(this$) {
+    return (ReactiveNode__get_Flags(this$) & 16) !== 0;
 }
 
 /**
@@ -98,22 +97,22 @@ export function ReactiveNode__get_Disposed(__) {
  * removal per node. A disposed node may linger in a live source's observer
  * list until that list is swept; `Graph.iterObservers` skips it.
  */
-export function ReactiveNode__set_Disposed_Z1FBCCD16(__, v) {
-    __["Disposed@"] = v;
+export function ReactiveNode__set_Disposed_Z1FBCCD16(this$, v) {
+    ReactiveNode__set_Flags_Z524259A4(this$, v ? (ReactiveNode__get_Flags(this$) | 16) : (ReactiveNode__get_Flags(this$) & ~16));
 }
 
 /**
  * Set while this node is in `Graph.sweepQueue`.
  */
-export function ReactiveNode__get_Affected(__) {
-    return __["Affected@"];
+export function ReactiveNode__get_Affected(this$) {
+    return (ReactiveNode__get_Flags(this$) & 32) !== 0;
 }
 
 /**
  * Set while this node is in `Graph.sweepQueue`.
  */
-export function ReactiveNode__set_Affected_Z1FBCCD16(__, v) {
-    __["Affected@"] = v;
+export function ReactiveNode__set_Affected_Z1FBCCD16(this$, v) {
+    ReactiveNode__set_Flags_Z524259A4(this$, v ? (ReactiveNode__get_Flags(this$) | 32) : (ReactiveNode__get_Flags(this$) & ~32));
 }
 
 /**
@@ -203,36 +202,32 @@ export function ReactiveNode__set_RestObservers_6EF2C44D(__, v) {
 }
 
 /**
- * A computed's recompute hook: re-evaluate and return true if the value
- * changed. Sources and effects leave the shared no-op default - a source is
- * never evaluated, and an effect runs through `EffectFn` instead.
+ * A computed's compute function or an effect's body; `null` on a source and
+ * once the node is disposed.
  */
-export function ReactiveNode__get_Recompute(__) {
-    return __["Recompute@"];
+export function ReactiveNode__get_Fn(__) {
+    return __["Fn@"];
 }
 
 /**
- * A computed's recompute hook: re-evaluate and return true if the value
- * changed. Sources and effects leave the shared no-op default - a source is
- * never evaluated, and an effect runs through `EffectFn` instead.
+ * A computed's compute function or an effect's body; `null` on a source and
+ * once the node is disposed.
  */
-export function ReactiveNode__set_Recompute_233A5940(__, v) {
-    __["Recompute@"] = v;
+export function ReactiveNode__set_Fn_4E60E31B(__, v) {
+    __["Fn@"] = v;
 }
 
 /**
- * An effect's body, stored directly so an effect needs no `Recompute`
- * wrapper closure. `ValueSome` only on effects.
+ * The next node registered with the same scope.
  */
-export function ReactiveNode__get_EffectFn(__) {
-    return __["EffectFn@"];
+export function ReactiveNode__get_NextOwned(__) {
+    return __["NextOwned@"];
 }
 
 /**
- * An effect's body, stored directly so an effect needs no `Recompute`
- * wrapper closure. `ValueSome` only on effects.
+ * The next node registered with the same scope.
  */
-export function ReactiveNode__set_EffectFn_A3DF6A2(__, v) {
-    __["EffectFn@"] = v;
+export function ReactiveNode__set_NextOwned_Z46457FEC(__, v) {
+    __["NextOwned@"] = v;
 }
 

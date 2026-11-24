@@ -1,13 +1,11 @@
 
 import { record_type, obj_type, string_type, enum_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { Record } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
-import { disposeSafe, getEnumerator, Exception, defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { Exception, defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.28.0/List.js";
 import { Signal_withContext, Signal_batch, Signal_context, Signal_autorun } from "../Fable.Ripple/Api.js";
 import { split, float64ToString } from "../../fable_modules/fable-library-js.5.28.0/String.js";
 import { item as item_1 } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
-import { addToSet } from "../../fable_modules/fable-library-js.5.28.0/MapUtil.js";
-import { unionWith } from "../../fable_modules/fable-library-js.5.28.0/Set.js";
 
 /**
  * Runtime-distinct marker so `Html.none` stays separable under `[<Erase>]`
@@ -477,7 +475,10 @@ function Base_ClassList_setToken(element, enabled, name) {
                 element.classList.add(token);
             }
             else {
-                element.classList.remove(token);
+                const current = element.getAttribute('class');
+                if ((!(current == null) && (current.indexOf(token) >= 0)) && element.classList.contains(token)) {
+                    element.classList.remove(token);
+                }
             }
         }
     }
@@ -491,7 +492,10 @@ function Base_ClassList_setToken(element, enabled, name) {
                     element.classList.add(token);
                 }
                 else {
-                    element.classList.remove(token);
+                    const current = element.getAttribute('class');
+                    if ((!(current == null) && (current.indexOf(token) >= 0)) && element.classList.contains(token)) {
+                        element.classList.remove(token);
+                    }
                 }
             }
         }
@@ -565,9 +569,9 @@ export function Base_ClassList_bind(callback) {
             Base_Recording_dynamic(true);
         }
         else {
-            const applied = new Set([]);
+            const applied = new Set();
             Signal_autorun(() => {
-                const next_1 = new Set([]);
+                const next_1 = new Set();
                 const next = next_1;
                 let rest = callback();
                 while (!isEmpty(rest)) {
@@ -576,7 +580,7 @@ export function Base_ClassList_bind(callback) {
                         const name_1 = patternInput[0];
                         if (name_1.indexOf(" ") < 0) {
                             if (name_1.length > 0) {
-                                addToSet(name_1, next);
+                                next.add(name_1);
                             }
                         }
                         else {
@@ -584,39 +588,27 @@ export function Base_ClassList_bind(callback) {
                             for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
                                 const token_1 = arr[idx] ?? item_1(idx, arr);
                                 if (token_1.length > 0) {
-                                    addToSet(token_1, next);
+                                    next.add(token_1);
                                 }
                             }
                         }
                     }
                     rest = tail(rest);
                 }
-                let enumerator = getEnumerator(applied);
-                try {
-                    while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
-                        const token_2 = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]();
-                        if (!next_1.has(token_2)) {
-                            element.classList.remove(token_2);
-                        }
+                applied.forEach((token_2, _arg, _arg_1) => {
+                    if (!next_1.has(token_2)) {
+                        element.classList.remove(token_2);
                     }
-                }
-                finally {
-                    disposeSafe(enumerator);
-                }
-                let enumerator_1 = getEnumerator(next_1);
-                try {
-                    while (enumerator_1["System.Collections.IEnumerator.MoveNext"]()) {
-                        const token_1_1 = enumerator_1["System.Collections.Generic.IEnumerator`1.get_Current"]();
-                        if (!applied.has(token_1_1)) {
-                            element.classList.add(token_1_1);
-                        }
+                });
+                next_1.forEach((token_1_1, _arg_2, _arg_3) => {
+                    if (!applied.has(token_1_1)) {
+                        element.classList.add(token_1_1);
                     }
-                }
-                finally {
-                    disposeSafe(enumerator_1);
-                }
+                });
                 applied.clear();
-                unionWith(applied, next_1);
+                next_1.forEach((token_2_1, _arg_4, _arg_5) => {
+                    applied.add(token_2_1);
+                });
             });
         }
     };
@@ -631,16 +623,16 @@ export function Base_ClassList_bindAll(callback) {
             Base_Recording_dynamic(true);
         }
         else {
-            const applied = new Set([]);
+            const applied = new Set();
             Signal_autorun(() => {
-                const next_1 = new Set([]);
+                const next_1 = new Set();
                 const next = next_1;
                 let rest = callback();
                 while (!isEmpty(rest)) {
                     const name = head(rest);
                     if (name.indexOf(" ") < 0) {
                         if (name.length > 0) {
-                            addToSet(name, next);
+                            next.add(name);
                         }
                     }
                     else {
@@ -648,38 +640,26 @@ export function Base_ClassList_bindAll(callback) {
                         for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
                             const token_1 = arr[idx] ?? item_1(idx, arr);
                             if (token_1.length > 0) {
-                                addToSet(token_1, next);
+                                next.add(token_1);
                             }
                         }
                     }
                     rest = tail(rest);
                 }
-                let enumerator = getEnumerator(applied);
-                try {
-                    while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
-                        const token_2 = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]();
-                        if (!next_1.has(token_2)) {
-                            element.classList.remove(token_2);
-                        }
+                applied.forEach((token_2, _arg, _arg_1) => {
+                    if (!next_1.has(token_2)) {
+                        element.classList.remove(token_2);
                     }
-                }
-                finally {
-                    disposeSafe(enumerator);
-                }
-                let enumerator_1 = getEnumerator(next_1);
-                try {
-                    while (enumerator_1["System.Collections.IEnumerator.MoveNext"]()) {
-                        const token_1_1 = enumerator_1["System.Collections.Generic.IEnumerator`1.get_Current"]();
-                        if (!applied.has(token_1_1)) {
-                            element.classList.add(token_1_1);
-                        }
+                });
+                next_1.forEach((token_1_1, _arg_2, _arg_3) => {
+                    if (!applied.has(token_1_1)) {
+                        element.classList.add(token_1_1);
                     }
-                }
-                finally {
-                    disposeSafe(enumerator_1);
-                }
+                });
                 applied.clear();
-                unionWith(applied, next_1);
+                next_1.forEach((token_2_1, _arg_4, _arg_5) => {
+                    applied.add(token_2_1);
+                });
             });
         }
     };

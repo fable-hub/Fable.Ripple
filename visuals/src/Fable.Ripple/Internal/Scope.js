@@ -1,9 +1,10 @@
 
-import { noteDeadObserver, releaseSweeps, holdSweeps } from "./Graph.js";
+import { noteDeadObserver, noteDeadReader, releaseSweeps, holdSweeps } from "./Graph.js";
 import { class_type } from "../../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
-import { disposeSafe, clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
-import { Defaults_noRecompute, ReactiveNode__set_Recompute_233A5940, ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
+import { disposeSafe, defaultOf, clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { value } from "../../../fable_modules/fable-library-js.5.28.0/Option.js";
+import { ReactiveNode__set_NextOwned_Z46457FEC, ReactiveNode__set_Fn_4E60E31B, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__get_NextOwned, ReactiveNode__get_Flags, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
 import { max } from "../../../fable_modules/fable-library-js.5.28.0/Double.js";
 
 /**
@@ -12,7 +13,7 @@ import { max } from "../../../fable_modules/fable-library-js.5.28.0/Double.js";
  */
 export class Scope {
     constructor() {
-        this["Nodes@"] = [];
+        this["First@"] = undefined;
         this["Cleanups@"] = undefined;
         this["Children@"] = undefined;
         this["Disposed@"] = false;
@@ -44,8 +45,16 @@ export function Scope_$ctor() {
  * The computeds and effects registered with this scope, unlinked from
  * their sources on teardown.
  */
-export function Scope__get_Nodes(__) {
-    return __["Nodes@"];
+export function Scope__get_First(__) {
+    return __["First@"];
+}
+
+/**
+ * The computeds and effects registered with this scope, unlinked from
+ * their sources on teardown.
+ */
+export function Scope__set_First_Z46457FEC(__, v) {
+    __["First@"] = v;
 }
 
 /**
@@ -154,13 +163,20 @@ function Scope__TearDown(this$) {
         }
         clear(cleanups);
     }
-    const nodes = Scope__get_Nodes(this$);
-    for (let i_2 = 0, limit_2 = ((nodes.length - 1) | 0); i_2 <= limit_2; i_2++) {
-        ReactiveNode__set_Disposed_Z1FBCCD16(nodes[i_2] ?? item(i_2, nodes), true);
+    let cursor = Scope__get_First(this$);
+    while (cursor != null) {
+        const node = value(cursor);
+        ReactiveNode__set_Disposed_Z1FBCCD16(node, true);
+        if ((ReactiveNode__get_Flags(node) & 128) !== 0) {
+            noteDeadReader();
+        }
+        cursor = ReactiveNode__get_NextOwned(node);
     }
-    for (let i_3 = 0, limit_4 = ((nodes.length - 1) | 0); i_3 <= limit_4; i_3++) {
-        const node = nodes[i_3] ?? item(i_3, nodes);
-        const n = node;
+    cursor = Scope__get_First(this$);
+    Scope__set_First_Z46457FEC(this$, undefined);
+    while (cursor != null) {
+        const node_1 = value(cursor);
+        const n = node_1;
         if (0 <= 0) {
             const option_2 = ReactiveNode__get_FirstSource(n);
             if (option_2 != null) {
@@ -174,21 +190,21 @@ function Scope__TearDown(this$) {
         if (option_3 != null) {
             const a = option_3;
             const start = ((0 <= 1) ? 0 : ((0 - 1) | 0)) | 0;
-            for (let i_4 = start, limit_3 = ((a.length - 1) | 0); i_4 <= limit_3; i_4++) {
-                const source = a[i_4] ?? item(i_4, a);
+            for (let i_2 = start, limit_2 = ((a.length - 1) | 0); i_2 <= limit_2; i_2++) {
+                const source = a[i_2] ?? item(i_2, a);
                 if (!ReactiveNode__get_Disposed(source)) {
                     noteDeadObserver(source);
                 }
             }
         }
-        ReactiveNode__set_FirstSource_Z46457FEC(node, undefined);
-        ReactiveNode__set_RestSources_6EF2C44D(node, undefined);
-        ReactiveNode__set_State_Z12CE0414(node, 0);
-        ReactiveNode__set_Queued_Z1FBCCD16(node, false);
-        ReactiveNode__set_EffectFn_A3DF6A2(node, undefined);
-        ReactiveNode__set_Recompute_233A5940(node, Defaults_noRecompute);
+        ReactiveNode__set_FirstSource_Z46457FEC(node_1, undefined);
+        ReactiveNode__set_RestSources_6EF2C44D(node_1, undefined);
+        ReactiveNode__set_State_Z12CE0414(node_1, 0);
+        ReactiveNode__set_Queued_Z1FBCCD16(node_1, false);
+        ReactiveNode__set_Fn_4E60E31B(node_1, defaultOf());
+        cursor = ReactiveNode__get_NextOwned(node_1);
+        ReactiveNode__set_NextOwned_Z46457FEC(node_1, undefined);
     }
-    clear(nodes);
 }
 
 let ScopeModule_currentScope = undefined;
@@ -201,7 +217,8 @@ export function ScopeModule_register(node) {
     const option = ScopeModule_currentScope;
     if (option != null) {
         const s = option;
-        void (Scope__get_Nodes(s).push(node));
+        ReactiveNode__set_NextOwned_Z46457FEC(node, Scope__get_First(s));
+        Scope__set_First_Z46457FEC(s, node);
     }
 }
 
