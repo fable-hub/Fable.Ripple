@@ -41,11 +41,15 @@ module Signal =
 
     /// A signal that never changes.
     let constant (value: 'T) : Signal<'T> =
-        Var<'T>(value, ValueSome(fun () -> value), defaultEquals)
+        let v = Var<'T>(value, ValueSome(fun () -> value), defaultEquals)
+        Scope.register v
+        v :> Signal<'T>
 
     /// Create a cached derived signal with a custom cutoff equality.
     let computedWith (equals: 'T -> 'T -> bool) (f: unit -> 'T) : Signal<'T> =
-        Var<'T>(Unchecked.defaultof<'T>, ValueSome f, equals)
+        let v = Var<'T>(Unchecked.defaultof<'T>, ValueSome f, equals)
+        Scope.register v
+        v :> Signal<'T>
 
     /// Create a cached derived signal from an auto-tracked computation.
     let computed (f: unit -> 'T) : Signal<'T> = computedWith defaultEquals f
@@ -92,20 +96,16 @@ module Signal =
     /// lives as long as the enclosing scope; there is no handle to dispose it earlier.
     /// A body that reads no signal on its first run is not kept.
     let autorun (fn: unit -> unit) : unit =
-        match Tracking.probe fn with
-        | ValueNone -> ()
-        | ValueSome sources ->
-            let eff = new Effect(fn)
-            eff.State <- NodeState.Clean
+        let eff = new Effect(fn)
+        Tracking.updateIfNecessary eff
 
-            for i in 0 .. sources.Count - 1 do
-                let s = sources.[i]
-                Graph.addSource eff s
-                Graph.addObserver s eff
+        if Graph.sourceCount eff > 0 then
+            Scope.register eff
 
     /// Run `fn` now and re-run it whenever a signal it reads changes.
     let effect (fn: unit -> unit) : IDisposable =
         let eff = new Effect(fn)
+        Scope.register eff
         Tracking.updateIfNecessary eff
         eff
 

@@ -36,10 +36,11 @@ module internal Tracking =
                     && obj.ReferenceEquals(Graph.sourceAt cur (currentGetsIndex - 1), node)
                 then
                     ()
-                elif
-                    currentGetsIndex < Graph.sourceCount cur
-                    && obj.ReferenceEquals(Graph.sourceAt cur currentGetsIndex, node)
-                then
+                elif currentGetsIndex = Graph.sourceCount cur then
+                    Graph.addSource cur node
+                    Graph.addObserver node cur
+                    currentGetsIndex <- currentGetsIndex + 1
+                elif obj.ReferenceEquals(Graph.sourceAt cur currentGetsIndex, node) then
                     currentGetsIndex <- currentGetsIndex + 1
                 else
                     let g = ResizeArray<ReactiveNode>()
@@ -83,15 +84,12 @@ module internal Tracking =
         currentGets <- ValueNone
         currentGetsIndex <- 0
         Context.current <- node.Context
+        let startCount = Graph.sourceCount node
         let mutable changed = false
+        let mutable completed = false
 
         try
-            changed <-
-                match node.EffectFn with
-                | ValueSome fn ->
-                    fn () // effect: run its body; it has no observers to propagate to
-                    false
-                | ValueNone -> node.Recompute()
+            changed <- (unbox<IRecompute> node).Recompute()
 
             // Reconcile edges only where the dependency set diverged, and only on
             // success - a partial `currentGets` from a throwing evaluation must
@@ -111,7 +109,13 @@ module internal Tracking =
                 if Graph.sourceCount node > currentGetsIndex then
                     Graph.unlinkSourcesTail node currentGetsIndex
                     Graph.truncateSources node currentGetsIndex
+
+            completed <- true
         finally
+            if not completed && Graph.sourceCount node > startCount then
+                Graph.unlinkSourcesTail node startCount
+                Graph.truncateSources node startCount
+
             // Always restore the tracking globals, even if evaluation threw, so a
             // user exception cannot leave the engine wedged mid-computation. The
             // node stays dirty (its `State <- clean` is skipped) and retries later.
@@ -127,28 +131,6 @@ module internal Tracking =
                     if int o.State < int NodeState.Dirty then
                         o.State <- NodeState.Dirty
                 )
-
-    // Never linked: a probe only collects `currentGets`.
-    let private probeNode = ReactiveNode(NodeState.Clean, true)
-
-    /// Run `fn` once as if it were an effect, and return the sources it read
-    /// (deduplicated, in read order) without linking them. `ValueNone` when it
-    /// read nothing.
-    let probe (fn: unit -> unit) : ResizeArray<ReactiveNode> voption =
-        let prevCurrent = current
-        let prevGets = currentGets
-        let prevIndex = currentGetsIndex
-        current <- ValueSome probeNode
-        currentGets <- ValueNone
-        currentGetsIndex <- 0
-
-        try
-            fn ()
-            currentGets
-        finally
-            current <- prevCurrent
-            currentGets <- prevGets
-            currentGetsIndex <- prevIndex
 
     let untracked (fn: unit -> 'a) =
         let prev = current
