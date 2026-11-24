@@ -490,27 +490,29 @@ module Base =
 
         /// Diff `collect`'s token set against the one this binding last applied, toggling
         /// only what changed - tokens this binding never added are never touched.
-        let inline private bindSet ([<InlineIfLambda>] collect: HashSet<string> -> unit) : DomItem =
+        let inline private bindSet ([<InlineIfLambda>] collect: JS.Set<string> -> unit) : DomItem =
             Apply(fun element ->
                 if Recording.active then
                     Recording.dynamic <- true
                 else
-                    let applied = HashSet<string>()
+                    let applied = JS.Constructors.Set.Create<string>()
 
                     Signal.autorun (fun () ->
-                        let next = HashSet<string>()
+                        let next = JS.Constructors.Set.Create<string>()
                         collect next
 
-                        for token in applied do
-                            if not (next.Contains token) then
+                        applied.forEach (fun token _ _ ->
+                            if not (next.has token) then
                                 element.classList.remove token
+                        )
 
-                        for token in next do
-                            if not (applied.Contains token) then
+                        next.forEach (fun token _ _ ->
+                            if not (applied.has token) then
                                 element.classList.add token
+                        )
 
-                        applied.Clear()
-                        applied.UnionWith next
+                        applied.clear ()
+                        next.forEach (fun token _ _ -> applied.add token |> ignore)
                     )
 
             )
@@ -518,11 +520,11 @@ module Base =
         /// Reactive conditional classes: diff the enabled token set against the one this
         /// binding last applied, toggling only what changed - other tokens are untouched.
         let bind (callback: unit -> (string * bool) list) : DomItem =
-            bindSet (fun next -> iterEnabled (callback ()) (fun token -> next.Add token |> ignore))
+            bindSet (fun next -> iterEnabled (callback ()) (fun token -> next.add token |> ignore))
 
         /// Reactive always-on classes: same diff, over a plain list of names.
         let bindAll (callback: unit -> string list) : DomItem =
-            bindSet (fun next -> iterNames (callback ()) (fun token -> next.Add token |> ignore))
+            bindSet (fun next -> iterNames (callback ()) (fun token -> next.add token |> ignore))
 
         /// Toggle a single class token by a static flag.
         let toggle (name: string) (enabled: bool) : DomItem =
