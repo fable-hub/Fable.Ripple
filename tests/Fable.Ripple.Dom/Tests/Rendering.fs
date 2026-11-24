@@ -24,6 +24,22 @@ let tests =
             )
 
             testComponent (
+                "text takes numbers: static, from a thunk, from a signal and in a template",
+                "NumericText",
+                fun root ->
+                    promise {
+                        do! assertLocator (root.locator "#static") (haveText "42 2.5")
+                        do! assertLocator (root.locator "#thunk") (haveText "10 1")
+                        do! assertLocator (root.locator "#signal") (haveText "1 0.5")
+                        do! assertLocator (root.locator "#rows") (haveText "1")
+                        do! click (root.locator "#bump")
+                        do! assertLocator (root.locator "#thunk") (haveText "20 2.5")
+                        do! assertLocator (root.locator "#signal") (haveText "2 1.25")
+                        do! assertLocator (root.locator "#rows") (haveText "12")
+                    }
+            )
+
+            testComponent (
                 "attributes follow thunks and signals, literals stay",
                 "ReactiveAttributes",
                 fun root ->
