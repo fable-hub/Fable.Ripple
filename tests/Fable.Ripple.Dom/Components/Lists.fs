@@ -164,8 +164,54 @@ let private eachPosition () : DomItem =
                 ]
         ]
 
+let private tupleKeyedList () : DomItem =
+    let items =
+        Var.create
+            [|
+                1, "a"
+                2, "b"
+                3, "c"
+            |]
+
+    let builds = Var.create 0
+
+    Html.div
+        [
+            Html.button
+                [
+                    attr.id "reverse"
+                    on.click (fun _ ->
+                        items.Value <- items.Value |> Array.rev |> Array.map (fun (n, s) -> n, s)
+                    )
+                    Html.text "reverse"
+                ]
+            Html.ul
+                [
+                    attr.id "list"
+                    Html.each (
+                        items,
+                        (fun (n, s) -> (n, s)),
+                        (fun (n, _) ->
+                            builds.Value <- builds.Peek() + 1
+
+                            Html.li
+                                [
+                                    attr.custom ("data-id", string n)
+                                    Html.input []
+                                ]
+                        )
+                    )
+                ]
+            Html.output
+                [
+                    attr.id "builds"
+                    Html.text builds
+                ]
+        ]
+
 let all: (string * (unit -> DomItem)) list =
     [
+        "TupleKeyedList", tupleKeyedList
         "KeyedList", keyedList
         "EachPosition", eachPosition
     ]
