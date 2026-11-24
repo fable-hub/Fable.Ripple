@@ -1,18 +1,18 @@
 
 import { Html_render_62D6BEC0, Html_text_Z721C83C5, Html_button_Z714D7FBE, Html_div_Z714D7FBE } from "./src/Fable.Ripple.Dom/Html.js";
-import { empty, singleton, append, delay, toList } from "./fable_modules/fable-library-js.5.18.0/Seq.js";
+import { empty, singleton, append, delay, toList } from "./fable_modules/fable-library-js.5.28.0/Seq.js";
 import { attr_style_Z721C83C5 } from "./src/Fable.Ripple.Dom/Attributes.js";
 import { Probe__get_Hits, Repaint__Now, Probe__Hit, Probe_$ctor_Z721C83C5, Repaint_$ctor } from "./demo/Examples/Widgets.js";
 import { Signal_batch, Signal_subscribe, Signal_map3, Signal_effect, Signal_map, Signal_bind, Signal_computed, Var_create } from "./src/Fable.Ripple/Api.js";
 import { Var$1__Peek, Var$1__get_Signal, Var$1__set_Value_2B595, Var$1__get_Value } from "./src/Fable.Ripple/Types.js";
 import { NodeModule_bindingWith, NodeModule_derivedWith, NodeModule_sourceWith } from "./demo/Examples/Schematic.js";
-import { comparePrimitives, int32ToString } from "./fable_modules/fable-library-js.5.18.0/Util.js";
+import { comparePrimitives, int32ToString } from "./fable_modules/fable-library-js.5.28.0/Util.js";
 import { NodeModule_beating, NodeModule_bindingWith as NodeModule_bindingWith_1, schematic, NodeModule_flag, legend, op_EqualsEqualsGreater, graph, NodeModule_counting } from "./demo/Examples/Schematic.js";
 import { on_click_2527B487 } from "./src/Fable.Ripple.Dom/Events.js";
-import { singleton as singleton_1, ofArray } from "./fable_modules/fable-library-js.5.18.0/List.js";
-import { tryFind, ofList } from "./fable_modules/fable-library-js.5.18.0/Map.js";
-import { defaultArg } from "./fable_modules/fable-library-js.5.18.0/Option.js";
-import { concat } from "./fable_modules/fable-library-js.5.18.0/String.js";
+import { singleton as singleton_1, ofArray } from "./fable_modules/fable-library-js.5.28.0/List.js";
+import { tryFind, ofList } from "./fable_modules/fable-library-js.5.28.0/Map.js";
+import { defaultArg } from "./fable_modules/fable-library-js.5.28.0/Option.js";
+import { concat } from "./fable_modules/fable-library-js.5.28.0/String.js";
 
 function controls(buttons) {
     return Html_div_Z714D7FBE(toList(delay(() => append(singleton(attr_style_Z721C83C5("display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0 0 0.75rem 0")), delay(() => buttons)))));
@@ -28,7 +28,7 @@ function introGraph() {
         return (Var$1__get_Value(a) + Var$1__get_Value(b)) | 0;
     });
     const bump = (v) => {
-        Var$1__set_Value_2B595(v, Var$1__get_Value(v) + 1);
+        Var$1__set_Value_2B595(v, (Var$1__get_Value(v) + 1) | 0);
         Repaint__Now(repaint);
     };
     const aNode = NodeModule_sourceWith("Var a", () => int32ToString(a.Peek()));
@@ -58,7 +58,7 @@ function bindRewiring() {
         }
     }, useCelsius);
     const bump = (v) => {
-        Var$1__set_Value_2B595(v, Var$1__get_Value(v) + 1);
+        Var$1__set_Value_2B595(v, (Var$1__get_Value(v) + 1) | 0);
         Repaint__Now(repaint);
     };
     const selectorNode = NodeModule_flag("useCelsius", useCelsius);
@@ -95,13 +95,13 @@ function cutoffChain() {
         return p.toLocaleUpperCase() + "!";
     }, parity);
     const step = (by) => {
-        Var$1__set_Value_2B595(n, Var$1__get_Value(n) + by);
+        Var$1__set_Value_2B595(n, (Var$1__get_Value(n) + by) | 0);
         Repaint__Now(repaint);
     };
     const nNode = NodeModule_sourceWith("n", () => int32ToString(n.Peek()));
-    const parityNode = NodeModule_counting(parityRuns, NodeModule_derivedWith("parity", () => parity.Peek()));
-    const upperNode = NodeModule_counting(upperRuns, NodeModule_derivedWith("upper", () => upper.Peek()));
-    const readNode = NodeModule_bindingWith("binding", () => upper.Peek());
+    const parityNode = NodeModule_counting(parityRuns, NodeModule_derivedWith("parity", () => (parity.Peek() || "")));
+    const upperNode = NodeModule_counting(upperRuns, NodeModule_derivedWith("upper", () => (upper.Peek() || "")));
+    const readNode = NodeModule_bindingWith("binding", () => (upper.Peek() || ""));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         step(2);
     }), Html_text_Z721C83C5("+2 (parity kept)")])), Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg_1) => {
@@ -121,7 +121,7 @@ function equalWrite() {
         Var$1__set_Value_2B595(name, value_2);
         Repaint__Now(repaint);
     };
-    const nameNode = NodeModule_sourceWith("Var name", () => name.Peek());
+    const nameNode = NodeModule_sourceWith("Var name", () => (name.Peek() || ""));
     const effectNode = NodeModule_counting(runs, NodeModule_bindingWith_1("effect", () => Var$1__Peek(name)));
     return Html_div_Z714D7FBE(ofArray([controls(ofArray([Html_button_Z714D7FBE(ofArray([on_click_2527B487((_arg) => {
         write(Var$1__Peek(name));
@@ -138,10 +138,10 @@ function autoTracking() {
     const includeB = Var_create(false);
     const total = Signal_computed(() => {
         Probe__Hit(runs);
-        return (Var$1__get_Value(includeB) ? (Var$1__get_Value(a) + Var$1__get_Value(b)) : Var$1__get_Value(a)) | 0;
+        return (Var$1__get_Value(includeB) ? ((Var$1__get_Value(a) + Var$1__get_Value(b)) | 0) : Var$1__get_Value(a)) | 0;
     });
     const bump = (v) => {
-        Var$1__set_Value_2B595(v, Var$1__get_Value(v) + 1);
+        Var$1__set_Value_2B595(v, (Var$1__get_Value(v) + 1) | 0);
         Repaint__Now(repaint);
     };
     const switchNode = NodeModule_flag("read b", includeB);
@@ -176,9 +176,9 @@ function batching() {
     const writeAll = (batchIt) => {
         window.setTimeout(() => {
             const writes = () => {
-                Var$1__set_Value_2B595(a, Var$1__get_Value(a) + 1);
-                Var$1__set_Value_2B595(b, Var$1__get_Value(b) + 1);
-                Var$1__set_Value_2B595(c, Var$1__get_Value(c) + 1);
+                Var$1__set_Value_2B595(a, (Var$1__get_Value(a) + 1) | 0);
+                Var$1__set_Value_2B595(b, (Var$1__get_Value(b) + 1) | 0);
+                Var$1__set_Value_2B595(c, (Var$1__get_Value(c) + 1) | 0);
             };
             if (batchIt) {
                 Signal_batch(writes);
@@ -207,7 +207,7 @@ const visuals = ofList(ofArray([["signals-intro", introGraph], ["signals-bind", 
 
 function mountAll() {
     const hosts = document.querySelectorAll("[data-visual]");
-    for (let i = 0; i <= (~~hosts.length - 1); i++) {
+    for (let i = 0, limit = ((~~hosts.length - 1) | 0); i <= limit; i++) {
         const host = hosts.item(i);
         const name = defaultArg(host.getAttribute("data-visual"), "");
         const matchValue = tryFind(name, visuals);

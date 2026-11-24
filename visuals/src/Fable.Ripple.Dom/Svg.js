@@ -1,7 +1,8 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttribute, Base_bindAttributeSignal, Base_attribute, Base_svgNamespace, Base_createElementNS } from "./Base.js";
-import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { float64ToString } from "../../fable_modules/fable-library-js.5.28.0/String.js";
+import { int32ToString } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 
 /**
  * SVG elements. Created in the SVG namespace (`createElementNS`) so they render as
@@ -286,7 +287,7 @@ export function svgAttr_$reflection() {
 }
 
 export function svgAttr_x_5E38073B(v) {
-    return Base_attribute("x", v.toString());
+    return Base_attribute("x", float64ToString(v));
 }
 
 export function svgAttr_x_Z524259A4(v) {
@@ -298,7 +299,7 @@ export function svgAttr_x_Z721C83C5(v) {
 }
 
 export function svgAttr_y_5E38073B(v) {
-    return Base_attribute("y", v.toString());
+    return Base_attribute("y", float64ToString(v));
 }
 
 export function svgAttr_y_Z524259A4(v) {
@@ -310,7 +311,7 @@ export function svgAttr_y_Z721C83C5(v) {
 }
 
 export function svgAttr_x1_5E38073B(v) {
-    return Base_attribute("x1", v.toString());
+    return Base_attribute("x1", float64ToString(v));
 }
 
 export function svgAttr_x1_Z524259A4(v) {
@@ -318,7 +319,7 @@ export function svgAttr_x1_Z524259A4(v) {
 }
 
 export function svgAttr_y1_5E38073B(v) {
-    return Base_attribute("y1", v.toString());
+    return Base_attribute("y1", float64ToString(v));
 }
 
 export function svgAttr_y1_Z524259A4(v) {
@@ -326,7 +327,7 @@ export function svgAttr_y1_Z524259A4(v) {
 }
 
 export function svgAttr_x2_5E38073B(v) {
-    return Base_attribute("x2", v.toString());
+    return Base_attribute("x2", float64ToString(v));
 }
 
 export function svgAttr_x2_Z524259A4(v) {
@@ -334,7 +335,7 @@ export function svgAttr_x2_Z524259A4(v) {
 }
 
 export function svgAttr_y2_5E38073B(v) {
-    return Base_attribute("y2", v.toString());
+    return Base_attribute("y2", float64ToString(v));
 }
 
 export function svgAttr_y2_Z524259A4(v) {
@@ -342,7 +343,7 @@ export function svgAttr_y2_Z524259A4(v) {
 }
 
 export function svgAttr_cx_5E38073B(v) {
-    return Base_attribute("cx", v.toString());
+    return Base_attribute("cx", float64ToString(v));
 }
 
 export function svgAttr_cx_Z524259A4(v) {
@@ -354,7 +355,7 @@ export function svgAttr_cx_Z721C83C5(v) {
 }
 
 export function svgAttr_cy_5E38073B(v) {
-    return Base_attribute("cy", v.toString());
+    return Base_attribute("cy", float64ToString(v));
 }
 
 export function svgAttr_cy_Z524259A4(v) {
@@ -366,7 +367,7 @@ export function svgAttr_cy_Z721C83C5(v) {
 }
 
 export function svgAttr_r_5E38073B(v) {
-    return Base_attribute("r", v.toString());
+    return Base_attribute("r", float64ToString(v));
 }
 
 export function svgAttr_r_Z524259A4(v) {
@@ -378,7 +379,7 @@ export function svgAttr_r_Z721C83C5(v) {
 }
 
 export function svgAttr_rx_5E38073B(v) {
-    return Base_attribute("rx", v.toString());
+    return Base_attribute("rx", float64ToString(v));
 }
 
 export function svgAttr_rx_Z524259A4(v) {
@@ -386,7 +387,7 @@ export function svgAttr_rx_Z524259A4(v) {
 }
 
 export function svgAttr_ry_5E38073B(v) {
-    return Base_attribute("ry", v.toString());
+    return Base_attribute("ry", float64ToString(v));
 }
 
 export function svgAttr_ry_Z524259A4(v) {
@@ -394,7 +395,7 @@ export function svgAttr_ry_Z524259A4(v) {
 }
 
 export function svgAttr_dx_5E38073B(v) {
-    return Base_attribute("dx", v.toString());
+    return Base_attribute("dx", float64ToString(v));
 }
 
 export function svgAttr_dx_Z721C83C5(v) {
@@ -402,7 +403,7 @@ export function svgAttr_dx_Z721C83C5(v) {
 }
 
 export function svgAttr_dy_5E38073B(v) {
-    return Base_attribute("dy", v.toString());
+    return Base_attribute("dy", float64ToString(v));
 }
 
 export function svgAttr_dy_Z721C83C5(v) {
@@ -410,7 +411,7 @@ export function svgAttr_dy_Z721C83C5(v) {
 }
 
 export function svgAttr_width_5E38073B(v) {
-    return Base_attribute("width", v.toString());
+    return Base_attribute("width", float64ToString(v));
 }
 
 export function svgAttr_width_Z524259A4(v) {
@@ -422,7 +423,7 @@ export function svgAttr_width_Z721C83C5(v) {
 }
 
 export function svgAttr_height_5E38073B(v) {
-    return Base_attribute("height", v.toString());
+    return Base_attribute("height", float64ToString(v));
 }
 
 export function svgAttr_height_Z524259A4(v) {
@@ -446,7 +447,7 @@ export function svgAttr_offset_Z721C83C5(v) {
 }
 
 export function svgAttr_pathLength_5E38073B(v) {
-    return Base_attribute("pathLength", v.toString());
+    return Base_attribute("pathLength", float64ToString(v));
 }
 
 export function svgAttr_refX_Z721C83C5(v) {
@@ -458,11 +459,11 @@ export function svgAttr_refY_Z721C83C5(v) {
 }
 
 export function svgAttr_markerWidth_5E38073B(v) {
-    return Base_attribute("markerWidth", v.toString());
+    return Base_attribute("markerWidth", float64ToString(v));
 }
 
 export function svgAttr_markerHeight_5E38073B(v) {
-    return Base_attribute("markerHeight", v.toString());
+    return Base_attribute("markerHeight", float64ToString(v));
 }
 
 export function svgAttr_startOffset_Z721C83C5(v) {
@@ -498,7 +499,7 @@ export function svgAttr_fill_Z721C83C5(v) {
 }
 
 export function svgAttr_fillOpacity_5E38073B(v) {
-    return Base_attribute("fill-opacity", v.toString());
+    return Base_attribute("fill-opacity", float64ToString(v));
 }
 
 export function svgAttr_fillOpacity_Z721C83C5(v) {
@@ -514,7 +515,7 @@ export function svgAttr_stroke_Z721C83C5(v) {
 }
 
 export function svgAttr_strokeWidth_5E38073B(v) {
-    return Base_attribute("stroke-width", v.toString());
+    return Base_attribute("stroke-width", float64ToString(v));
 }
 
 export function svgAttr_strokeWidth_Z524259A4(v) {
@@ -542,7 +543,7 @@ export function svgAttr_strokeDashoffset_Z721C83C5(v) {
 }
 
 export function svgAttr_strokeOpacity_5E38073B(v) {
-    return Base_attribute("stroke-opacity", v.toString());
+    return Base_attribute("stroke-opacity", float64ToString(v));
 }
 
 export function svgAttr_strokeMiterlimit_Z721C83C5(v) {
@@ -550,7 +551,7 @@ export function svgAttr_strokeMiterlimit_Z721C83C5(v) {
 }
 
 export function svgAttr_opacity_5E38073B(v) {
-    return Base_attribute("opacity", v.toString());
+    return Base_attribute("opacity", float64ToString(v));
 }
 
 export function svgAttr_opacity_Z721C83C5(v) {
@@ -566,7 +567,7 @@ export function svgAttr_stopColor_Z721C83C5(v) {
 }
 
 export function svgAttr_stopOpacity_5E38073B(v) {
-    return Base_attribute("stop-opacity", v.toString());
+    return Base_attribute("stop-opacity", float64ToString(v));
 }
 
 export function svgAttr_floodColor_Z721C83C5(v) {
@@ -574,7 +575,7 @@ export function svgAttr_floodColor_Z721C83C5(v) {
 }
 
 export function svgAttr_floodOpacity_5E38073B(v) {
-    return Base_attribute("flood-opacity", v.toString());
+    return Base_attribute("flood-opacity", float64ToString(v));
 }
 
 export function svgAttr_gradientUnits_Z721C83C5(v) {
@@ -654,7 +655,7 @@ export function svgAttr_fontFamily_Z721C83C5(v) {
 }
 
 export function svgAttr_fontSize_5E38073B(v) {
-    return Base_attribute("font-size", v.toString());
+    return Base_attribute("font-size", float64ToString(v));
 }
 
 export function svgAttr_fontSize_Z721C83C5(v) {

@@ -1,8 +1,8 @@
 
 import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__get_Queued, ReactiveNode__get_IsEffect, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
-import { item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { releaseSweeps, holdSweeps } from "./Graph.js";
-import { clear } from "../../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { updateIfNecessary } from "./Tracking.js";
 
 const pending = [];
@@ -31,8 +31,8 @@ function stale(node, target) {
             const option_1 = ReactiveNode__get_RestObservers(n);
             if (option_1 != null) {
                 const a = option_1;
-                for (let i = 0; i <= (a.length - 1); i++) {
-                    const o_1_1 = item(i, a);
+                for (let i = 0, limit = ((a.length - 1) | 0); i <= limit; i++) {
+                    const o_1_1 = a[i] ?? item(i, a);
                     if (!ReactiveNode__get_Disposed(o_1_1)) {
                         stale(o_1_1, 1);
                     }
@@ -49,7 +49,7 @@ export function flush() {
         let i = 0;
         try {
             while (i < pending.length) {
-                const e = item(i, pending);
+                const e = pending[i] ?? item(i, pending);
                 i = ((i + 1) | 0);
                 ReactiveNode__set_Queued_Z1FBCCD16(e, false);
                 if (ReactiveNode__get_State(e) !== 0) {
@@ -58,8 +58,8 @@ export function flush() {
             }
         }
         finally {
-            for (let j = i; j <= (pending.length - 1); j++) {
-                ReactiveNode__set_Queued_Z1FBCCD16(item(j, pending), false);
+            for (let j = i, limit = ((pending.length - 1) | 0); j <= limit; j++) {
+                ReactiveNode__set_Queued_Z1FBCCD16(pending[j] ?? item(j, pending), false);
             }
             clear(pending);
             flushing = false;
@@ -83,8 +83,8 @@ export function notifyChange(source) {
     const option_1 = ReactiveNode__get_RestObservers(n);
     if (option_1 != null) {
         const a = option_1;
-        for (let i = 0; i <= (a.length - 1); i++) {
-            const o_1_1 = item(i, a);
+        for (let i = 0, limit = ((a.length - 1) | 0); i <= limit; i++) {
+            const o_1_1 = a[i] ?? item(i, a);
             if (!ReactiveNode__get_Disposed(o_1_1)) {
                 stale(o_1_1, 2);
             }

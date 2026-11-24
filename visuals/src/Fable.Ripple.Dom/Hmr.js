@@ -1,16 +1,15 @@
 
-import { substring } from "../../fable_modules/fable-library-js.5.18.0/String.js";
-import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
-import { record_type, class_type, int32_type, string_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { addToSet, tryGetValue } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
-import { disposeSafe, getEnumerator, defaultOf, int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { filter, toArray } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
-import { item as item_3 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { substring } from "../../fable_modules/fable-library-js.5.28.0/String.js";
+import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
+import { record_type, class_type, int32_type, string_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
+import { addToSet, tryGetValue } from "../../fable_modules/fable-library-js.5.28.0/MapUtil.js";
+import { disposeSafe, getEnumerator, defaultOf, int32ToString } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { filter, toArray } from "../../fable_modules/fable-library-js.5.28.0/Seq.js";
+import { item as item_3 } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { Var$1__set_Value_2B595, Var$1__get_Value, Var$1__Peek, Var$1 } from "../Fable.Ripple/Types.js";
-import { empty, cons, tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.18.0/List.js";
-import { value as value_5, ofNullable } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
+import { empty, cons, tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.28.0/List.js";
+import { value as value_5, ofNullable } from "../../fable_modules/fable-library-js.5.28.0/Option.js";
 import { Base_replaceTrackedNode, Base_Recording_dependOn, EmptyMarker, Base_applyItemRecording, Base_Recording_active } from "./Base.js";
-import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Core.js";
 import { Var_create, Signal_onCleanup, Signal_autorun, Signal_untracked, Signal_root } from "../Fable.Ripple/Api.js";
 
 function key(url, name) {
@@ -42,12 +41,10 @@ let frame = newFrame("");
 function place(k) {
     let n_1;
     let matchValue;
-    let outArg = 0;
-    matchValue = [tryGetValue(frame.Counts, k, new FSharpRef(() => (outArg | 0), (v) => {
-        outArg = (v | 0);
-    })), outArg];
+    const cell = new FSharpRef(0);
+    matchValue = [tryGetValue(frame.Counts, k, cell), cell.contents];
     n_1 = (matchValue[0] ? matchValue[1] : 0);
-    frame.Counts.set(k, n_1 + 1);
+    frame.Counts.set(k, (n_1 + 1) | 0);
     return (((frame.Path + "/") + k) + "#") + int32ToString(n_1);
 }
 
@@ -60,15 +57,13 @@ function enter(path) {
 function leave(saved) {
     let source, f1, objectArg;
     let matchValue;
-    let outArg = defaultOf();
-    matchValue = [tryGetValue(stash, frame.Path, new FSharpRef(() => outArg, (v) => {
-        outArg = v;
-    })), outArg];
+    const cell = new FSharpRef(defaultOf());
+    matchValue = [tryGetValue(stash, frame.Path, cell), cell.contents];
     if (matchValue[0]) {
         const bag = matchValue[1];
         const stale = toArray((source = bag.keys(), filter((f1 = ((objectArg = frame.Seen, (item) => objectArg.has(item))), (arg) => !f1(arg)), source)));
-        for (let idx = 0; idx <= (stale.length - 1); idx++) {
-            const name = item_3(idx, stale);
+        for (let idx = 0; idx <= ((stale.length - 1) | 0); idx++) {
+            const name = stale[idx] ?? item_3(idx, stale);
             bag.delete(name);
         }
     }
@@ -85,10 +80,8 @@ export function adopt(name, create) {
     addToSet(name, frame.Seen);
     let bag_2;
     let matchValue;
-    let outArg = defaultOf();
-    matchValue = [tryGetValue(stash, frame.Path, new FSharpRef(() => outArg, (v) => {
-        outArg = v;
-    })), outArg];
+    const cell = new FSharpRef(defaultOf());
+    matchValue = [tryGetValue(stash, frame.Path, cell), cell.contents];
     if (matchValue[0]) {
         bag_2 = matchValue[1];
     }
@@ -98,14 +91,12 @@ export function adopt(name, create) {
         bag_2 = bag_1;
     }
     let matchValue_1;
-    let outArg_1 = defaultOf();
-    matchValue_1 = [tryGetValue(bag_2, name, new FSharpRef(() => outArg_1, (v_1) => {
-        outArg_1 = v_1;
-    })), outArg_1];
+    const cell_1 = new FSharpRef(defaultOf());
+    matchValue_1 = [tryGetValue(bag_2, name, cell_1), cell_1.contents];
     if (matchValue_1[0]) {
-        const v_2 = matchValue_1[1];
-        if (v_2 instanceof Var$1) {
-            const typed = v_2;
+        const v = matchValue_1[1];
+        if (v instanceof Var$1) {
+            const typed = v;
             return typed;
         }
         else {
@@ -190,7 +181,7 @@ function capture(root) {
     const matchValue_1 = document.activeElement;
     let matchResult, active_1;
     if (matchValue_1 != null) {
-        if ((active = matchValue_1, !Operators_IsNull(root) && root.contains(active))) {
+        if ((active = matchValue_1, !(root == null) && root.contains(active))) {
             matchResult = 0;
             active_1 = matchValue_1;
         }
@@ -222,7 +213,7 @@ function restore(root, captured) {
         const tupledArg = option_1;
         const selStart = tupledArg[1];
         let node = root;
-        let ok = !Operators_IsNull(root);
+        let ok = !(root == null);
         const enumerator = getEnumerator(tupledArg[0]);
         try {
             while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
@@ -241,11 +232,11 @@ function restore(root, captured) {
         finally {
             disposeSafe(enumerator);
         }
-        if (ok && !Operators_IsNull(node)) {
+        if (ok && !(node == null)) {
             const el = node;
-            if (!Operators_IsNull(el.focus)) {
+            if (!(el.focus == null)) {
                 el.focus();
-                if (!Operators_IsNull(selStart)) {
+                if (!(selStart == null)) {
                     try {
                         el.setSelectionRange(selStart, tupledArg[2]);
                     }
@@ -369,19 +360,17 @@ export function define(url, name, fn) {
     const k = key(url, name);
     let impl;
     let matchValue;
-    let outArg = defaultOf();
-    matchValue = [tryGetValue((globalThis.__RIPPLE_HMR__ || (globalThis.__RIPPLE_HMR__ = new Map())), k, new FSharpRef(() => outArg, (v) => {
-        outArg = v;
-    })), outArg];
+    const cell = new FSharpRef(defaultOf());
+    matchValue = [tryGetValue((globalThis.__RIPPLE_HMR__ || (globalThis.__RIPPLE_HMR__ = new Map())), k, cell), cell.contents];
     if (matchValue[0]) {
-        const v_1 = matchValue[1];
-        Var$1__set_Value_2B595(v_1, fn);
-        impl = v_1;
+        const v = matchValue[1];
+        Var$1__set_Value_2B595(v, fn);
+        impl = v;
     }
     else {
-        const v_2 = Var_create(fn);
-        ((globalThis.__RIPPLE_HMR__ || (globalThis.__RIPPLE_HMR__ = new Map()))).set(k, v_2);
-        impl = v_2;
+        const v_1 = Var_create(fn);
+        ((globalThis.__RIPPLE_HMR__ || (globalThis.__RIPPLE_HMR__ = new Map()))).set(k, v_1);
+        impl = v_1;
     }
     return (...a) => (boundaryOf)(k, impl, a);
 }

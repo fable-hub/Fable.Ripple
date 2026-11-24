@@ -1,6 +1,6 @@
 
-import { defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 
 export function Defaults_noRecompute() {
     return false;

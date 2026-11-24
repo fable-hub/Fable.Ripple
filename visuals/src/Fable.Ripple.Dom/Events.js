@@ -1,7 +1,7 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { Base_onEvent } from "./Base.js";
-import { value } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
+import { value } from "../../fable_modules/fable-library-js.5.28.0/Option.js";
 
 /**
  * DOM events, read as `on.click`, `on.input`, `on.keyDown`, ... Every handler's

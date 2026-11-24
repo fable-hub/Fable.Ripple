@@ -1,13 +1,13 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { EmptyMarker, Base_Recording_splice, Base_toElement, Base_applyItems, Base_emptyMarker, Base_Recording_text, Base_Recording_active, Base_createElement } from "./Base.js";
-import { Exception, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { Exception, disposeSafe, defaultOf } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { Signal_untracked, Signal_computed, Signal_onCleanup, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
-import { singleton } from "../../fable_modules/fable-library-js.5.18.0/List.js";
+import { singleton } from "../../fable_modules/fable-library-js.5.28.0/List.js";
 import { keyedEach } from "./Dom.js";
-import { ofNullable, value as value_2 } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
+import { ofNullable, value as value_2 } from "../../fable_modules/fable-library-js.5.28.0/Option.js";
 import { Template_compile } from "./Template.js";
-import { concat } from "../../fable_modules/fable-library-js.5.18.0/String.js";
+import { concat } from "../../fable_modules/fable-library-js.5.28.0/String.js";
 
 /**
  * HTML elements, text, keyed lists, conditionals, fragments and mounting. Each

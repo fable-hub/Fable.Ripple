@@ -1,5 +1,5 @@
 
-import { item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { addObserver, addSource, truncateSources, unlinkSourcesTail, sourceCount, sourceAt } from "./Graph.js";
 import { ReactiveNode_$ctor_73324B86, ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Recompute, ReactiveNode__get_EffectFn, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
 
@@ -20,7 +20,7 @@ export function track(node) {
         const cur = current;
         if (currentGets != null) {
             const gets = currentGets;
-            const last = (gets.length > 0) ? item(gets.length - 1, gets) : ((currentGetsIndex > 0) ? sourceAt(cur, currentGetsIndex - 1) : undefined);
+            const last = (gets.length > 0) ? item((gets.length - 1) | 0, gets) : ((currentGetsIndex > 0) ? sourceAt(cur, (currentGetsIndex - 1) | 0) : undefined);
             let matchResult;
             if (last != null) {
                 if (last === node) {
@@ -43,7 +43,7 @@ export function track(node) {
                 }
             }
         }
-        else if ((currentGetsIndex > 0) && (sourceAt(cur, currentGetsIndex - 1) === node)) {
+        else if ((currentGetsIndex > 0) && (sourceAt(cur, (currentGetsIndex - 1) | 0) === node)) {
         }
         else if ((currentGetsIndex < sourceCount(cur)) && (sourceAt(cur, currentGetsIndex) === node)) {
             currentGetsIndex = ((currentGetsIndex + 1) | 0);
@@ -97,8 +97,8 @@ function recompute(node) {
             const gets = currentGets;
             unlinkSourcesTail(node, currentGetsIndex);
             truncateSources(node, currentGetsIndex);
-            for (let i = 0; i <= (gets.length - 1); i++) {
-                const s = item(i, gets);
+            for (let i = 0, limit = ((gets.length - 1) | 0); i <= limit; i++) {
+                const s = gets[i] ?? item(i, gets);
                 addSource(node, s);
                 addObserver(s, node);
             }
@@ -125,8 +125,8 @@ function recompute(node) {
         const option_1 = ReactiveNode__get_RestObservers(n);
         if (option_1 != null) {
             const a = option_1;
-            for (let i_1 = 0; i_1 <= (a.length - 1); i_1++) {
-                const o_1_1 = item(i_1, a);
+            for (let i_1 = 0, limit_1 = ((a.length - 1) | 0); i_1 <= limit_1; i_1++) {
+                const o_1_1 = a[i_1] ?? item(i_1, a);
                 if (!ReactiveNode__get_Disposed(o_1_1)) {
                     const o = o_1_1;
                     if (ReactiveNode__get_State(o) < 2) {

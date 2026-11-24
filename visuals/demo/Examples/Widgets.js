@@ -1,13 +1,13 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { Signal_observerCount, Signal_effect, Var_create } from "../../src/Fable.Ripple/Api.js";
 import { Var$1__get_Value, Var$1__Peek, Var$1__set_Value_2B595 } from "../../src/Fable.Ripple/Types.js";
 import { Html_each_Z7426A257, Html_fragment_Z714D7FBE, Html_text_5106B011, Html_text_Z721C83C5, Html_span_Z714D7FBE, Html_div_Z714D7FBE } from "../../src/Fable.Ripple.Dom/Html.js";
 import { attr_ref_7CBEC989, attr_classList_ZA225E0A, attr_className_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Attributes.js";
-import { toArray, length, tryFindIndex, singleton, append, empty, map, ofArray } from "../../fable_modules/fable-library-js.5.18.0/List.js";
-import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { map as map_1, singleton as singleton_1, append as append_1, delay, toList } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
-import { mapIndexed } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { toArray, length, tryFindIndex, singleton, append, empty, map, ofArray } from "../../fable_modules/fable-library-js.5.28.0/List.js";
+import { int32ToString } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { map as map_1, singleton as singleton_1, append as append_1, delay, toList } from "../../fable_modules/fable-library-js.5.28.0/Seq.js";
+import { mapIndexed } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
 
 /**
  * A hit counter, called from inside a computation to count how often it ran.
@@ -74,7 +74,7 @@ export function Repaint_$ctor() {
 }
 
 export function Repaint__Now(_) {
-    Var$1__set_Value_2B595(_.tick, Var$1__Peek(_.tick) + 1);
+    Var$1__set_Value_2B595(_.tick, (Var$1__Peek(_.tick) + 1) | 0);
 }
 
 /**
@@ -219,7 +219,7 @@ export function Trace__Note_Z721C83C5(_, name) {
 export function Trace__PositionOf_Z721C83C5(_, name) {
     const option_1 = tryFindIndex((n) => (n === name), _.order);
     if (option_1 != null) {
-        return 1 + option_1;
+        return (1 + option_1) | 0;
     }
     else {
         return undefined;

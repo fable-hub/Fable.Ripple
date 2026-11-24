@@ -1,11 +1,11 @@
 
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { Base_Recording_dynamic, Base_Recording_active, Base_bindNumberAttributeSignal, Base_bindNumberAttribute, Base_bindAttributeSignal, Base_bindPropertySignal, Base_booleanAttribute, Base_listen, Base_bindProperty, Base_property, Base_bindStylePropertySignal, Base_bindStyleProperty, Base_styleProperty, Base_ClassList_bindToggle, Base_ClassList_toggle, Base_ClassList_bindAll, Base_ClassList_addAll, Base_ClassList_bind, Base_ClassList_add, Base_bindAttribute, Base_attribute } from "./Base.js";
-import { join } from "../../fable_modules/fable-library-js.5.18.0/String.js";
-import { map } from "../../fable_modules/fable-library-js.5.18.0/List.js";
+import { float64ToString, join } from "../../fable_modules/fable-library-js.5.28.0/String.js";
+import { map } from "../../fable_modules/fable-library-js.5.28.0/List.js";
 import { Signal_autorun } from "../Fable.Ripple/Api.js";
 import { Var$1__set_Value_2B595, Var$1__get_Value } from "../Fable.Ripple/Types.js";
-import { int32ToString } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { int32ToString } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 
 /**
  * HTML attributes and properties. Value-bearing attributes take a plain literal;
@@ -582,15 +582,15 @@ export function attr_cols_Z524259A4(v) {
 }
 
 export function attr_low_5E38073B(v) {
-    return Base_attribute("low", v.toString());
+    return Base_attribute("low", float64ToString(v));
 }
 
 export function attr_high_5E38073B(v) {
-    return Base_attribute("high", v.toString());
+    return Base_attribute("high", float64ToString(v));
 }
 
 export function attr_optimum_5E38073B(v) {
-    return Base_attribute("optimum", v.toString());
+    return Base_attribute("optimum", float64ToString(v));
 }
 
 export function attr_autoFocus_Z1FBCCD16(v) {

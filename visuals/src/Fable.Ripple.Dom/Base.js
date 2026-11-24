@@ -1,14 +1,13 @@
 
-import { record_type, obj_type, string_type, enum_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { Record } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
-import { disposeSafe, getEnumerator, Exception, defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.18.0/List.js";
-import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Core.js";
+import { record_type, obj_type, string_type, enum_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
+import { Record } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
+import { disposeSafe, getEnumerator, Exception, defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { tail, head, isEmpty } from "../../fable_modules/fable-library-js.5.28.0/List.js";
 import { Signal_withContext, Signal_batch, Signal_context, Signal_autorun } from "../Fable.Ripple/Api.js";
-import { split } from "../../fable_modules/fable-library-js.5.18.0/String.js";
-import { item as item_1 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
-import { addToSet } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
-import { unionWith } from "../../fable_modules/fable-library-js.5.18.0/Set.js";
+import { split, float64ToString } from "../../fable_modules/fable-library-js.5.28.0/String.js";
+import { item as item_1 } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
+import { addToSet } from "../../fable_modules/fable-library-js.5.28.0/MapUtil.js";
+import { unionWith } from "../../fable_modules/fable-library-js.5.28.0/Set.js";
 
 /**
  * Runtime-distinct marker so `Html.none` stays separable under `[<Erase>]`
@@ -211,7 +210,7 @@ export function Base_trackNode(node, update) {
  */
 export function Base_replaceTrackedNode(oldNode, newNode) {
     const update = oldNode.__rippleOwner;
-    if (!Operators_IsNull(update)) {
+    if (!(update == null)) {
         update(newNode);
         newNode.__rippleOwner = update;
     }
@@ -282,7 +281,7 @@ export function Base_bindNumberAttribute(name, callback) {
                 const v = callback();
                 if (v !== prev) {
                     prev = v;
-                    element.setAttribute(name, v.toString());
+                    element.setAttribute(name, float64ToString(v));
                 }
             });
         }
@@ -439,7 +438,7 @@ export function Base_bindPropertySignal(name, signal) {
 export function Base_listen(element, name, handler) {
     const context = Signal_context();
     element.addEventListener(name, (event) => {
-        if (Operators_IsNull(context)) {
+        if (context == null) {
             Signal_batch(() => {
                 handler(event);
             });
@@ -484,8 +483,8 @@ function Base_ClassList_setToken(element, enabled, name) {
     }
     else {
         const arr = split(name_1, [" "], undefined, 0);
-        for (let idx = 0; idx <= (arr.length - 1); idx++) {
-            const token_1 = item_1(idx, arr);
+        for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
+            const token_1 = arr[idx] ?? item_1(idx, arr);
             if (token_1.length > 0) {
                 const token = token_1;
                 if (enabled) {
@@ -516,8 +515,8 @@ export function Base_ClassList_add(pairs) {
                 }
                 else {
                     const arr = split(name_1, [" "], undefined, 0);
-                    for (let idx = 0; idx <= (arr.length - 1); idx++) {
-                        const token_1 = item_1(idx, arr);
+                    for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
+                        const token_1 = arr[idx] ?? item_1(idx, arr);
                         if (token_1.length > 0) {
                             element.classList.add(token_1);
                         }
@@ -544,8 +543,8 @@ export function Base_ClassList_addAll(names) {
             }
             else {
                 const arr = split(name, [" "], undefined, 0);
-                for (let idx = 0; idx <= (arr.length - 1); idx++) {
-                    const token_1 = item_1(idx, arr);
+                for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
+                    const token_1 = arr[idx] ?? item_1(idx, arr);
                     if (token_1.length > 0) {
                         element.classList.add(token_1);
                     }
@@ -582,8 +581,8 @@ export function Base_ClassList_bind(callback) {
                         }
                         else {
                             const arr = split(name_1, [" "], undefined, 0);
-                            for (let idx = 0; idx <= (arr.length - 1); idx++) {
-                                const token_1 = item_1(idx, arr);
+                            for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
+                                const token_1 = arr[idx] ?? item_1(idx, arr);
                                 if (token_1.length > 0) {
                                     addToSet(token_1, next);
                                 }
@@ -646,8 +645,8 @@ export function Base_ClassList_bindAll(callback) {
                     }
                     else {
                         const arr = split(name, [" "], undefined, 0);
-                        for (let idx = 0; idx <= (arr.length - 1); idx++) {
-                            const token_1 = item_1(idx, arr);
+                        for (let idx = 0; idx <= ((arr.length - 1) | 0); idx++) {
+                            const token_1 = arr[idx] ?? item_1(idx, arr);
                             if (token_1.length > 0) {
                                 addToSet(token_1, next);
                             }

@@ -1,9 +1,9 @@
 
-import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { defaultOf, equals as equals_1 } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { Effect_$ctor_3A5B6456, Var$1_$ctor_Z4606F8CC } from "./Types.js";
 import { untracked, updateIfNecessary, probe } from "./Internal/Tracking.js";
 import { Context_get, Context_current, ReactiveNode__set_State_Z12CE0414 } from "./ReactiveNode.js";
-import { item } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { item } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { observerCount, addObserver, addSource } from "./Internal/Graph.js";
 import { batch } from "./Internal/Scheduler.js";
 import { ScopeModule_onCleanup, ScopeModule_root } from "./Internal/Scope.js";
@@ -112,8 +112,8 @@ export function Signal_autorun(fn) {
         const sources = matchValue;
         const eff = Effect_$ctor_3A5B6456(fn);
         ReactiveNode__set_State_Z12CE0414(eff, 0);
-        for (let i = 0; i <= (sources.length - 1); i++) {
-            const s = item(i, sources);
+        for (let i = 0, limit = ((sources.length - 1) | 0); i <= limit; i++) {
+            const s = sources[i] ?? item(i, sources);
             addSource(eff, s);
             addObserver(s, eff);
         }

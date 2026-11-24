@@ -1,0 +1,311 @@
+import Decimal from "./lib/big.js";
+import { symbol } from "./Numeric.js";
+import { Exception, MidpointRounding, combineHashCodes } from "./Util.js";
+import { NumberStyles, splitNumber } from "./NumberStyles.js";
+import { ArgumentNullException_$ctor_Z721C83C5, FormatException_$ctor_Z721C83C5, OverflowException_$ctor_Z721C83C5 } from "./System.js";
+import { fromDecimal } from "./BigInt.js";
+import * as bigInt from "./BigInt.js";
+Decimal.prototype.GetHashCode = function () {
+    const digits = this.c;
+    if (digits[0] === 0) {
+        return combineHashCodes([1, 0, 0]);
+    }
+    let end = digits.length;
+    while (digits[end - 1] === 0) {
+        end--;
+    }
+    return combineHashCodes([this.s, this.e].concat(digits.slice(0, end)));
+};
+Decimal.prototype.Equals = function (x) {
+    return !this.cmp(x);
+};
+Decimal.prototype.CompareTo = function (x) {
+    return this.cmp(x);
+};
+Decimal.prototype[symbol] = function () {
+    const _this = this;
+    return {
+        multiply: (y) => _this.mul(y),
+        toPrecision: (sd) => _this.toPrecision(sd),
+        toExponential: (dp) => _this.toExponential(dp),
+        toFixed: (dp) => _this.toFixed(dp),
+        toHex: () => (Number(_this) >>> 0).toString(16),
+    };
+};
+export default Decimal;
+export const get_Zero = new Decimal(0);
+export const get_One = new Decimal(1);
+export const get_MinusOne = new Decimal(-1);
+export const get_MaxValue = new Decimal("79228162514264337593543950335");
+export const get_MinValue = new Decimal("-79228162514264337593543950335");
+export function compare(x, y) {
+    return x.cmp(y);
+}
+export function equals(x, y) {
+    return !x.cmp(y);
+}
+export function abs(x) { return x.abs(); }
+export function sign(x) { return x.lt(get_Zero) ? -1 : x.gt(get_Zero) ? 1 : 0; }
+export function max(x, y) { return x.lt(y) ? y : x; }
+export function min(x, y) { return x.lt(y) ? x : y; }
+export function maxMagnitude(x, y) { return abs(x).gt(abs(y)) ? x : y; }
+export function minMagnitude(x, y) { return abs(x).lt(abs(y)) ? x : y; }
+export function clamp(x, min, max) {
+    return x.lt(min) ? min : x.gt(max) ? max : x;
+}
+export function round(x, digits = 0) {
+    return x.round(digits, 2 /* ROUND_HALF_EVEN */);
+}
+export function roundToMode(x, digits, mode) {
+    if (!(digits >= 0 && digits <= 28)) {
+        throw new Exception("Decimal can only round to between 0 and 28 digits of precision. (Parameter 'decimals')");
+    }
+    switch (mode) {
+        case MidpointRounding.ToEven: return x.round(digits, 2 /* ROUND_HALF_EVEN */);
+        case MidpointRounding.AwayFromZero: return x.round(digits, 1 /* ROUND_HALF_UP */);
+        case MidpointRounding.ToZero: return x.round(digits, 0 /* ROUND_DOWN */);
+        case MidpointRounding.ToNegativeInfinity: return x.round(digits, x.cmp(0) >= 0 ? 0 /* ROUND_DOWN */ : 3 /* ROUND_UP */);
+        case MidpointRounding.ToPositiveInfinity: return x.round(digits, x.cmp(0) >= 0 ? 3 /* ROUND_UP */ : 0 /* ROUND_DOWN */);
+        default: throw new Exception(`The value '${mode}' is not valid for this usage of the type MidpointRounding. (Parameter 'mode')`);
+    }
+}
+export function roundMode(x, mode) {
+    return roundToMode(x, 0, mode);
+}
+export function truncate(x) {
+    return x.round(0, 0 /* ROUND_DOWN */);
+}
+export function ceiling(x) {
+    return x.round(0, x.cmp(0) >= 0 ? 3 /* ROUND_UP */ : 0 /* ROUND_DOWN */);
+}
+export function floor(x) {
+    return x.round(0, x.cmp(0) >= 0 ? 0 /* ROUND_DOWN */ : 3 /* ROUND_UP */);
+}
+export function pow(x, n) {
+    return x.pow(n);
+}
+export function sqrt(x) {
+    return x.sqrt();
+}
+export function op_Addition(x, y) {
+    return x.add(y);
+}
+export function op_Subtraction(x, y) {
+    return x.sub(y);
+}
+export function op_Multiply(x, y) {
+    return x.mul(y);
+}
+export function op_Division(x, y) {
+    return x.div(y);
+}
+export function op_Modulus(x, y) {
+    return x.mod(y);
+}
+export function op_UnaryNegation(x) {
+    const x2 = new Decimal(x);
+    x2.s = -x2.s || 0;
+    return x2;
+}
+export function op_UnaryPlus(x) {
+    return x;
+}
+export const add = op_Addition;
+export const subtract = op_Subtraction;
+export const multiply = op_Multiply;
+export const divide = op_Division;
+export const remainder = op_Modulus;
+export const negate = op_UnaryNegation;
+export function toString(x) {
+    return x.toString();
+}
+// Returns undefined when the string does not have the format allowed by the style
+function parseWithStyle(str, style) {
+    const parts = splitNumber(str, style);
+    if (parts === undefined) {
+        return undefined;
+    }
+    let d;
+    try {
+        d = new Decimal(parts.digits);
+    }
+    catch {
+        // Fable's big.js fork throws for values outside the decimal range
+        throw OverflowException_$ctor_Z721C83C5(OVERFLOW);
+    }
+    if (parts.negative) {
+        d.s = -1;
+    }
+    return d;
+}
+export function tryParse(str, style, defValue) {
+    let d;
+    try {
+        d = parseWithStyle(str, style);
+    }
+    catch {
+        d = undefined;
+    }
+    defValue.contents = d ?? get_Zero;
+    return d !== undefined;
+}
+export function parse(str, style = NumberStyles.Number) {
+    if (str == null) {
+        throw ArgumentNullException_$ctor_Z721C83C5("s");
+    }
+    const d = parseWithStyle(str, style);
+    if (d === undefined) {
+        throw FormatException_$ctor_Z721C83C5(`The input string '${str}' was not in a correct format.`);
+    }
+    return d;
+}
+export function toNumber(x) {
+    return +x;
+}
+export function toChar(x) {
+    const n = toNumber(x);
+    if (n < 0 || n > 65535 || isNaN(n)) {
+        throw new Exception("Value was either too large or too small for a character.");
+    }
+    return String.fromCharCode(n);
+}
+export function toInt8(x) { return bigInt.toInt8(fromDecimal(x)); }
+export function toUInt8(x) { return bigInt.toUInt8(fromDecimal(x)); }
+export function toInt16(x) { return bigInt.toInt16(fromDecimal(x)); }
+export function toUInt16(x) { return bigInt.toUInt16(fromDecimal(x)); }
+export function toInt32(x) { return bigInt.toInt32(fromDecimal(x)); }
+export function toUInt32(x) { return bigInt.toUInt32(fromDecimal(x)); }
+export function toInt64(x) { return bigInt.toInt64(fromDecimal(x)); }
+export function toUInt64(x) { return bigInt.toUInt64(fromDecimal(x)); }
+export function toInt128(x) { return bigInt.toInt128(fromDecimal(x)); }
+export function toUInt128(x) { return bigInt.toUInt128(fromDecimal(x)); }
+export function toNativeInt(x) { return bigInt.toNativeInt(fromDecimal(x)); }
+export function toUNativeInt(x) { return bigInt.toUNativeInt(fromDecimal(x)); }
+export function toFloat16(x) { return toNumber(x); }
+export function toFloat32(x) { return toNumber(x); }
+export function toFloat64(x) { return toNumber(x); }
+function decimalToHex(dec, bitSize) {
+    const hex = new Uint8Array(bitSize / 4 | 0);
+    let hexCount = 1;
+    for (let d = 0; d < dec.length; d++) {
+        let value = dec[d];
+        for (let i = 0; i < hexCount; i++) {
+            const digit = hex[i] * 10 + value | 0;
+            hex[i] = digit & 0xF;
+            value = digit >> 4;
+        }
+        if (value !== 0) {
+            hex[hexCount++] = value;
+        }
+    }
+    return hex.slice(0, hexCount); // digits in reverse order
+}
+function hexToDecimal(hex, bitSize) {
+    const dec = new Uint8Array(bitSize * 301 / 1000 + 1 | 0);
+    let decCount = 1;
+    for (let d = hex.length - 1; d >= 0; d--) {
+        let carry = hex[d];
+        for (let i = 0; i < decCount; i++) {
+            const val = dec[i] * 16 + carry | 0;
+            dec[i] = (val % 10) | 0;
+            carry = (val / 10) | 0;
+        }
+        while (carry > 0) {
+            dec[decCount++] = (carry % 10) | 0;
+            carry = (carry / 10) | 0;
+        }
+    }
+    return dec.slice(0, decCount); // digits in reverse order
+}
+function setInt32Bits(hexDigits, bits, offset) {
+    for (let i = 0; i < 8; i++) {
+        hexDigits[offset + i] = (bits >> (i * 4)) & 0xF;
+    }
+}
+function getInt32Bits(hexDigits, offset) {
+    let bits = 0;
+    for (let i = 0; i < 8; i++) {
+        bits = bits | (hexDigits[offset + i] << (i * 4));
+    }
+    return bits;
+}
+const OVERFLOW = "Value was either too large or too small for a Decimal.";
+// The first double outside the decimal range
+const MAX_DOUBLE = 2 ** 96;
+function fromFloat(n, significantDigits) {
+    if (!isFinite(n) || Math.abs(n) >= MAX_DOUBLE) {
+        throw new Exception(OVERFLOW);
+    }
+    const exact = Math.abs(n) >= 1e21 ? BigInt(n).toString() : n.toFixed(100);
+    const d = new Decimal(exact).prec(significantDigits, 2);
+    const digits = d.c;
+    let end = digits.length;
+    while (end > 1 && digits[end - 1] === 0) {
+        end--;
+    }
+    d.c = digits.slice(0, end);
+    if (d.c[0] === 0) {
+        d.e = 0;
+    }
+    return d;
+}
+export function fromFloat64(n) {
+    return fromFloat(n, 15);
+}
+export function fromFloat32(n) {
+    return fromFloat(n, 7);
+}
+export function fromIntArray(bits) {
+    return fromInts(bits[0], bits[1], bits[2], bits[3]);
+}
+export function fromInts(low, mid, high, signExp) {
+    const isNegative = signExp < 0;
+    const scale = (signExp >> 16) & 0x7F;
+    return fromParts(low, mid, high, isNegative, scale);
+}
+export function fromParts(low, mid, high, isNegative, scale) {
+    const bitSize = 96;
+    const hexDigits = new Uint8Array(bitSize / 4);
+    setInt32Bits(hexDigits, low, 0);
+    setInt32Bits(hexDigits, mid, 8);
+    setInt32Bits(hexDigits, high, 16);
+    const decDigits = hexToDecimal(hexDigits, bitSize);
+    scale = scale & 0x7F;
+    const big = new Decimal(0);
+    big.c = Array.from(decDigits.reverse());
+    big.e = decDigits.length - scale - 1;
+    big.s = isNegative ? -1 : 1;
+    const d = new Decimal(big);
+    return d;
+}
+export function getBits(d) {
+    const bitSize = 96;
+    const decStr = d.toString();
+    const absStr = decStr[0] === "-" ? decStr.slice(1) : decStr;
+    const dotPos = absStr.indexOf(".");
+    const scale = dotPos < 0 ? 0 : absStr.length - dotPos - 1;
+    const mantissaStr = absStr.replace(".", "");
+    const decDigits = Uint8Array.from(mantissaStr, ch => ch.charCodeAt(0) - 48);
+    const hexDigits = decimalToHex(decDigits, bitSize);
+    const low = getInt32Bits(hexDigits, 0);
+    const mid = getInt32Bits(hexDigits, 8);
+    const high = getInt32Bits(hexDigits, 16);
+    const signExp = ((scale & 0x7F) << 16) | (d.s < 0 ? 0x80000000 : 0);
+    return [low, mid, high, signExp];
+}
+// export function makeRangeStepFunction(step: Decimal, last: Decimal) {
+//   const stepComparedWithZero = step.cmp(get_Zero);
+//   if (stepComparedWithZero === 0) {
+//     throw new Exception("The step of a range cannot be zero");
+//   }
+//   const stepGreaterThanZero = stepComparedWithZero > 0;
+//   return (x: Decimal) => {
+//     const comparedWithLast = x.cmp(last);
+//     if ((stepGreaterThanZero && comparedWithLast <= 0)
+//       || (!stepGreaterThanZero && comparedWithLast >= 0)) {
+//       return [x, op_Addition(x, step)];
+//     } else {
+//       return undefined;
+//     }
+//   };
+// }

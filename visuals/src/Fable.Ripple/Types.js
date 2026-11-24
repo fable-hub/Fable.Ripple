@@ -1,10 +1,11 @@
 
-import { Exception, defaultOf } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { FSharpRef } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
+import { defaultOf } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { FSharpRef } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
 import { ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode_$reflection, ReactiveNode, ReactiveNode__set_Recompute_233A5940 } from "./ReactiveNode.js";
 import { ScopeModule_register } from "./Internal/Scope.js";
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { updateIfNecessary, track } from "./Internal/Tracking.js";
+import { Operators_InvalidOp } from "../../fable_modules/fable-library-js.5.28.0/FSharp.Core.js";
 import { notifyChange } from "./Internal/Scheduler.js";
 import { dispose } from "./Internal/Graph.js";
 
@@ -80,7 +81,7 @@ export function Var$1__get_Value(this$) {
  */
 export function Var$1__set_Value_2B595(this$, v) {
     if (this$.compute != null) {
-        throw new Exception("Cannot write to a computed signal.");
+        throw Operators_InvalidOp("Cannot write to a computed signal.");
     }
     if (!this$.equals(this$.value, v)) {
         this$.value = v;

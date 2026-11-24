@@ -1,8 +1,8 @@
 
 import { ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_Affected_Z1FBCCD16, ReactiveNode__get_Affected, ReactiveNode__get_Disposed, ReactiveNode__set_DeadObservers_Z524259A4, ReactiveNode__set_FirstObserver_Z46457FEC, ReactiveNode__set_RestObservers_6EF2C44D, ReactiveNode__get_DeadObservers, ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__get_RestSources, ReactiveNode__get_FirstSource } from "../ReactiveNode.js";
-import { value } from "../../../fable_modules/fable-library-js.5.18.0/Option.js";
-import { setItem, item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
-import { clear } from "../../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { value } from "../../../fable_modules/fable-library-js.5.28.0/Option.js";
+import { setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
+import { clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
 
 export function sourceCount(n) {
     const matchValue = ReactiveNode__get_FirstSource(n);
@@ -31,7 +31,7 @@ export function sourceAt(n, i) {
         return value(copyOfStruct);
     }
     else {
-        return item(i - 1, (copyOfStruct_1 = ReactiveNode__get_RestSources(n), value(copyOfStruct_1)));
+        return item((i - 1) | 0, (copyOfStruct_1 = ReactiveNode__get_RestSources(n), value(copyOfStruct_1)));
     }
 }
 
@@ -73,8 +73,8 @@ export function truncateSources(n, len) {
         const option_1 = ReactiveNode__get_RestSources(n);
         if (option_1 != null) {
             const a_1 = option_1;
-            while (a_1.length > (len - 1)) {
-                a_1.splice(a_1.length - 1, 1);
+            while (a_1.length > ((len - 1) | 0)) {
+                a_1.splice((a_1.length - 1) | 0, 1);
             }
         }
     }
@@ -151,8 +151,8 @@ export function removeObserver(n, o) {
         switch (matchResult) {
             case 0: {
                 const a_1 = matchValue_1;
-                ReactiveNode__set_FirstObserver_Z46457FEC(n, item(a_1.length - 1, a_1));
-                a_1.splice(a_1.length - 1, 1);
+                ReactiveNode__set_FirstObserver_Z46457FEC(n, item((a_1.length - 1) | 0, a_1));
+                a_1.splice((a_1.length - 1) | 0, 1);
                 break;
             }
             case 1: {
@@ -168,9 +168,9 @@ export function removeObserver(n, o) {
             let i = 0;
             let go = true;
             while (go && (i < a_2.length)) {
-                if (item(i, a_2) === o) {
-                    setItem(a_2, i, item(a_2.length - 1, a_2));
-                    a_2.splice(a_2.length - 1, 1);
+                if ((a_2[i] ?? item(i, a_2)) === o) {
+                    setItem(a_2, i, item((a_2.length - 1) | 0, a_2));
+                    a_2.splice((a_2.length - 1) | 0, 1);
                     go = false;
                 }
                 else {
@@ -196,8 +196,8 @@ export function compactObservers(n, keep) {
         if (option != null) {
             const rest = option;
             let w = 0;
-            for (let readIdx = 0; readIdx <= (rest.length - 1); readIdx++) {
-                const o = item(readIdx, rest);
+            for (let readIdx = 0, limit = ((rest.length - 1) | 0); readIdx <= limit; readIdx++) {
+                const o = rest[readIdx] ?? item(readIdx, rest);
                 if (keep(o)) {
                     if (newFirst != null) {
                         setItem(rest, w, o);
@@ -209,7 +209,7 @@ export function compactObservers(n, keep) {
                 }
             }
             while (rest.length > w) {
-                rest.splice(rest.length - 1, 1);
+                rest.splice((rest.length - 1) | 0, 1);
             }
         }
         ReactiveNode__set_FirstObserver_Z46457FEC(n, newFirst);
@@ -225,7 +225,7 @@ function sweepDeadObservers(n) {
             ReactiveNode__set_RestObservers_6EF2C44D(n, undefined);
             ReactiveNode__set_DeadObservers_Z524259A4(n, 0);
         }
-        else if ((2 * dead) >= slots) {
+        else if (Math.imul(2, dead) >= slots) {
             compactObservers(n, (o) => !ReactiveNode__get_Disposed(o));
             ReactiveNode__set_DeadObservers_Z524259A4(n, 0);
         }
@@ -237,7 +237,7 @@ const sweepQueue = [];
 let sweepHolds = 0;
 
 export function noteDeadObserver(source) {
-    ReactiveNode__set_DeadObservers_Z524259A4(source, ReactiveNode__get_DeadObservers(source) + 1);
+    ReactiveNode__set_DeadObservers_Z524259A4(source, (ReactiveNode__get_DeadObservers(source) + 1) | 0);
     if (!ReactiveNode__get_Affected(source)) {
         ReactiveNode__set_Affected_Z1FBCCD16(source, true);
         void (sweepQueue.push(source));
@@ -257,8 +257,8 @@ export function holdSweeps() {
 export function releaseSweeps() {
     sweepHolds = ((sweepHolds - 1) | 0);
     if ((sweepHolds === 0) && (sweepQueue.length > 0)) {
-        for (let i = 0; i <= (sweepQueue.length - 1); i++) {
-            const source = item(i, sweepQueue);
+        for (let i = 0, limit = ((sweepQueue.length - 1) | 0); i <= limit; i++) {
+            const source = sweepQueue[i] ?? item(i, sweepQueue);
             ReactiveNode__set_Affected_Z1FBCCD16(source, false);
             sweepDeadObservers(source);
         }
@@ -281,9 +281,9 @@ export function unlinkSourcesTail(node, fromIndex) {
     const option_1 = ReactiveNode__get_RestSources(n);
     if (option_1 != null) {
         const a = option_1;
-        const start = ((fromIdx <= 1) ? 0 : (fromIdx - 1)) | 0;
-        for (let i = start; i <= (a.length - 1); i++) {
-            removeObserver(item(i, a), node);
+        const start = ((fromIdx <= 1) ? 0 : ((fromIdx - 1) | 0)) | 0;
+        for (let i = start, limit = ((a.length - 1) | 0); i <= limit; i++) {
+            removeObserver(a[i] ?? item(i, a), node);
         }
     }
 }
@@ -302,9 +302,9 @@ export function dispose(node) {
     const option_1 = ReactiveNode__get_RestSources(n);
     if (option_1 != null) {
         const a = option_1;
-        const start = ((0 <= 1) ? 0 : (0 - 1)) | 0;
-        for (let i = start; i <= (a.length - 1); i++) {
-            removeObserver(item(i, a), node);
+        const start = ((0 <= 1) ? 0 : ((0 - 1) | 0)) | 0;
+        for (let i = start, limit = ((a.length - 1) | 0); i <= limit; i++) {
+            removeObserver(a[i] ?? item(i, a), node);
         }
     }
     ReactiveNode__set_FirstSource_Z46457FEC(node, undefined);

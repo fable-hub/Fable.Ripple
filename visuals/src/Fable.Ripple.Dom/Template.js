@@ -1,11 +1,10 @@
 
 import { Signal_setContext, Signal_autorun, Signal_context } from "../Fable.Ripple/Api.js";
-import { Operators_IsNull } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Core.js";
-import { defaultOf, comparePrimitives, Exception } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { value } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
-import { min } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
-import { initialize, item } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
+import { defaultOf, comparePrimitives, Exception } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
+import { value } from "../../fable_modules/fable-library-js.5.28.0/Option.js";
+import { min } from "../../fable_modules/fable-library-js.5.28.0/Double.js";
+import { initialize, item } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { Base_toElement, Base_Recording_stop, Base_Recording_start, Base_listen } from "./Base.js";
 
 /**
@@ -18,7 +17,7 @@ export class RowSignal$1 {
     }
     get Value() {
         const row = Signal_context();
-        if (Operators_IsNull(row)) {
+        if (row == null) {
             throw new Exception("Html.template: the row was read with no row active. At the top level of the render function, wrap the read in a binding: Html.text (fun () -> ...). In code that runs later (a timer, a promise, an observer), read the row into a local first: let item = row.Value.");
         }
         return row;
@@ -65,7 +64,7 @@ function Template_comparePaths(a, b) {
     let i = 0;
     let result = 0;
     while ((result === 0) && (i < n)) {
-        result = (comparePrimitives(item(i, a), item(i, b)) | 0);
+        result = (comparePrimitives(a[i] ?? item(i, a), b[i] ?? item(i, b)) | 0);
         i = ((i + 1) | 0);
     }
     if (result !== 0) {
@@ -77,41 +76,41 @@ function Template_comparePaths(a, b) {
 }
 
 function Template_planOf(root, recorded) {
-    const paths = initialize(recorded.length, (i) => Template_pathOf(root, item(i, recorded).Node));
+    const paths = initialize(recorded.length, (i) => Template_pathOf(root, (recorded[i] ?? item(i, recorded)).Node));
     const order = initialize(recorded.length, (x) => (x | 0), Int32Array);
     order.sort((i_1, j) => {
-        const matchValue = Template_comparePaths(item(i_1, paths), item(j, paths)) | 0;
+        const matchValue = Template_comparePaths(paths[i_1] ?? item(i_1, paths), paths[j] ?? item(j, paths)) | 0;
         return ((matchValue === 0) ? comparePrimitives(i_1, j) : matchValue) | 0;
     });
     const plan = [];
     const bindings = [];
     let at = [];
-    for (let idx = 0; idx <= (order.length - 1); idx++) {
-        const k = item(idx, order) | 0;
-        const target = item(k, paths);
+    for (let idx = 0; idx <= ((order.length - 1) | 0); idx++) {
+        const k = (order[idx] ?? item(idx, order)) | 0;
+        const target = paths[k] ?? item(k, paths);
         let common = 0;
-        while (((common < at.length) && (common < target.length)) && (item(common, at) === item(common, target))) {
+        while (((common < at.length) && (common < target.length)) && ((at[common] ?? item(common, at)) === (target[common] ?? item(common, target)))) {
             common = ((common + 1) | 0);
         }
         let depth = common;
         if (at.length > common) {
-            for (let forLoopVar = 1; forLoopVar <= ((at.length - common) - 1); forLoopVar++) {
+            for (let forLoopVar = 1, limit = (((at.length - common) - 1) | 0); forLoopVar <= limit; forLoopVar++) {
                 void (plan.push(Template_opUp));
             }
-            for (let forLoopVar_1 = 1; forLoopVar_1 <= (item(common, target) - item(common, at)); forLoopVar_1++) {
+            for (let forLoopVar_1 = 1, limit_1 = (((target[common] ?? item(common, target)) - (at[common] ?? item(common, at))) | 0); forLoopVar_1 <= limit_1; forLoopVar_1++) {
                 void (plan.push(Template_opNext));
             }
             depth = ((common + 1) | 0);
         }
         while (depth < target.length) {
             void (plan.push(Template_opDown));
-            for (let forLoopVar_2 = 1; forLoopVar_2 <= item(depth, target); forLoopVar_2++) {
+            for (let forLoopVar_2 = 1, limit_2 = (target[depth] ?? item(depth, target)); forLoopVar_2 <= limit_2; forLoopVar_2++) {
                 void (plan.push(Template_opNext));
             }
             depth = ((depth + 1) | 0);
         }
-        void (plan.push(3 + bindings.length));
-        void (bindings.push(item(k, recorded)));
+        void (plan.push((3 + bindings.length) | 0));
+        void (bindings.push(recorded[k] ?? item(k, recorded)));
         at = target;
     }
     return [plan, bindings];
@@ -171,7 +170,7 @@ export function Template_realise(proto, plan, bindings, row) {
                 node = node.parentNode;
             }
             else {
-                Template_apply(bindings[(op - 3)], node, context);
+                Template_apply(bindings[((op - 3) | 0)], node, context);
             }
             i = ((i + 1) | 0);
         }

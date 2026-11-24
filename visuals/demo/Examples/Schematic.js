@@ -1,20 +1,20 @@
 
-import { Record, Union } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
-import { float64_type, record_type, bool_type, option_type, lambda_type, unit_type, string_type, int32_type, union_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
+import { Record, Union } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
+import { float64_type, record_type, bool_type, option_type, lambda_type, unit_type, string_type, int32_type, union_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 import { Repaint__Track, Probe__get_Hits } from "./Widgets.js";
-import { printf, toText, substring } from "../../fable_modules/fable-library-js.5.18.0/String.js";
-import { arrayHash, compareArrays, equalArrays, int32ToString, equals, numberHash, comparePrimitives, disposeSafe, getEnumerator } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { tryPick, tryFindIndex, toArray as toArray_1, filter, average, sortBy, empty, singleton as singleton_1, ofArray, indexed, map, max, min, isEmpty, choose, length } from "../../fable_modules/fable-library-js.5.18.0/List.js";
-import { addToSet, getItemFromDict } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
-import { List_distinct, List_countBy, List_groupBy } from "../../fable_modules/fable-library-js.5.18.0/Seq2.js";
-import { empty as empty_1, exists, append, singleton, collect, delay as delay_1, toList } from "../../fable_modules/fable-library-js.5.18.0/Seq.js";
+import { printf, toText, float64ToString, substring } from "../../fable_modules/fable-library-js.5.28.0/String.js";
+import { arrayHash, compareArrays, equalArrays, int32ToString, equals, numberHash, comparePrimitives, disposeSafe, getEnumerator } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { tryPick, tryFindIndex, toArray as toArray_1, filter, average, sortBy, empty, singleton as singleton_1, ofArray, indexed, map, max, min, isEmpty, choose, length } from "../../fable_modules/fable-library-js.5.28.0/List.js";
+import { addToSet, getItemFromDict } from "../../fable_modules/fable-library-js.5.28.0/MapUtil.js";
+import { List_distinct, List_countBy, List_groupBy } from "../../fable_modules/fable-library-js.5.28.0/Seq2.js";
+import { empty as empty_1, exists, append, singleton, collect, delay as delay_1, toList } from "../../fable_modules/fable-library-js.5.28.0/Seq.js";
 import { Signal_effect, Signal_untracked } from "../../src/Fable.Ripple/Api.js";
 import { Svg_defs_Z714D7FBE, svgAttr_viewBox_Z721C83C5, Svg_svg_Z714D7FBE, Svg_circle_Z714D7FBE, Svg_path_Z714D7FBE, Svg_elem, Svg_text_Z714D7FBE, svgAttr_custom_Z384F8060, Svg_rect_Z714D7FBE, Svg_g_Z714D7FBE } from "../../src/Fable.Ripple.Dom/Svg.js";
 import { attr_style_Z721C83C5, attr_ref_7CBEC989, attr_className_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Attributes.js";
 import { Html_span_Z714D7FBE, Html_each_Z7426A257, Html_div_Z714D7FBE, Html_figure_Z714D7FBE, Html_get_none, Html_text_5106B011, Html_fragment_Z714D7FBE, Html_text_Z721C83C5 } from "../../src/Fable.Ripple.Dom/Html.js";
-import { ofList, tryFind } from "../../fable_modules/fable-library-js.5.18.0/Map.js";
-import { min as min_1, max as max_1 } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
-import { defaultArg, toArray } from "../../fable_modules/fable-library-js.5.18.0/Option.js";
+import { ofList, tryFind } from "../../fable_modules/fable-library-js.5.28.0/Map.js";
+import { min as min_1, max as max_1 } from "../../fable_modules/fable-library-js.5.28.0/Double.js";
+import { defaultArg, toArray } from "../../fable_modules/fable-library-js.5.28.0/Option.js";
 
 export class NodeKind extends Union {
     constructor(tag, fields) {
@@ -141,7 +141,7 @@ const valueChars = ~~((boxW - (2 * 10)) / 9);
 
 function fit(s) {
     if (s.length > valueChars) {
-        return substring(s, 0, valueChars - 1) + "…";
+        return substring(s, 0, (valueChars - 1) | 0) + "…";
     }
     else {
         return s;
@@ -207,7 +207,7 @@ function place(nodes, edges) {
     }
     let changed = true;
     let guard = 0;
-    while (changed && (guard < (length(nodes) + 2))) {
+    while (changed && (guard < ((length(nodes) + 2) | 0))) {
         changed = false;
         guard = ((guard + 1) | 0);
         const enumerator_1 = getEnumerator(edges);
@@ -231,7 +231,7 @@ function place(nodes, edges) {
     }
     changed = true;
     guard = 0;
-    while (changed && (guard < (length(nodes) + 2))) {
+    while (changed && (guard < ((length(nodes) + 2) | 0))) {
         changed = false;
         guard = ((guard + 1) | 0);
         const enumerator_2 = getEnumerator(nodes);
@@ -273,7 +273,7 @@ function place(nodes, edges) {
     }) | 0;
     return toList(delay_1(() => collect((matchValue) => {
         const ns_1 = matchValue[1];
-        const offset = (tallest - length(ns_1)) / 2;
+        const offset = ((tallest - length(ns_1)) | 0) / 2;
         return collect((matchValue_1) => {
             const n_3 = matchValue_1[1];
             return singleton(new Placed(n_3, matchValue[0], offset + matchValue_1[0], Signal_untracked(n_3.Value) === ""));
@@ -360,10 +360,10 @@ function drawNode(repaint, flashOn, p) {
         }
         else {
             onGrow(repaint, flashOn, () => {
-                flash(p.Col * stagger, el);
+                flash(Math.imul(p.Col, stagger), el);
             });
         }
-    })), delay_1(() => append(singleton(Svg_rect_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("x", x(p).toString()), svgAttr_custom_Z384F8060("y", y(p).toString()), svgAttr_custom_Z384F8060("width", widthOf(p).toString()), svgAttr_custom_Z384F8060("height", boxH.toString()), svgAttr_custom_Z384F8060("rx", equals(n.Kind, NodeKind.Derived) ? "10" : "0")]))), delay_1(() => append(p.Bare ? singleton(Svg_text_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-label"), svgAttr_custom_Z384F8060("x", (x(p) + (widthOf(p) / 2)).toString()), svgAttr_custom_Z384F8060("y", ((y(p) + (boxH / 2)) + 4).toString()), svgAttr_custom_Z384F8060("text-anchor", "middle"), Html_text_Z721C83C5(n.Label)]))) : singleton(Html_fragment_Z714D7FBE(ofArray([Svg_text_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-label"), svgAttr_custom_Z384F8060("x", (x(p) + 10).toString()), svgAttr_custom_Z384F8060("y", (y(p) + 21).toString()), Html_text_Z721C83C5(n.Label)])), Svg_text_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-value"), svgAttr_custom_Z384F8060("x", (x(p) + 10).toString()), svgAttr_custom_Z384F8060("y", (y(p) + 42).toString()), Svg_elem("title", singleton_1(Html_text_5106B011(() => {
+    })), delay_1(() => append(singleton(Svg_rect_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("x", float64ToString(x(p))), svgAttr_custom_Z384F8060("y", float64ToString(y(p))), svgAttr_custom_Z384F8060("width", float64ToString(widthOf(p))), svgAttr_custom_Z384F8060("height", float64ToString(boxH)), svgAttr_custom_Z384F8060("rx", equals(n.Kind, NodeKind.Derived) ? "10" : "0")]))), delay_1(() => append(p.Bare ? singleton(Svg_text_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-label"), svgAttr_custom_Z384F8060("x", float64ToString(x(p) + (widthOf(p) / 2))), svgAttr_custom_Z384F8060("y", float64ToString((y(p) + (boxH / 2)) + 4)), svgAttr_custom_Z384F8060("text-anchor", "middle"), Html_text_Z721C83C5(n.Label)]))) : singleton(Html_fragment_Z714D7FBE(ofArray([Svg_text_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-label"), svgAttr_custom_Z384F8060("x", float64ToString(x(p) + 10)), svgAttr_custom_Z384F8060("y", float64ToString(y(p) + 21)), Html_text_Z721C83C5(n.Label)])), Svg_text_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-value"), svgAttr_custom_Z384F8060("x", float64ToString(x(p) + 10)), svgAttr_custom_Z384F8060("y", float64ToString(y(p) + 42)), Svg_elem("title", singleton_1(Html_text_5106B011(() => {
         Repaint__Track(repaint);
         return n.Value();
     }))), Html_text_5106B011(() => {
@@ -376,7 +376,7 @@ function drawNode(repaint, flashOn, p) {
         }
         else {
             const runs_1 = matchValue;
-            return singleton(Svg_g_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-badge"), Svg_elem("title", singleton_1(Html_text_Z721C83C5("Times this has run"))), Svg_rect_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("x", (rightX(p) - 31).toString()), svgAttr_custom_Z384F8060("y", (y(p) + 8).toString()), svgAttr_custom_Z384F8060("width", "24"), svgAttr_custom_Z384F8060("height", "15")])), Svg_text_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("x", (rightX(p) - 19).toString()), svgAttr_custom_Z384F8060("y", (y(p) + 19.5).toString()), svgAttr_custom_Z384F8060("text-anchor", "middle"), Html_text_5106B011(() => {
+            return singleton(Svg_g_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-badge"), Svg_elem("title", singleton_1(Html_text_Z721C83C5("Times this has run"))), Svg_rect_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("x", float64ToString(rightX(p) - 31)), svgAttr_custom_Z384F8060("y", float64ToString(y(p) + 8)), svgAttr_custom_Z384F8060("width", "24"), svgAttr_custom_Z384F8060("height", "15")])), Svg_text_Z714D7FBE(ofArray([svgAttr_custom_Z384F8060("x", float64ToString(rightX(p) - 19)), svgAttr_custom_Z384F8060("y", float64ToString(y(p) + 19.5)), svgAttr_custom_Z384F8060("text-anchor", "middle"), Html_text_5106B011(() => {
                 Repaint__Track(repaint);
                 return int32ToString(runs_1());
             })]))])));
@@ -412,7 +412,7 @@ function drawEdge(repaint, placed, laneOf, fromKey, toKey) {
                 path = toText(printf("M %f %f H %f"))(x1)(y1)(x2);
             }
             else {
-                const gapStart = (padX + ((b.Col - 1) * colW)) + boxW;
+                const gapStart = (padX + (((b.Col - 1) | 0) * colW)) + boxW;
                 let elbow;
                 let e_3;
                 const e_1 = gapStart + (((padX + (b.Col * colW)) - gapStart) * laneOf(fromKey, toKey));
@@ -459,7 +459,7 @@ function drawEdge(repaint, placed, laneOf, fromKey, toKey) {
                             }
                             else if (now > previousRuns) {
                                 if (current !== valueAtLastRun) {
-                                    travel((a.Col * stagger) + 30, el);
+                                    travel((Math.imul(a.Col, stagger) + 30) | 0, el);
                                 }
                                 valueAtLastRun = current;
                             }
@@ -549,7 +549,7 @@ export function schematic(repaint, nodes, edges) {
     const height = ((padY * 2) + (max(map((p_5) => p_5.Row, placed), {
         Compare: (x_13, y_12) => (comparePrimitives(x_13, y_12) | 0),
     }) * rowH)) + boxH;
-    return Html_figure_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-figure"), Html_div_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-frame"), Svg_svg_Z714D7FBE(ofArray([attr_className_Z721C83C5("schematic"), svgAttr_viewBox_Z721C83C5(toText(printf("0 0 %f %f"))(width)(height)), svgAttr_custom_Z384F8060("width", width.toString()), Svg_defs_Z714D7FBE(singleton_1(Svg_elem("marker", ofArray([svgAttr_custom_Z384F8060("id", "sch-arrow"), svgAttr_custom_Z384F8060("viewBox", "0 0 10 10"), svgAttr_custom_Z384F8060("refX", "10"), svgAttr_custom_Z384F8060("refY", "5"), svgAttr_custom_Z384F8060("markerUnits", "userSpaceOnUse"), svgAttr_custom_Z384F8060("markerWidth", "9"), svgAttr_custom_Z384F8060("markerHeight", "9"), svgAttr_custom_Z384F8060("orient", "auto-start-reverse"), Svg_path_Z714D7FBE(singleton_1(svgAttr_custom_Z384F8060("d", "M 0 0 L 10 5 L 0 10 z")))])))), Svg_g_Z714D7FBE(singleton_1(Html_each_Z7426A257(() => toArray_1(map((tupledArg_7) => [tupledArg_7[0].Key, tupledArg_7[1].Key], edges())), (tupledArg_8) => ((int32ToString(tupledArg_8[0]) + "->") + int32ToString(tupledArg_8[1])), (tupledArg_9) => drawEdge(repaint, byKey, (fromKey_1, toKey_1) => {
+    return Html_figure_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-figure"), Html_div_Z714D7FBE(ofArray([attr_className_Z721C83C5("sch-frame"), Svg_svg_Z714D7FBE(ofArray([attr_className_Z721C83C5("schematic"), svgAttr_viewBox_Z721C83C5(toText(printf("0 0 %f %f"))(width)(height)), svgAttr_custom_Z384F8060("width", float64ToString(width)), Svg_defs_Z714D7FBE(singleton_1(Svg_elem("marker", ofArray([svgAttr_custom_Z384F8060("id", "sch-arrow"), svgAttr_custom_Z384F8060("viewBox", "0 0 10 10"), svgAttr_custom_Z384F8060("refX", "10"), svgAttr_custom_Z384F8060("refY", "5"), svgAttr_custom_Z384F8060("markerUnits", "userSpaceOnUse"), svgAttr_custom_Z384F8060("markerWidth", "9"), svgAttr_custom_Z384F8060("markerHeight", "9"), svgAttr_custom_Z384F8060("orient", "auto-start-reverse"), Svg_path_Z714D7FBE(singleton_1(svgAttr_custom_Z384F8060("d", "M 0 0 L 10 5 L 0 10 z")))])))), Svg_g_Z714D7FBE(singleton_1(Html_each_Z7426A257(() => toArray_1(map((tupledArg_7) => [tupledArg_7[0].Key, tupledArg_7[1].Key], edges())), (tupledArg_8) => ((int32ToString(tupledArg_8[0]) + "->") + int32ToString(tupledArg_8[1])), (tupledArg_9) => drawEdge(repaint, byKey, (fromKey_1, toKey_1) => {
         const group = groupOf(fromKey_1, toKey_1);
         const peers = defaultArg(tryFind(colOf(toKey_1), lanesByGap), singleton_1(group));
         const matchValue_3 = tryFindIndex((g_1) => equalArrays(g_1, group), peers);
@@ -568,7 +568,7 @@ export function schematic(repaint, nodes, edges) {
         }
         switch (matchResult) {
             case 0:
-                return 0.3 + (((0.62 - 0.3) * i_2) / (length(peers) - 1));
+                return 0.3 + (((0.62 - 0.3) * i_2) / ((length(peers) - 1) | 0));
             default:
                 if (group[0] === 0) {
                     return 0.3 + 0.04;

@@ -1,10 +1,10 @@
 
 import { noteDeadObserver, releaseSweeps, holdSweeps } from "./Graph.js";
-import { class_type } from "../../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { setItem, item } from "../../../fable_modules/fable-library-js.5.18.0/Array.js";
-import { disposeSafe, clear } from "../../../fable_modules/fable-library-js.5.18.0/Util.js";
+import { class_type } from "../../../fable_modules/fable-library-js.5.28.0/Reflection.js";
+import { setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
+import { disposeSafe, clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { Defaults_noRecompute, ReactiveNode__set_Recompute_233A5940, ReactiveNode__set_EffectFn_A3DF6A2, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
-import { max } from "../../../fable_modules/fable-library-js.5.18.0/Double.js";
+import { max } from "../../../fable_modules/fable-library-js.5.28.0/Double.js";
 
 /**
  * Everything created inside one dynamic region - a component, a list row - so
@@ -141,25 +141,25 @@ function Scope__TearDown(this$) {
     const option = Scope__get_Children(this$);
     if (option != null) {
         const children = option;
-        for (let i = 0; i <= (children.length - 1); i++) {
-            Scope__TearDown(item(i, children));
+        for (let i = 0, limit = ((children.length - 1) | 0); i <= limit; i++) {
+            Scope__TearDown(children[i] ?? item(i, children));
         }
         clear(children);
     }
     const option_1 = Scope__get_Cleanups(this$);
     if (option_1 != null) {
         const cleanups = option_1;
-        for (let i_1 = 0; i_1 <= (cleanups.length - 1); i_1++) {
-            item(i_1, cleanups)();
+        for (let i_1 = 0, limit_1 = ((cleanups.length - 1) | 0); i_1 <= limit_1; i_1++) {
+            (cleanups[i_1] ?? item(i_1, cleanups))();
         }
         clear(cleanups);
     }
     const nodes = Scope__get_Nodes(this$);
-    for (let i_2 = 0; i_2 <= (nodes.length - 1); i_2++) {
-        ReactiveNode__set_Disposed_Z1FBCCD16(item(i_2, nodes), true);
+    for (let i_2 = 0, limit_2 = ((nodes.length - 1) | 0); i_2 <= limit_2; i_2++) {
+        ReactiveNode__set_Disposed_Z1FBCCD16(nodes[i_2] ?? item(i_2, nodes), true);
     }
-    for (let i_3 = 0; i_3 <= (nodes.length - 1); i_3++) {
-        const node = item(i_3, nodes);
+    for (let i_3 = 0, limit_4 = ((nodes.length - 1) | 0); i_3 <= limit_4; i_3++) {
+        const node = nodes[i_3] ?? item(i_3, nodes);
         const n = node;
         if (0 <= 0) {
             const option_2 = ReactiveNode__get_FirstSource(n);
@@ -173,9 +173,9 @@ function Scope__TearDown(this$) {
         const option_3 = ReactiveNode__get_RestSources(n);
         if (option_3 != null) {
             const a = option_3;
-            const start = ((0 <= 1) ? 0 : (0 - 1)) | 0;
-            for (let i_4 = start; i_4 <= (a.length - 1); i_4++) {
-                const source = item(i_4, a);
+            const start = ((0 <= 1) ? 0 : ((0 - 1) | 0)) | 0;
+            for (let i_4 = start, limit_3 = ((a.length - 1) | 0); i_4 <= limit_3; i_4++) {
+                const source = a[i_4] ?? item(i_4, a);
                 if (!ReactiveNode__get_Disposed(source)) {
                     noteDeadObserver(source);
                 }
@@ -218,17 +218,17 @@ export function ScopeModule_onCleanup(fn) {
 
 function ScopeModule_compact(parent, children) {
     let w = 0;
-    for (let readIdx = 0; readIdx <= (children.length - 1); readIdx++) {
-        const child = item(readIdx, children);
+    for (let readIdx = 0, limit = ((children.length - 1) | 0); readIdx <= limit; readIdx++) {
+        const child = children[readIdx] ?? item(readIdx, children);
         if (!Scope__get_Disposed(child)) {
             setItem(children, w, child);
             w = ((w + 1) | 0);
         }
     }
     while (children.length > w) {
-        children.splice(children.length - 1, 1);
+        children.splice((children.length - 1) | 0, 1);
     }
-    Scope__set_CompactAt_Z524259A4(parent, max(8, children.length * 2));
+    Scope__set_CompactAt_Z524259A4(parent, max(8, Math.imul(children.length, 2)));
 }
 
 /**

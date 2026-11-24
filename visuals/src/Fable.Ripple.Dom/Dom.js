@@ -1,13 +1,13 @@
 
 import { Signal_onCleanup, Signal_effect, Signal_root, Signal_autorun } from "../Fable.Ripple/Api.js";
-import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.18.0/Types.js";
-import { record_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.18.0/Reflection.js";
-import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.18.0/Array.js";
-import { Dictionary } from "../../fable_modules/fable-library-js.5.18.0/MutableMap.js";
-import { HashIdentity_Structural } from "../../fable_modules/fable-library-js.5.18.0/FSharp.Collections.js";
-import { defaultOf, equals, disposeSafe } from "../../fable_modules/fable-library-js.5.18.0/Util.js";
-import { min } from "../../fable_modules/fable-library-js.5.18.0/Double.js";
-import { tryGetValue } from "../../fable_modules/fable-library-js.5.18.0/MapUtil.js";
+import { FSharpRef, Record } from "../../fable_modules/fable-library-js.5.28.0/Types.js";
+import { record_type, int32_type, class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
+import { fill, map, setItem, item as item_1 } from "../../fable_modules/fable-library-js.5.28.0/Array.js";
+import { Dictionary } from "../../fable_modules/fable-library-js.5.28.0/MutableMap.js";
+import { HashIdentity_Structural } from "../../fable_modules/fable-library-js.5.28.0/FSharp.Collections.js";
+import { defaultOf, equals, disposeSafe } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { min } from "../../fable_modules/fable-library-js.5.28.0/Double.js";
+import { tryGetValue } from "../../fable_modules/fable-library-js.5.28.0/MapUtil.js";
 
 export function el(tag) {
     return document.createElement(tag);
@@ -59,21 +59,21 @@ function markLis(src, keep) {
     const tails = new Int32Array(n);
     const prev = new Int32Array(n);
     let len = 0;
-    for (let i = 0; i <= (n - 1); i++) {
-        const v = item_1(i, src) | 0;
+    for (let i = 0; i <= ((n - 1) | 0); i++) {
+        const v = (src[i] ?? item_1(i, src)) | 0;
         if (v >= 0) {
             let lo = 0;
             let hi = len;
             while (lo < hi) {
-                const mid = ~~((lo + hi) / 2) | 0;
-                if (item_1(item_1(mid, tails), src) < v) {
+                const mid = ~~(((lo + hi) | 0) / 2);
+                if (item_1(tails[mid] ?? item_1(mid, tails), src) < v) {
                     lo = ((mid + 1) | 0);
                 }
                 else {
                     hi = (mid | 0);
                 }
             }
-            setItem(prev, i, ((lo > 0) ? item_1(lo - 1, tails) : -1) | 0);
+            setItem(prev, i, ((lo > 0) ? item_1((lo - 1) | 0, tails) : -1) | 0);
             setItem(tails, lo, i | 0);
             if (lo === len) {
                 len = ((len + 1) | 0);
@@ -81,10 +81,10 @@ function markLis(src, keep) {
         }
     }
     if (len > 0) {
-        let k = item_1(len - 1, tails);
+        let k = item_1((len - 1) | 0, tails);
         while (k >= 0) {
             setItem(keep, k, true);
-            k = (item_1(k, prev) | 0);
+            k = ((prev[k] ?? item_1(k, prev)) | 0);
         }
     }
 }
@@ -106,14 +106,14 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
     };
     const reindex = () => {
         if (!indexed) {
-            for (let i = 0; i <= (order.length - 1); i++) {
-                byKey.set(item_1(i, order), item_1(i, rows));
+            for (let i = 0; i <= ((order.length - 1) | 0); i++) {
+                byKey.set(order[i] ?? item_1(i, order), rows[i] ?? item_1(i, rows));
             }
             indexed = true;
         }
     };
     const removeAllRowNodes = () => {
-        const owned = ((anchor != null) ? (order.length + 1) : order.length) | 0;
+        const owned = ((anchor != null) ? ((order.length + 1) | 0) : order.length) | 0;
         if (~~parent.childNodes.length === owned) {
             parent.textContent = "";
             const option_1 = anchor;
@@ -123,8 +123,8 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
             }
         }
         else {
-            for (let i_3 = 0; i_3 <= (rows.length - 1); i_3++) {
-                parent.removeChild(item_1(i_3, rows).Node);
+            for (let i_3 = 0; i_3 <= ((rows.length - 1) | 0); i_3++) {
+                parent.removeChild((rows[i_3] ?? item_1(i_3, rows)).Node);
             }
         }
     };
@@ -135,8 +135,8 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
         const newKeys_2 = map(keyOf, items);
         if (n === 0) {
             if (order.length > 0) {
-                for (let i_9 = 0; i_9 <= (rows.length - 1); i_9++) {
-                    disposeSafe(item_1(i_9, rows).Dispose);
+                for (let i_9 = 0; i_9 <= ((rows.length - 1) | 0); i_9++) {
+                    disposeSafe((rows[i_9] ?? item_1(i_9, rows)).Dispose);
                 }
                 removeAllRowNodes();
                 byKey.clear();
@@ -147,7 +147,7 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
         }
         else if ((newKeys = newKeys_2, (order.length > newKeys.length) ? false : ((ok = true, (i_1 = 0, ((() => {
             while (ok && (i_1 < order.length)) {
-                if (!equals(item_1(i_1, order), item_1(i_1, newKeys))) {
+                if (!equals(order[i_1] ?? item_1(i_1, order), newKeys[i_1] ?? item_1(i_1, newKeys))) {
                     ok = false;
                 }
                 i_1 = ((i_1 + 1) | 0);
@@ -156,13 +156,13 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
             if (n > order.length) {
                 const frag = document.createDocumentFragment();
                 const newRows_1 = fill(new Array(n), 0, n, null);
-                for (let i_10 = 0; i_10 <= (order.length - 1); i_10++) {
-                    setItem(newRows_1, i_10, item_1(i_10, rows));
+                for (let i_10 = 0; i_10 <= ((order.length - 1) | 0); i_10++) {
+                    setItem(newRows_1, i_10, rows[i_10] ?? item_1(i_10, rows));
                 }
-                for (let i_11 = order.length; i_11 <= (n - 1); i_11++) {
-                    const e_4 = make(item_1(i_11, items), i_11);
+                for (let i_11 = order.length; i_11 <= ((n - 1) | 0); i_11++) {
+                    const e_4 = make(items[i_11] ?? item_1(i_11, items), i_11);
                     if (indexed) {
-                        byKey.set(item_1(i_11, newKeys_2), e_4);
+                        byKey.set(newKeys_2[i_11] ?? item_1(i_11, newKeys_2), e_4);
                     }
                     setItem(newRows_1, i_11, e_4);
                     frag.appendChild(e_4.Node);
@@ -175,31 +175,31 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
         else {
             let start_1 = 0;
             const lim = min(order.length, n) | 0;
-            while ((start_1 < lim) && equals(item_1(start_1, order), item_1(start_1, newKeys_2))) {
+            while ((start_1 < lim) && equals(order[start_1] ?? item_1(start_1, order), newKeys_2[start_1] ?? item_1(start_1, newKeys_2))) {
                 start_1 = ((start_1 + 1) | 0);
             }
-            let endOld_1 = order.length - 1;
-            let endNew_1 = n - 1;
-            while (((endOld_1 >= start_1) && (endNew_1 >= start_1)) && equals(item_1(endOld_1, order), item_1(endNew_1, newKeys_2))) {
+            let endOld_1 = (order.length - 1) | 0;
+            let endNew_1 = (n - 1) | 0;
+            while (((endOld_1 >= start_1) && (endNew_1 >= start_1)) && equals(order[endOld_1] ?? item_1(endOld_1, order), newKeys_2[endNew_1] ?? item_1(endNew_1, newKeys_2))) {
                 endOld_1 = ((endOld_1 - 1) | 0);
                 endNew_1 = ((endNew_1 - 1) | 0);
             }
-            if (((start_1 === 0) && (endNew_1 === (n - 1))) && ((newKeys_1 = newKeys_2, (reindex(), (dj = true, (i_2 = 0, ((() => {
+            if (((start_1 === 0) && (endNew_1 === ((n - 1) | 0))) && ((newKeys_1 = newKeys_2, (reindex(), (dj = true, (i_2 = 0, ((() => {
                 while (dj && (i_2 < newKeys_1.length)) {
-                    if (byKey.has(item_1(i_2, newKeys_1))) {
+                    if (byKey.has(newKeys_1[i_2] ?? item_1(i_2, newKeys_1))) {
                         dj = false;
                     }
                     i_2 = ((i_2 + 1) | 0);
                 }
             })(), dj))))))) {
-                for (let i_12 = 0; i_12 <= (rows.length - 1); i_12++) {
-                    disposeSafe(item_1(i_12, rows).Dispose);
+                for (let i_12 = 0; i_12 <= ((rows.length - 1) | 0); i_12++) {
+                    disposeSafe((rows[i_12] ?? item_1(i_12, rows)).Dispose);
                 }
                 removeAllRowNodes();
                 const frag_1 = document.createDocumentFragment();
                 const newRows_2 = fill(new Array(n), 0, n, null);
-                for (let i_13 = 0; i_13 <= (n - 1); i_13++) {
-                    const e_5 = make(item_1(i_13, items), i_13);
+                for (let i_13 = 0; i_13 <= ((n - 1) | 0); i_13++) {
+                    const e_5 = make(items[i_13] ?? item_1(i_13, items), i_13);
                     setItem(newRows_2, i_13, e_5);
                     frag_1.appendChild(e_5.Node);
                 }
@@ -214,13 +214,13 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
                 const endOld = endOld_1 | 0;
                 const endNew = endNew_1 | 0;
                 const newRows = fill(new Array(n), 0, n, null);
-                for (let i_4 = 0; i_4 <= (start - 1); i_4++) {
-                    setItem(newRows, i_4, item_1(i_4, rows));
+                for (let i_4 = 0; i_4 <= ((start - 1) | 0); i_4++) {
+                    setItem(newRows, i_4, rows[i_4] ?? item_1(i_4, rows));
                 }
-                let oi = order.length - 1;
-                let ni = n - 1;
+                let oi = (order.length - 1) | 0;
+                let ni = (n - 1) | 0;
                 while (ni > endNew) {
-                    setItem(newRows, ni, item_1(oi, rows));
+                    setItem(newRows, ni, rows[oi] ?? item_1(oi, rows));
                     oi = ((oi - 1) | 0);
                     ni = ((ni - 1) | 0);
                 }
@@ -228,42 +228,40 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
                 const count = ((endNew - start) + 1) | 0;
                 const srcIdx = (count > 0) ? (new Int32Array(count)) : (new Int32Array([]));
                 for (let i_5 = start; i_5 <= endNew; i_5++) {
-                    const k = item_1(i_5, newKeys_2);
-                    if ((i_5 <= endOld) && equals(item_1(i_5, order), k)) {
-                        const e = item_1(i_5, rows);
+                    const k = newKeys_2[i_5] ?? item_1(i_5, newKeys_2);
+                    if ((i_5 <= endOld) && equals(order[i_5] ?? item_1(i_5, order), k)) {
+                        const e = rows[i_5] ?? item_1(i_5, rows);
                         e.Seen = (generation | 0);
                         setItem(newRows, i_5, e);
-                        setItem(srcIdx, i_5 - start, i_5 | 0);
+                        setItem(srcIdx, (i_5 - start) | 0, i_5 | 0);
                     }
                     else {
                         reindex();
                         let matchValue;
-                        let outArg = defaultOf();
-                        matchValue = [tryGetValue(byKey, k, new FSharpRef(() => outArg, (v) => {
-                            outArg = v;
-                        })), outArg];
+                        const cell = new FSharpRef(defaultOf());
+                        matchValue = [tryGetValue(byKey, k, cell), cell.contents];
                         if (matchValue[0]) {
                             const e_1 = matchValue[1];
                             e_1.Seen = (generation | 0);
                             setItem(newRows, i_5, e_1);
-                            setItem(srcIdx, i_5 - start, e_1.Index | 0);
+                            setItem(srcIdx, (i_5 - start) | 0, e_1.Index | 0);
                         }
                         else {
-                            const e_2 = make(item_1(i_5, items), i_5);
+                            const e_2 = make(items[i_5] ?? item_1(i_5, items), i_5);
                             e_2.Seen = (generation | 0);
                             byKey.set(k, e_2);
                             setItem(newRows, i_5, e_2);
-                            setItem(srcIdx, i_5 - start, -1);
+                            setItem(srcIdx, (i_5 - start) | 0, -1);
                         }
                     }
                 }
                 for (let i_6 = start; i_6 <= endOld; i_6++) {
-                    const e_3 = item_1(i_6, rows);
+                    const e_3 = rows[i_6] ?? item_1(i_6, rows);
                     if (e_3.Seen !== generation) {
                         disposeSafe(e_3.Dispose);
                         parent.removeChild(e_3.Node);
                         if (indexed) {
-                            byKey.delete(item_1(i_6, order));
+                            byKey.delete(order[i_6] ?? item_1(i_6, order));
                         }
                     }
                 }
@@ -271,27 +269,27 @@ export function keyedEach(parent, anchor, getItems, keyOf, render) {
                 if (count > 0) {
                     markLis(srcIdx, keep);
                 }
-                let nextSibling = ((endNew + 1) < n) ? item_1(endNew + 1, newRows).Node : anchor;
+                let nextSibling = (((endNew + 1) | 0) < n) ? item_1((endNew + 1) | 0, newRows).Node : anchor;
                 for (let i_7 = endNew; i_7 >= start; i_7--) {
-                    const node_1 = item_1(i_7, newRows).Node;
-                    if (!item_1(i_7 - start, keep)) {
+                    const node_1 = (newRows[i_7] ?? item_1(i_7, newRows)).Node;
+                    if (!item_1((i_7 - start) | 0, keep)) {
                         parent.insertBefore(node_1, nextSibling);
                     }
                     nextSibling = node_1;
                 }
                 order = newKeys_2;
                 rows = newRows;
-                for (let i_8 = start; i_8 <= (n - 1); i_8++) {
-                    item_1(i_8, newRows).Index = (i_8 | 0);
+                for (let i_8 = start; i_8 <= ((n - 1) | 0); i_8++) {
+                    (newRows[i_8] ?? item_1(i_8, newRows)).Index = (i_8 | 0);
                 }
             }
         }
     });
     const disposeAll = () => {
         disposeSafe(sub);
-        for (let i_14 = 0; i_14 <= (rows.length - 1); i_14++) {
-            disposeSafe(item_1(i_14, rows).Dispose);
-            parent.removeChild(item_1(i_14, rows).Node);
+        for (let i_14 = 0; i_14 <= ((rows.length - 1) | 0); i_14++) {
+            disposeSafe((rows[i_14] ?? item_1(i_14, rows)).Dispose);
+            parent.removeChild((rows[i_14] ?? item_1(i_14, rows)).Node);
         }
         byKey.clear();
         indexed = false;
