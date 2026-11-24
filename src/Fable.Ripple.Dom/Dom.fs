@@ -12,6 +12,12 @@ open Fable.Ripple
 /// own a `Signal.root` scope so their effects/computeds tear down on removal.
 module Dom =
 
+    [<Emit("new Array($0)")>]
+    let private newEmptyArray<'t> (n: int) : 't[] = jsNative
+
+    [<Emit("$0[$1] = $2")>]
+    let private setAt (a: 't[]) (i: int) (v: 't) : unit = jsNative
+
     let el (tag: string) : HTMLElement = document.createElement tag
 
     /// Static text child.
@@ -205,7 +211,11 @@ module Dom =
 
         let reconcile (items: 'a[]) =
             let n = items.Length
-            let newKeys = items |> Array.map keyOf
+            let newKeys = newEmptyArray<'k> n
+
+            // Fable's bounds-checked `setItem` is slow here. The writes stay in range: `newKeys` has length `n` and `i` stops at `n - 1`.
+            for i in 0 .. n - 1 do
+                setAt newKeys i (keyOf items.[i])
 
             // The general middle diff (prefix/suffix already trimmed), factored out
             // so the fast paths can bypass it entirely.
