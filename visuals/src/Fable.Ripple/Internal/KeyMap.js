@@ -1,7 +1,7 @@
 
-import { structuralHash, equals, defaultOf } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { equals, structuralHash, defaultOf } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { class_type } from "../../../fable_modules/fable-library-js.5.28.0/Reflection.js";
-import { removeAllInPlace, setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
+import { setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 
 /**
  * Map keyed by F# equality. Primitive keys live in a JS `Map`; object keys are
@@ -65,13 +65,19 @@ export function KeyMap$2__Set_5BDDA1(_, k, v) {
 
 export function KeyMap$2__Delete_2B595(_, k) {
     if (KeyMap$2__isObject_2B595(_, k)) {
-        const b = KeyMap$2__bucketOf(_, k, false);
-        if (!(b == null)) {
-            const matchValue = KeyMap$2__indexIn(_, b, k) | 0;
-            if (matchValue === -1) {
-            }
-            else {
-                b.splice(matchValue, 1);
+        if (!(_.buckets == null)) {
+            const h = structuralHash(k) | 0;
+            const b = _.buckets.get(h);
+            if (!(b == null)) {
+                const matchValue = KeyMap$2__indexIn(_, b, k) | 0;
+                if (matchValue === -1) {
+                }
+                else if (b.length === 1) {
+                    _.buckets.delete(h);
+                }
+                else {
+                    b.splice(matchValue, 1);
+                }
             }
         }
     }
@@ -98,22 +104,6 @@ export function KeyMap$2__get_Count(_) {
         });
     }
     return n | 0;
-}
-
-/**
- * Remove every entry whose value matches `drop`.
- */
-export function KeyMap$2__RemoveWhere_Z3AD716D8(_, drop) {
-    _.direct.forEach((v, k, _arg) => {
-        if (drop(v)) {
-            _.direct.delete(k);
-        }
-    });
-    if (!(_.buckets == null)) {
-        _.buckets.forEach((b, _arg_1, _arg_2) => {
-            removeAllInPlace((tupledArg) => drop(tupledArg[1]), b);
-        });
-    }
 }
 
 export function KeyMap$2__isObject_2B595(this$, k) {
