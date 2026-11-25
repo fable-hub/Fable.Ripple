@@ -1,7 +1,7 @@
 
 import { item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { truncateSources, unlinkSourcesTail, addObserver, addSource, sourceCount, sourceAt } from "./Graph.js";
-import { ReactiveNode__get_RestObservers, ReactiveNode__get_Disposed, ReactiveNode__get_FirstObserver, ReactiveNode__get_Flags, ReactiveNode__set_Flags_Z524259A4, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State } from "../ReactiveNode.js";
+import { ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__get_Flags, ReactiveNode__set_Flags_Z524259A4, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State, ReactiveNode__get_Disposed } from "../ReactiveNode.js";
 
 let current = undefined;
 
@@ -47,7 +47,9 @@ export function track(node) {
         }
         else if (currentGetsIndex === sourceCount(cur)) {
             addSource(cur, node);
-            addObserver(node, cur);
+            if (!ReactiveNode__get_Disposed(node)) {
+                addObserver(node, cur);
+            }
             currentGetsIndex = ((currentGetsIndex + 1) | 0);
         }
         else if (sourceAt(cur, currentGetsIndex) === node) {
@@ -108,7 +110,9 @@ function recompute(node) {
             for (let i = 0, limit = ((gets.length - 1) | 0); i <= limit; i++) {
                 const s = gets[i] ?? item(i, gets);
                 addSource(node, s);
-                addObserver(s, node);
+                if (!ReactiveNode__get_Disposed(s)) {
+                    addObserver(s, node);
+                }
             }
         }
         completed = true;
