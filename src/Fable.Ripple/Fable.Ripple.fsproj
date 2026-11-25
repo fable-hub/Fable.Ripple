@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Fable.Ripple.Dom" />
+    <InternalsVisibleTo Include="Fable.Ripple.Tests" />
   </ItemGroup>
 
   <ItemGroup>

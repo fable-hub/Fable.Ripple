@@ -6,6 +6,13 @@ open type Scriptorium.Quill.Test
 [<EntryPoint>]
 let main _ =
 
-    let tests = testList ("Fable.Ripple", [ Signal.tests ])
+    let tests =
+        testList (
+            "Fable.Ripple",
+            [
+                KeyMap.tests
+                Signal.tests
+            ]
+        )
 
     runTests tests
