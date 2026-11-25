@@ -814,6 +814,24 @@ let tests =
                     assertThat (Signal.observerCount src.Signal) (isEqualTo 0)
             )
 
+            test (
+                "a disposed computed does not collect readers",
+                fun _ ->
+                    let v = Var.create 0
+                    let c, root = Signal.root (fun () -> Signal.computed (fun () -> v.Value + 1))
+                    root.Dispose()
+
+                    for _ in 1..20000 do
+                        let _, d =
+                            Signal.root (fun () ->
+                                Signal.effect (fun () -> c.Value |> ignore) |> ignore
+                            )
+
+                        d.Dispose()
+
+                    assertThat (Signal.observerCount c) (isEqualTo 0)
+            )
+
             (*
                 Exception safety
             *)

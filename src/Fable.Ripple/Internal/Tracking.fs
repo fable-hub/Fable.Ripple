@@ -38,7 +38,11 @@ module internal Tracking =
                     ()
                 elif currentGetsIndex = Graph.sourceCount cur then
                     Graph.addSource cur node
-                    Graph.addObserver node cur
+
+                    // A disposed node never notifies, and its readers' teardown does not count it.
+                    if not node.Disposed then
+                        Graph.addObserver node cur
+
                     currentGetsIndex <- currentGetsIndex + 1
                 elif obj.ReferenceEquals(Graph.sourceAt cur currentGetsIndex, node) then
                     currentGetsIndex <- currentGetsIndex + 1
@@ -104,7 +108,9 @@ module internal Tracking =
                 for i in 0 .. gets.Count - 1 do
                     let s = gets.[i]
                     Graph.addSource node s
-                    Graph.addObserver s node
+
+                    if not s.Disposed then
+                        Graph.addObserver s node
             | ValueNone ->
                 // Read fewer sources than before: drop the stale tail.
                 if Graph.sourceCount node > currentGetsIndex then
