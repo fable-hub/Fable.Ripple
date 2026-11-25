@@ -69,12 +69,18 @@ type internal KeyMap<'k, 'v when 'k: equality>() =
 
     member _.Delete(k: 'k) =
         if isObject k then
-            let b = bucketOf k false
+            if not (isNull (box buckets)) then
+                let h = hash k
+                let b = buckets.get h
 
-            if not (isNull (box b)) then
-                match indexIn b k with
-                | -1 -> ()
-                | i -> b.RemoveAt i
+                if not (isNull (box b)) then
+                    match indexIn b k with
+                    | -1 -> ()
+                    | i ->
+                        if b.Count = 1 then
+                            buckets.delete h |> ignore
+                        else
+                            b.RemoveAt i
         else
             direct.delete k |> ignore
 
@@ -92,13 +98,3 @@ type internal KeyMap<'k, 'v when 'k: equality>() =
             buckets.forEach (fun b _ _ -> n <- n + b.Count)
 
         n
-
-    /// Remove every entry whose value matches `drop`.
-    member _.RemoveWhere(drop: 'v -> bool) =
-        direct.forEach (fun v k _ ->
-            if drop v then
-                direct.delete k |> ignore
-        )
-
-        if not (isNull (box buckets)) then
-            buckets.forEach (fun b _ _ -> b.RemoveAll(fun (_, v) -> drop v) |> ignore)

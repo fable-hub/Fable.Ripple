@@ -5,6 +5,7 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="KeyMap.fs" />
     <Compile Include="Signal.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
