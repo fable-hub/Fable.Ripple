@@ -77,6 +77,7 @@ type internal Scope() =
         while cursor.IsSome do
             let node = cursor.Value
             node.Disposed <- true
+            Owner.disposeOwned node
 
             if NodeFlags.has NodeFlags.External node.Flags then
                 Graph.noteDeadReader ()
@@ -123,21 +124,49 @@ type internal Scope() =
 /// Ownership: which scope new computeds/effects belong to, and how a scope is torn down.
 module internal Scope =
 
-    // The scope that new computeds/effects register with (`ValueNone` = none).
-    let mutable private currentScope: Scope voption = ValueNone
+    let mutable private currentScope: Scope = Unchecked.defaultof<_>
 
-    /// Register a node with the current scope, if any, so it is unlinked when
-    /// the scope is disposed.
+    // `Tracking.ownerNode` when the innermost open root started.
+    let mutable private rootOwner: ReactiveNode = Unchecked.defaultof<_>
+
+    let private owner () : Scope =
+        let r = Tracking.ownerNode ()
+
+        if isNull (box r) || obj.ReferenceEquals(r, rootOwner) then
+            currentScope
+        elif NodeFlags.has NodeFlags.HasOwned r.Flags then
+            unbox<Scope> (Owner.getOwned r)
+        else
+            let s = new Scope()
+
+            if not (NodeFlags.has NodeFlags.DisposesOwned r.Flags) then
+                let run = r.Fn
+                r.Flags <- r.Flags ||| NodeFlags.DisposesOwned
+
+                r.Fn <-
+                    box (fun () ->
+                        Tracking.untracked (fun () -> Owner.disposeOwned r)
+                        (unbox<unit -> obj> run) ()
+                    )
+
+            Owner.setOwned r s
+            s
+
+    /// Register a node with its owner scope, if any, so it is unlinked when
+    /// that scope is disposed.
     let register (node: ReactiveNode) =
-        currentScope
-        |> ValueOption.iter (fun s ->
+        let s = owner ()
+
+        if not (isNull (box s)) then
             node.NextOwned <- s.First
             s.First <- ValueSome node
-        )
 
-    /// Register a cleanup callback with the current scope, if any.
+    /// Register a cleanup callback with the owner scope, if any.
     let onCleanup (fn: unit -> unit) =
-        currentScope |> ValueOption.iter (fun s -> s.EnsureCleanups().Add fn)
+        let s = owner ()
+
+        if not (isNull (box s)) then
+            s.EnsureCleanups().Add fn
 
     /// Drop the dead entries from `children`. A child is not unhooked when it is
     /// disposed - nothing in a scope points back at its parent - so without this
@@ -163,22 +192,29 @@ module internal Scope =
     /// Run `fn` inside a fresh scope nested under the current one. Returns its
     /// result and a disposer that tears the scope down.
     let root (fn: unit -> 'a) : 'a * System.IDisposable =
-        let prev = currentScope
+        let prevScope = currentScope
+        let prevOwner = rootOwner
+        let r = Tracking.ownerNode ()
         let s = new Scope()
 
-        prev
-        |> ValueOption.iter (fun p ->
+        // A root made during a run is not owned.
+        if
+            not (isNull (box prevScope))
+            && (isNull (box r) || obj.ReferenceEquals(r, prevOwner))
+        then
+            let p = prevScope
             let children = p.EnsureChildren()
 
             if children.Count >= p.CompactAt then
                 compact p children
 
             children.Add s
-        )
 
-        currentScope <- ValueSome s
+        currentScope <- s
+        rootOwner <- r
 
         try
             fn (), (s :> System.IDisposable)
         finally
-            currentScope <- prev
+            currentScope <- prevScope
+            rootOwner <- prevOwner

@@ -12,6 +12,7 @@ let main _ =
             [
                 KeyMap.tests
                 Signal.tests
+                Ownership.tests
             ]
         )
 

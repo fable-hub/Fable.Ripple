@@ -244,6 +244,7 @@ module internal Graph =
 
     /// Unlink a node from the graph entirely (used to dispose subscriptions).
     let dispose (node: ReactiveNode) =
+        Owner.disposeOwned node
         iterSourcesFrom node 0 (fun s -> removeObserver s node)
         node.FirstSource <- ValueNone
         node.RestSources |> ValueOption.iter (fun a -> a.Clear())
