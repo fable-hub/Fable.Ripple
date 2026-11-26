@@ -1,13 +1,29 @@
 
+import { defaultOf } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { truncateSources, unlinkSourcesTail, addObserver, addSource, sourceCount, sourceAt } from "./Graph.js";
 import { ReactiveNode__get_RestObservers, ReactiveNode__get_FirstObserver, ReactiveNode__get_Flags, ReactiveNode__set_Flags_Z524259A4, ReactiveNode__get_Context, Context_current, Context_get, ReactiveNode__set_State_Z12CE0414, ReactiveNode__get_State, ReactiveNode__get_Disposed } from "../ReactiveNode.js";
+import { value } from "../../../fable_modules/fable-library-js.5.28.0/Option.js";
 
 let current = undefined;
 
 let currentGets = undefined;
 
 let currentGetsIndex = 0;
+
+let untrackedOwner = defaultOf();
+
+/**
+ * The computed or effect whose run owns what is created now, or null.
+ */
+export function ownerNode() {
+    if (current == null) {
+        return untrackedOwner;
+    }
+    else {
+        return current;
+    }
+}
 
 /**
  * Record that `current` reads `node`. While reads arrive in the same order
@@ -91,7 +107,7 @@ function recompute(node) {
     currentGets = undefined;
     currentGetsIndex = 0;
     Context_current(ReactiveNode__get_Context(node));
-    ReactiveNode__set_Flags_Z524259A4(node, (flags = (ReactiveNode__get_Flags(node) | 0), (flags & 255) | ((flags + 256) & 1073741568)));
+    ReactiveNode__set_Flags_Z524259A4(node, (flags = (ReactiveNode__get_Flags(node) | 0), (flags & 1023) | ((flags + 1024) & 1073740800)));
     const startCount = sourceCount(node) | 0;
     let changed = false;
     let completed = false;
@@ -164,12 +180,17 @@ export function observer() {
 
 export function untracked(fn) {
     const prev = current;
+    const prevOwner = untrackedOwner;
+    if (prev != null) {
+        untrackedOwner = value(prev);
+    }
     current = undefined;
     try {
         return fn();
     }
     finally {
         current = prev;
+        untrackedOwner = prevOwner;
     }
 }
 

@@ -1,5 +1,5 @@
 
-import { defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
+import { disposeSafe, defaultOf, createAtom } from "../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { class_type } from "../../fable_modules/fable-library-js.5.28.0/Reflection.js";
 
 export let Context_current = createAtom(defaultOf());
@@ -229,5 +229,30 @@ export function ReactiveNode__get_NextOwned(__) {
  */
 export function ReactiveNode__set_NextOwned_Z46457FEC(__, v) {
     __["NextOwned@"] = v;
+}
+
+const Owner_owned = new WeakMap();
+
+export function Owner_getOwned(node) {
+    if ((ReactiveNode__get_Flags(node) & 256) !== 0) {
+        return Owner_owned.get(node);
+    }
+    else {
+        return defaultOf();
+    }
+}
+
+export function Owner_setOwned(node, s) {
+    ReactiveNode__set_Flags_Z524259A4(node, ReactiveNode__get_Flags(node) | 256);
+    Owner_owned.set(node, s);
+}
+
+export function Owner_disposeOwned(node) {
+    if ((ReactiveNode__get_Flags(node) & 256) !== 0) {
+        ReactiveNode__set_Flags_Z524259A4(node, ReactiveNode__get_Flags(node) & ~256);
+        const s = Owner_owned.get(node);
+        Owner_owned.delete(node);
+        disposeSafe(s);
+    }
 }
 

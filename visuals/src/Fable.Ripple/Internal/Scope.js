@@ -4,7 +4,8 @@ import { class_type } from "../../../fable_modules/fable-library-js.5.28.0/Refle
 import { setItem, item } from "../../../fable_modules/fable-library-js.5.28.0/Array.js";
 import { disposeSafe, defaultOf, clear } from "../../../fable_modules/fable-library-js.5.28.0/Util.js";
 import { value } from "../../../fable_modules/fable-library-js.5.28.0/Option.js";
-import { ReactiveNode__set_NextOwned_Z46457FEC, ReactiveNode__set_Fn_4E60E31B, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__get_NextOwned, ReactiveNode__get_Flags, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
+import { Owner_setOwned, ReactiveNode__set_Flags_Z524259A4, ReactiveNode__get_Fn, Owner_getOwned, ReactiveNode__set_NextOwned_Z46457FEC, ReactiveNode__set_Fn_4E60E31B, ReactiveNode__set_Queued_Z1FBCCD16, ReactiveNode__set_State_Z12CE0414, ReactiveNode__set_RestSources_6EF2C44D, ReactiveNode__set_FirstSource_Z46457FEC, ReactiveNode__get_RestSources, ReactiveNode__get_Disposed, ReactiveNode__get_FirstSource, ReactiveNode__get_NextOwned, ReactiveNode__get_Flags, Owner_disposeOwned, ReactiveNode__set_Disposed_Z1FBCCD16 } from "../ReactiveNode.js";
+import { untracked, ownerNode } from "./Tracking.js";
 import { max } from "../../../fable_modules/fable-library-js.5.28.0/Double.js";
 
 /**
@@ -167,6 +168,7 @@ function Scope__TearDown(this$) {
     while (cursor != null) {
         const node = value(cursor);
         ReactiveNode__set_Disposed_Z1FBCCD16(node, true);
+        Owner_disposeOwned(node);
         if ((ReactiveNode__get_Flags(node) & 128) !== 0) {
             noteDeadReader();
         }
@@ -207,28 +209,53 @@ function Scope__TearDown(this$) {
     }
 }
 
-let ScopeModule_currentScope = undefined;
+let ScopeModule_currentScope = defaultOf();
+
+let ScopeModule_rootOwner = defaultOf();
+
+function ScopeModule_owner() {
+    const r = ownerNode();
+    if ((r == null) ? true : (r === ScopeModule_rootOwner)) {
+        return ScopeModule_currentScope;
+    }
+    else if ((ReactiveNode__get_Flags(r) & 256) !== 0) {
+        return Owner_getOwned(r);
+    }
+    else {
+        const s = Scope_$ctor();
+        if (!((ReactiveNode__get_Flags(r) & 512) !== 0)) {
+            const run = ReactiveNode__get_Fn(r);
+            ReactiveNode__set_Flags_Z524259A4(r, ReactiveNode__get_Flags(r) | 512);
+            ReactiveNode__set_Fn_4E60E31B(r, () => {
+                untracked(() => {
+                    Owner_disposeOwned(r);
+                });
+                return run();
+            });
+        }
+        Owner_setOwned(r, s);
+        return s;
+    }
+}
 
 /**
- * Register a node with the current scope, if any, so it is unlinked when
- * the scope is disposed.
+ * Register a node with its owner scope, if any, so it is unlinked when
+ * that scope is disposed.
  */
 export function ScopeModule_register(node) {
-    const option = ScopeModule_currentScope;
-    if (option != null) {
-        const s = option;
+    const s = ScopeModule_owner();
+    if (!(s == null)) {
         ReactiveNode__set_NextOwned_Z46457FEC(node, Scope__get_First(s));
         Scope__set_First_Z46457FEC(s, node);
     }
 }
 
 /**
- * Register a cleanup callback with the current scope, if any.
+ * Register a cleanup callback with the owner scope, if any.
  */
 export function ScopeModule_onCleanup(fn) {
-    const option = ScopeModule_currentScope;
-    if (option != null) {
-        const s = option;
+    const s = ScopeModule_owner();
+    if (!(s == null)) {
         void (Scope__EnsureCleanups(s).push(fn));
     }
 }
@@ -260,11 +287,12 @@ export function ScopeModule_dispose(scope) {
  * result and a disposer that tears the scope down.
  */
 export function ScopeModule_root(fn) {
-    const prev = ScopeModule_currentScope;
+    const prevScope = ScopeModule_currentScope;
+    const prevOwner = ScopeModule_rootOwner;
+    const r = ownerNode();
     const s = Scope_$ctor();
-    const option = prev;
-    if (option != null) {
-        const p = option;
+    if (!(prevScope == null) && ((r == null) ? true : (r === prevOwner))) {
+        const p = prevScope;
         const children = Scope__EnsureChildren(p);
         if (children.length >= Scope__get_CompactAt(p)) {
             ScopeModule_compact(p, children);
@@ -272,11 +300,13 @@ export function ScopeModule_root(fn) {
         void (children.push(s));
     }
     ScopeModule_currentScope = s;
+    ScopeModule_rootOwner = r;
     try {
         return [fn(), s];
     }
     finally {
-        ScopeModule_currentScope = prev;
+        ScopeModule_currentScope = prevScope;
+        ScopeModule_rootOwner = prevOwner;
     }
 }
 

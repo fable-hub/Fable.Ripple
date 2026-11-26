@@ -52,7 +52,7 @@ export function Selector$1_$ctor_Z66562DBE(source) {
 function Selector$1__Live_Z524259A4(_, i) {
     const flags = ReactiveNode__get_Flags(_.entries[i]) | 0;
     if (!((flags & 16) !== 0)) {
-        return (flags & 1073741568) === (_.entries[((i + 2) | 0)]);
+        return (flags & 1073740800) === (_.entries[((i + 2) | 0)]);
     }
     else {
         return false;
@@ -126,7 +126,7 @@ export function Selector$1__Read_2B595(this$, key) {
     if (option != null) {
         const o = option;
         ReactiveNode__set_Flags_Z524259A4(o, ReactiveNode__get_Flags(o) | 128);
-        this$.entries.push(o, key, (ReactiveNode__get_Flags(o) & 1073741568));
+        this$.entries.push(o, key, (ReactiveNode__get_Flags(o) & 1073740800));
         if (this$.entries.length >= this$.limit) {
             Selector$1__Compact(this$);
         }
@@ -230,7 +230,7 @@ export function Signal_bind(f, a) {
 export function Signal_autorun(fn) {
     const eff = Effect_$ctor_3A5B6456(fn);
     updateIfNecessary(eff);
-    if ((sourceCount(eff) > 0) ? true : ((ReactiveNode__get_Flags(eff) & 128) !== 0)) {
+    if (((sourceCount(eff) > 0) ? true : ((ReactiveNode__get_Flags(eff) & 128) !== 0)) ? true : ((ReactiveNode__get_Flags(eff) & 256) !== 0)) {
         ScopeModule_register(eff);
     }
 }
@@ -276,7 +276,8 @@ export function Signal_root(fn) {
 }
 
 /**
- * Register a cleanup callback with the current scope.
+ * Register a cleanup callback with the current scope. Inside an effect or
+ * computed, it runs before the next run and when the node is disposed.
  */
 export function Signal_onCleanup(fn) {
     ScopeModule_onCleanup(fn);
