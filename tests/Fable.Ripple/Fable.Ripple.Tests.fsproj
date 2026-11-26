@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="KeyMap.fs" />
     <Compile Include="Signal.fs" />
+    <Compile Include="Ownership.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>

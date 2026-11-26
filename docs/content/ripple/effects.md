@@ -77,4 +77,6 @@ After `Dispose`{fsharp}, the source lives on but the effect is detached - the wr
 
 `Signal.onCleanup`{fsharp} registers a callback with the current scope, for teardown work of your own.
 
+Inside an effect or a computed, the callback and every effect or computed created by the run belong to that run. They are disposed before the next run and when the effect or computed is disposed. A `Signal.root`{fsharp} opened during a run belongs to the code that opened it.
+
 The DOM layer does this for you: every row of an `Html.each`{fsharp} and every branch of an `Html.switch`{fsharp} runs in its own root, disposed when the row or branch leaves.

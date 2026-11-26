@@ -21,6 +21,15 @@ module internal Tracking =
     // stale tail starts once reconciliation kicks in.
     let mutable private currentGetsIndex = 0
 
+    // The node whose run `untracked` hid from `current`; it still owns what is created.
+    let mutable private untrackedOwner: ReactiveNode = Unchecked.defaultof<_>
+
+    /// The computed or effect whose run owns what is created now, or null.
+    let ownerNode () : ReactiveNode =
+        match current with
+        | ValueSome n -> n
+        | ValueNone -> untrackedOwner
+
     /// Record that `current` reads `node`. While reads arrive in the same order
     /// as the previous run, just advance the index (no edge mutation); on the
     /// first mismatch, collect the new tail into `currentGets`. A read of the
@@ -144,9 +153,15 @@ module internal Tracking =
 
     let untracked (fn: unit -> 'a) =
         let prev = current
+        let prevOwner = untrackedOwner
+
+        if prev.IsSome then
+            untrackedOwner <- prev.Value
+
         current <- ValueNone
 
         try
             fn ()
         finally
             current <- prev
+            untrackedOwner <- prevOwner

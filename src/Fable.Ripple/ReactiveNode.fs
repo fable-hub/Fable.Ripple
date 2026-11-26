@@ -45,16 +45,24 @@ module internal NodeFlags =
     [<Literal>]
     let External = 128
 
-    /// Bits 8 to 29 count the node's evaluations and wrap to 0.
+    /// Set while the node has a scope in `Owner.owned`.
     [<Literal>]
-    let Run = 256
+    let HasOwned = 256
+
+    /// Set once the node's `Fn` disposes the previous run's scope before running.
+    [<Literal>]
+    let DisposesOwned = 512
+
+    /// Bits 10 to 29 count the node's evaluations and wrap to 0.
+    [<Literal>]
+    let Run = 1024
 
     [<Literal>]
-    let FlagMask = 255
+    let FlagMask = 1023
 
     /// Bits 30 and 31 stay clear so that V8 keeps the field a small integer.
     [<Literal>]
-    let RunMask = 0x3FFFFF00
+    let RunMask = 0x3FFFFC00
 
     let inline has (flag: int) (flags: int) = flags &&& flag <> 0
 
@@ -152,3 +160,27 @@ type ReactiveNode internal (flags: int, fn: obj) =
 
     /// The next node registered with the same scope.
     member val internal NextOwned: ReactiveNode voption = ValueNone with get, set
+
+/// The scope of what a node's last run created.
+module internal Owner =
+
+    // Weak: a node that owns something but is in no scope must still be collectable.
+    let private owned =
+        Fable.Core.JS.Constructors.WeakMap.Create<ReactiveNode, System.IDisposable>()
+
+    let getOwned (node: ReactiveNode) : System.IDisposable =
+        if NodeFlags.has NodeFlags.HasOwned node.Flags then
+            owned.get node
+        else
+            null
+
+    let setOwned (node: ReactiveNode) (s: System.IDisposable) =
+        node.Flags <- node.Flags ||| NodeFlags.HasOwned
+        owned.set (node, s) |> ignore
+
+    let disposeOwned (node: ReactiveNode) =
+        if NodeFlags.has NodeFlags.HasOwned node.Flags then
+            node.Flags <- node.Flags &&& ~~~NodeFlags.HasOwned
+            let s = owned.get node
+            owned.delete node |> ignore
+            s.Dispose()

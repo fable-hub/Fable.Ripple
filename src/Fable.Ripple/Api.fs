@@ -196,7 +196,11 @@ module Signal =
         let eff = new Effect(fn)
         Tracking.updateIfNecessary eff
 
-        if Graph.sourceCount eff > 0 || NodeFlags.has NodeFlags.External eff.Flags then
+        if
+            Graph.sourceCount eff > 0
+            || NodeFlags.has NodeFlags.External eff.Flags
+            || NodeFlags.has NodeFlags.HasOwned eff.Flags
+        then
             Scope.register eff
 
     /// Run `fn` now and re-run it whenever a signal it reads changes.
@@ -219,7 +223,8 @@ module Signal =
     /// Run `fn` inside a fresh scope; disposing the returned handle tears it down.
     let root (fn: unit -> 'a) : 'a * IDisposable = Scope.root fn
 
-    /// Register a cleanup callback with the current scope.
+    /// Register a cleanup callback with the current scope. Inside an effect or
+    /// computed, it runs before the next run and when the node is disposed.
     let onCleanup (fn: unit -> unit) : unit = Scope.onCleanup fn
 
     /// The ambient context, see `withContext`. `null` outside one.
